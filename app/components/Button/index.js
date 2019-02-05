@@ -1,17 +1,8 @@
-/**
- *
- * Button
- *
- */
+import styled from 'styled-components';
 
-import React from 'react';
-// import PropTypes from 'prop-types';
-// import styled from 'styled-components';
-
-function Button() {
-  return <div />;
-}
-
-Button.propTypes = {};
+const Button = styled.button`
+  font-size: 2em;
+  margin-bottom: 0.25em;
+`;
 
 export default Button;
