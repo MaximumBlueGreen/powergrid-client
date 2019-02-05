@@ -12,7 +12,7 @@
   },
   "author": "Max Stoiber",
   "license": "MIT",
-  "homepage": "https://maximumbluegreen.github.io/powergrid-client/"
+  "homepage": "https://maximumbluegreen.github.io/powergrid-client/",
   "scripts": {
     "analyze:clean": "rimraf stats.json",
     "preanalyze": "npm run analyze:clean",
