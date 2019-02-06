@@ -12,8 +12,10 @@ import { createStructuredSelector } from 'reselect';
 import { compose, bindActionCreators } from 'redux';
 
 import injectReducer from 'utils/injectReducer';
+import injectSaga from 'utils/injectSaga';
 import makeSelectLoginPage from './selectors';
 import reducer from './reducer';
+import waitForLoginInfo from './saga';
 import { loginButtonClickedAction } from './actions';
 
 function LoginPage({ loginButtonClickedAction, username }) {
@@ -51,8 +53,10 @@ const withConnect = connect(
 );
 
 const withReducer = injectReducer({ key: 'loginPage', reducer });
+const withSaga = injectSaga({ key: 'loginPage', saga: waitForLoginInfo });
 
 export default compose(
   withReducer,
+  withSaga,
   withConnect,
 )(LoginPage);
