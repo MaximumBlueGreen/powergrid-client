@@ -1,8 +1,9 @@
 import styled from 'styled-components';
+// import Button from '@material-ui/core/Button';
 
-const Button = styled.button`
+const styledButton = styled.button`
   font-size: 2em;
   margin-bottom: 0.25em;
 `;
 
-export default Button;
+export default styledButton;
