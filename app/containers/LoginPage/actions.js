@@ -17,10 +17,10 @@ export function defaultAction() {
   };
 }
 
-export function loginButtonClickedAction(username) {
+export function loginButtonClickedAction(username, password) {
   return {
     type: LOGIN_BUTTON_CLICKED_ACTION,
-    loginInfo: username,
+    loginInfo: { username, password },
   };
 }
 

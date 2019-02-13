@@ -18,14 +18,18 @@ import reducer from './reducer';
 import waitForLoginInfo from './saga';
 import { loginButtonClickedAction } from './actions';
 
-function LoginPage({ loginButtonClickedAction, username }) {
+function LoginPage({ loginButtonClickedAction }) {
   return (
     <div>
-      This is our page! Username <input type="text" />
+      This is our page! Username <input type="text" id="username" />
+      Password <input type="text" id="password" />
       <button
         type="button"
         onClick={() => {
-          loginButtonClickedAction(username);
+          loginButtonClickedAction(
+            document.getElementById('username').value,
+            document.getElementById('password').value,
+          );
         }}
       >
         Login
@@ -36,11 +40,10 @@ function LoginPage({ loginButtonClickedAction, username }) {
 
 LoginPage.propTypes = {
   loginButtonClickedAction: PropTypes.func.isRequired,
-  username: PropTypes.string.isRequired,
 };
 
 const mapStateToProps = createStructuredSelector({
-  username: makeSelectLoginPage(),
+  loginInfo: makeSelectLoginPage(),
 });
 
 function mapDispatchToProps(dispatch) {

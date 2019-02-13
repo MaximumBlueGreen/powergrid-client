@@ -1,14 +1,17 @@
-import { call, put, takeLatest } from 'redux-saga/effects';
+import { call, put, takeLatest, select } from 'redux-saga/effects';
 
 import request from 'utils/request';
-// import makeSelectLoginPage from 'containers/LoginPage/selectors';
+import makeSelectLoginPage from 'containers/LoginPage/selectors';
 import { validatedAction, invalidatedAction } from './actions';
 import { LOGIN_BUTTON_CLICKED_ACTION } from './constants';
 
 // Individual exports for testing
 export function* postLoginInfo() {
-  const email = 'john.westwig@gmail.com'; // yield select(makeSelectLoginPage());
-  const password = 'john';
+  const t = yield select(makeSelectLoginPage());
+  const email = t.username;
+  const { password } = t;
+  // const email = 'john.westwig@gmail.com';
+  // const password = 'john';
   const requestURL = `https://powergrid-app.herokuapp.com/users/me/authenticationToken`;
 
   try {
