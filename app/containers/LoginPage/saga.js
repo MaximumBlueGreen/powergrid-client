@@ -5,13 +5,8 @@ import makeSelectLoginPage from 'containers/LoginPage/selectors';
 import { validatedAction, invalidatedAction } from './actions';
 import { LOGIN_BUTTON_CLICKED_ACTION } from './constants';
 
-// Individual exports for testing
 export function* postLoginInfo() {
-  const t = yield select(makeSelectLoginPage());
-  const email = t.username;
-  const { password } = t;
-  // const email = 'john.westwig@gmail.com';
-  // const password = 'john';
+  const { username: email, password } = yield select(makeSelectLoginPage());
   const requestURL = `https://powergrid-app.herokuapp.com/users/me/authenticationToken`;
 
   try {

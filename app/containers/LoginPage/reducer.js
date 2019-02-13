@@ -7,7 +7,7 @@
 import { fromJS } from 'immutable';
 import {
   DEFAULT_ACTION,
-  LOGIN_BUTTON_CLICKED_ACTION,
+  INPUT_FIELD_UPDATED_ACTION,
   SUCCESSFUL_USER_LOGIN_ACTION,
   UNSUCCESSFUL_USER_LOGIN_ACTION,
 } from './constants';
@@ -18,12 +18,8 @@ function loginPageReducer(state = initialState, action) {
   switch (action.type) {
     case DEFAULT_ACTION:
       return state;
-    case LOGIN_BUTTON_CLICKED_ACTION:
-      // console.log(`resucer login clicked action: ${action.loginInfo.username}`);
-      return fromJS({
-        username: `${action.loginInfo.username}`,
-        password: `${action.loginInfo.password}`,
-      });
+    case INPUT_FIELD_UPDATED_ACTION:
+      return state.set(action.fieldName, action.fieldValue);
     case SUCCESSFUL_USER_LOGIN_ACTION:
       return state;
     case UNSUCCESSFUL_USER_LOGIN_ACTION:

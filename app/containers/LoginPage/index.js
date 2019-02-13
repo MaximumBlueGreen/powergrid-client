@@ -16,22 +16,24 @@ import injectSaga from 'utils/injectSaga';
 import makeSelectLoginPage from './selectors';
 import reducer from './reducer';
 import waitForLoginInfo from './saga';
-import { loginButtonClickedAction } from './actions';
+import { loginButtonClickedAction, inputFieldUpdatedAction } from './actions';
 
-function LoginPage({ loginButtonClickedAction }) {
+function LoginPage({ loginButtonClickedAction, inputFieldUpdatedAction }) {
   return (
     <div>
-      This is our page! Username <input type="text" id="username" />
-      Password <input type="text" id="password" />
-      <button
-        type="button"
-        onClick={() => {
-          loginButtonClickedAction(
-            document.getElementById('username').value,
-            document.getElementById('password').value,
-          );
-        }}
-      >
+      This is our page! Username{' '}
+      <input
+        type="text"
+        onChange={e => inputFieldUpdatedAction('username', e.target.value)}
+        id="username"
+      />
+      Password{' '}
+      <input
+        type="password"
+        onChange={e => inputFieldUpdatedAction('password', e.target.value)}
+        id="password"
+      />
+      <button type="button" onClick={loginButtonClickedAction}>
         Login
       </button>
     </div>
@@ -40,6 +42,7 @@ function LoginPage({ loginButtonClickedAction }) {
 
 LoginPage.propTypes = {
   loginButtonClickedAction: PropTypes.func.isRequired,
+  inputFieldUpdatedAction: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = createStructuredSelector({
@@ -47,7 +50,10 @@ const mapStateToProps = createStructuredSelector({
 });
 
 function mapDispatchToProps(dispatch) {
-  return bindActionCreators({ loginButtonClickedAction }, dispatch);
+  return bindActionCreators(
+    { loginButtonClickedAction, inputFieldUpdatedAction },
+    dispatch,
+  );
 }
 
 const withConnect = connect(
