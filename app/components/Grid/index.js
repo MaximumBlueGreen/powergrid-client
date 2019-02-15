@@ -12,12 +12,15 @@ import styled from 'styled-components';
 
 const StyledGrid = styled.div`
   display: grid;
-  grid-template-columns: auto auto auto;
+  grid-template-columns: repeat(${props => props.width}, 1fr);
+  grid-template-rows: repeat(${props => props.height}, 1fr);
+  height: 500px;
+  width: 500px;
 `;
 
-function Grid({ squares }) {
+function Grid({ squares, size }) {
   return (
-    <StyledGrid>
+    <StyledGrid {...size}>
       {squares.map(s => (
         <GridSquare key={s.number} number={s.number} value={s.value} />
       ))}
@@ -26,6 +29,10 @@ function Grid({ squares }) {
 }
 
 Grid.propTypes = {
+  // size: PropTypes.object({
+  //   height: PropTypes.number.isRequired,
+  //   width: PropTypes.number.isRequired,
+  // }),
   squares: PropTypes.arrayOf(PropTypes.object).isRequired,
 };
 

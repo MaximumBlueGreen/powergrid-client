@@ -9,8 +9,6 @@ import PropTypes from 'prop-types';
 import styled from 'styled-components';
 
 const GridSquareWrapper = styled.div`
-  height: 100px;
-  width: 100px;
   border: 1px solid black;
 `;
 
