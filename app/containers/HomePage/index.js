@@ -10,17 +10,11 @@
  */
 
 import React from 'react';
-import Grid from 'components/Grid';
 
-import _ from 'lodash';
+import GridContainer from 'containers/GridContainer';
 /* eslint-disable react/prefer-stateless-function */
 export default class HomePage extends React.PureComponent {
   render() {
-    return (
-      <Grid
-        squares={_.times(30, n => ({ number: n, value: 'A' }))}
-        size={{ height: 6, width: 5 }}
-      />
-    );
+    return <GridContainer />;
   }
 }

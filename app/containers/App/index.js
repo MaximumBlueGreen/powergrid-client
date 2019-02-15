@@ -17,10 +17,11 @@ import NotFoundPage from 'containers/NotFoundPage/Loadable';
 import GlobalStyle from '../../global-styles';
 
 export default function App() {
+  console.log('The app');
   return (
     <div>
       <Switch>
-        <Route exact path="/" component={HomePage} />
+        <Route exact path="/home" component={HomePage} />
         <Route exact path="/Login" component={LoginPage} />
         <Route component={NotFoundPage} />
       </Switch>
