@@ -4,10 +4,11 @@
  *
  */
 
-import { DEFAULT_ACTION } from './constants';
+import { SQUARE_BLACK_TOGGLED } from './constants';
 
-export function defaultAction() {
+export function toggleBlackSquare(squareId) {
   return {
-    type: DEFAULT_ACTION,
+    type: SQUARE_BLACK_TOGGLED,
+    squareId,
   };
 }

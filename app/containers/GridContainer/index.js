@@ -5,37 +5,41 @@
  */
 
 import React from 'react';
-// import PropTypes from 'prop-types';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
-import { compose } from 'redux';
+import { compose, bindActionCreators } from 'redux';
 
 import injectSaga from 'utils/injectSaga';
 import injectReducer from 'utils/injectReducer';
 import Grid from 'components/Grid';
+import { toggleBlackSquare } from './actions';
 import makeSelectGridContainer from './selectors';
 import reducer from './reducer';
 import saga from './saga';
 
-/* eslint-disable react/prop-types */
-function GridContainer({ gridContainer: { squares, dimensions } }) {
-  console.log('rendering the grid container', squares, dimensions);
+function GridContainer({
+  gridContainer: { squares, dimensions },
+  toggleBlackSquare,
+}) {
   return (
     <Grid
-      squares={squares.allIds.map(id => squares.byId[id])}
+      squares={squares}
       size={dimensions}
+      onSquareClicked={toggleBlackSquare}
     />
   );
 }
 
 GridContainer.propTypes = {
-  // gridContainer: PropTypes.object({}).isRequired,
-  // dispatch: PropTypes.func.isRequired,
-  // squares: PropTypes.arrayOf(PropTypes.object).isRequired,
-  // dimensions: PropTypes.object({
-  //   height: PropTypes.number.isRequired,
-  //   width: PropTypes.number.isRequired,
-  // }),
+  gridContainer: PropTypes.shape({
+    squares: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
+    dimensions: PropTypes.shape({
+      height: PropTypes.number.isRequired,
+      width: PropTypes.number.isRequired,
+    }),
+  }).isRequired,
+  toggleBlackSquare: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = createStructuredSelector({
@@ -43,9 +47,7 @@ const mapStateToProps = createStructuredSelector({
 });
 
 function mapDispatchToProps(dispatch) {
-  return {
-    dispatch,
-  };
+  return bindActionCreators({ toggleBlackSquare }, dispatch);
 }
 
 const withConnect = connect(

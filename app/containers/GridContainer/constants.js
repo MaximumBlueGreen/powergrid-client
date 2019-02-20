@@ -4,7 +4,7 @@
  *
  */
 
-export const DEFAULT_ACTION = 'app/GridContainer/DEFAULT_ACTION';
+export const SQUARE_BLACK_TOGGLED = 'app/GridContainer/SQUARE_BLACK_TOGGLED';
 
 export const ACROSS = 'ACROSS';
 export const DOWN = 'DOWN';

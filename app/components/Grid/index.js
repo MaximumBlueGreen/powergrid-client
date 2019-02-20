@@ -16,13 +16,14 @@ const StyledGrid = styled.div`
   grid-template-rows: repeat(${props => props.height}, 1fr);
   height: 500px;
   width: 500px;
+  font-size: 24px;
 `;
 
-function Grid({ squares, size }) {
+function Grid({ squares, size, onSquareClicked }) {
   return (
     <StyledGrid {...size}>
       {squares.map(s => (
-        <GridSquare key={s.number} number={s.number} value={s.value} />
+        <GridSquare key={s.id} {...s} onClick={() => onSquareClicked(s.id)} />
       ))}
     </StyledGrid>
   );
@@ -34,6 +35,7 @@ Grid.propTypes = {
   //   width: PropTypes.number.isRequired,
   // }),
   squares: PropTypes.arrayOf(PropTypes.object).isRequired,
+  onSquareClicked: PropTypes.func.isRequired,
 };
 
 export default Grid;
