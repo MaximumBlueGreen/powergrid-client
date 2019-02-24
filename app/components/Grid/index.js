@@ -19,45 +19,45 @@ const StyledGrid = styled.div`
   font-size: 24px;
 `;
 
-function Grid({ squares, size, onSquareClicked }) {
+function Grid({
+  squares,
+  size,
+  focusedSquareId,
+  onSquareClicked,
+  onSquareDoubleClicked,
+  onKeyPressed,
+}) {
   return (
-    <StyledGrid {...size}>
-      {squares.map(s => (
-        <GridSquare key={s.id} {...s} onClick={() => onSquareClicked(s.id)} />
+    <StyledGrid
+      {...size}
+      onKeyPress={e => {
+        onKeyPressed(e.key);
+      }}
+      tabIndex={0}
+    >
+      {squares.map((s, i) => (
+        <GridSquare
+          key={s.id}
+          {...s}
+          isFocused={focusedSquareId === s.id}
+          onClick={() => onSquareClicked(i)}
+          onDoubleClick={() => onSquareDoubleClicked(s.id)}
+        />
       ))}
     </StyledGrid>
   );
 }
 
 Grid.propTypes = {
-  // size: PropTypes.object({
-  //   height: PropTypes.number.isRequired,
-  //   width: PropTypes.number.isRequired,
-  // }),
+  size: PropTypes.shape({
+    height: PropTypes.number.isRequired,
+    width: PropTypes.number.isRequired,
+  }),
   squares: PropTypes.arrayOf(PropTypes.object).isRequired,
+  focusedSquareId: PropTypes.string.isRequired,
   onSquareClicked: PropTypes.func.isRequired,
+  onSquareDoubleClicked: PropTypes.func.isRequired,
+  onKeyPressed: PropTypes.func.isRequired,
 };
 
 export default Grid;
-
-/* Grid actions */
-/*
- squareFocused,
- gridNavigated,
-*/
-
-/*
-grid data model:
-squares: [
-  {
-    id: Number,
-    number: Number,
-    value: String,
-    isBlackSquare: Bool,
-    isCircled: Bool,
-    isShaded: Bool,
-    ///
-    isFocused,
-  }...
-]
-*/

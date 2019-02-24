@@ -4,11 +4,11 @@
  *
  */
 
-import { SQUARE_BLACK_TOGGLED } from './constants';
+import { SQUARE_FOCUSED } from './constants';
 
-export function toggleBlackSquare(squareId) {
+export function focusSquare(index) {
   return {
-    type: SQUARE_BLACK_TOGGLED,
-    squareId,
+    type: SQUARE_FOCUSED,
+    index,
   };
 }

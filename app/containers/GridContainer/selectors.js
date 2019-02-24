@@ -1,44 +1,53 @@
 import { createSelector } from 'reselect';
+import puzzlesSelector from 'entities/Puzzles/selectors';
+import squaresSelector from 'entities/Squares/selectors';
 import { initialState } from './reducer';
 
 /**
  * Direct selector to the gridContainer state domain
  */
 
+const JSify = state => state.toJS();
+
 const selectGridContainerDomain = state =>
   state.get('gridContainer', initialState);
 
-const normalize = createSelector(selectGridContainerDomain, state =>
-  state.set(
-    'squares',
-    state
-      .getIn(['squares', 'allIds'])
-      .map(id => state.getIn(['squares', 'byId', id]).set('id', id)),
-  ),
-);
+const makeSelectGridContainerDomain = () =>
+  createSelector(selectGridContainerDomain, JSify);
 
-const selectGridContainerSquareNumbers = createSelector(normalize, state =>
-  state.update('squares', squares => {
-    const { width } = state.get('dimensions').toJS();
-    let currentNumber = 0;
-    return squares.map((s, i) => {
-      const needsNumber =
-        !s.get('isBlack') &&
-        (i % width === 0 ||
-          i < width ||
-          squares.getIn([i - 1, 'isBlack']) ||
-          squares.getIn([i - width, 'isBlack']));
+const makeSelectPuzzle = puzzleId =>
+  createSelector([puzzlesSelector, squaresSelector], (puzzles, squares) =>
+    puzzles
+      .get(puzzleId)
+      .update('squares', ids => ids.map(id => squares.get(id).set('id', id))),
+  );
 
-      if (needsNumber) {
-        currentNumber += 1;
-      }
-      return s.set('number', needsNumber ? currentNumber : undefined);
-    });
-  }),
-);
+const makeSelectGridContainerSquareNumbers = puzzleId =>
+  createSelector(makeSelectPuzzle(puzzleId), state =>
+    state.update('squares', squares => {
+      const width = state.get('size').get('width');
+      let currentNumber = 0;
+      return squares.map((s, i) => {
+        const needsNumber =
+          !s.get('isBlack') &&
+          (i % width === 0 ||
+            i < width ||
+            squares.getIn([i - 1, 'isBlack']) ||
+            squares.getIn([i - width, 'isBlack']));
 
-const makeSelectGridContainer = () =>
-  createSelector(selectGridContainerSquareNumbers, substate => substate.toJS());
+        if (needsNumber) {
+          currentNumber += 1;
+        }
+        return s.set('number', needsNumber ? currentNumber : undefined);
+      });
+    }),
+  );
 
-export default makeSelectGridContainer;
-export { selectGridContainerDomain, selectGridContainerSquareNumbers };
+const makeSelectGridContainer = puzzleId =>
+  createSelector(makeSelectGridContainerSquareNumbers(puzzleId), JSify);
+
+export {
+  makeSelectGridContainerDomain,
+  makeSelectGridContainer,
+  makeSelectGridContainerSquareNumbers,
+};

@@ -11,10 +11,10 @@
 
 import React from 'react';
 
-import GridContainer from 'containers/GridContainer';
+import PuzzleContainer from 'containers/PuzzleContainer';
 /* eslint-disable react/prefer-stateless-function */
 export default class HomePage extends React.PureComponent {
   render() {
-    return <GridContainer />;
+    return <PuzzleContainer />;
   }
 }
