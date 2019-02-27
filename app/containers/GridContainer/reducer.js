@@ -6,6 +6,7 @@
 
 import { fromJS } from 'immutable';
 import { SQUARE_VALUE_UPDATED } from 'entities/Squares/constants';
+import { PUZZLE_SELECTED } from 'containers/PuzzleContainer/constants';
 import { ACROSS, DOWN, SQUARE_FOCUSED } from './constants';
 
 export const initialState = fromJS({
@@ -29,6 +30,9 @@ function gridContainerReducer(state = initialState, action) {
         )
         .set('focusedSquareIndex', action.index);
     }
+    /* TODO refactor */
+    case PUZZLE_SELECTED:
+      return state.set('focusedSquareIndex', 0).set('focusedDirection', ACROSS);
     default:
       return state;
   }
