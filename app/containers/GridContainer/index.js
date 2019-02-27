@@ -59,11 +59,10 @@ GridContainer.propTypes = {
   updateSquareValue: PropTypes.func.isRequired,
 };
 
-const mapStateToProps = (state, { puzzleId }) =>
-  createStructuredSelector({
-    ui: makeSelectGridContainerDomain(),
-    data: makeSelectGridContainer(puzzleId),
-  });
+const mapStateToProps = createStructuredSelector({
+  ui: makeSelectGridContainerDomain(),
+  data: makeSelectGridContainer(),
+});
 
 function mapDispatchToProps(dispatch) {
   return bindActionCreators(

@@ -1,23 +1,24 @@
 import { createSelector } from 'reselect';
+import puzzlesSelector from 'entities/Puzzles/selectors';
 import { initialState } from './reducer';
 
 /**
  * Direct selector to the puzzleContainer state domain
  */
 
+const JSify = state => state.toJS();
+
 const selectPuzzleContainerDomain = state =>
   state.get('puzzleContainer', initialState);
 
-/**
- * Other specific selectors
- */
-
-/**
- * Default selector used by PuzzleContainer
- */
+const makeSelectPuzzleContainerData = () =>
+  createSelector(puzzlesSelector, JSify);
 
 const makeSelectPuzzleContainer = () =>
-  createSelector(selectPuzzleContainerDomain, substate => substate.toJS());
+  createSelector(selectPuzzleContainerDomain, JSify);
 
-export default makeSelectPuzzleContainer;
-export { selectPuzzleContainerDomain };
+export {
+  selectPuzzleContainerDomain,
+  makeSelectPuzzleContainer,
+  makeSelectPuzzleContainerData,
+};

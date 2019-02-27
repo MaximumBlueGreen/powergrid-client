@@ -15,15 +15,19 @@ const selectGridContainerDomain = state =>
 const makeSelectGridContainerDomain = () =>
   createSelector(selectGridContainerDomain, JSify);
 
-const makeSelectPuzzle = puzzleId =>
-  createSelector([puzzlesSelector, squaresSelector], (puzzles, squares) =>
-    puzzles
-      .get(puzzleId)
-      .update('squares', ids => ids.map(id => squares.get(id).set('id', id))),
+const selectPuzzleId = (_, { puzzleId }) => puzzleId;
+
+const makeSelectPuzzle = () =>
+  createSelector(
+    [selectPuzzleId, puzzlesSelector, squaresSelector],
+    (puzzleId, puzzles, squares) =>
+      puzzles
+        .get(puzzleId)
+        .update('squares', ids => ids.map(id => squares.get(id).set('id', id))),
   );
 
-const makeSelectGridContainerSquareNumbers = puzzleId =>
-  createSelector(makeSelectPuzzle(puzzleId), state =>
+const makeSelectGridContainerSquareNumbers = () =>
+  createSelector(makeSelectPuzzle(), state =>
     state.update('squares', squares => {
       const width = state.get('size').get('width');
       let currentNumber = 0;
@@ -43,8 +47,8 @@ const makeSelectGridContainerSquareNumbers = puzzleId =>
     }),
   );
 
-const makeSelectGridContainer = puzzleId =>
-  createSelector(makeSelectGridContainerSquareNumbers(puzzleId), JSify);
+const makeSelectGridContainer = () =>
+  createSelector(makeSelectGridContainerSquareNumbers(), JSify);
 
 export {
   makeSelectGridContainerDomain,
