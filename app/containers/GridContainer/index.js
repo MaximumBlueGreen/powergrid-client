@@ -9,7 +9,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import { compose, bindActionCreators } from 'redux';
-
+import { clamp } from 'lodash';
 import injectReducer from 'utils/injectReducer';
 import Grid from 'components/Grid';
 import { toggleBlackSquare, updateSquareValue } from 'entities/Squares/actions';
@@ -28,31 +28,31 @@ function GridContainer({
   focusSquare,
 }) {
   const focusedSquareId = squares[focusedSquareIndex].id;
+  const focusSquareClamped = i =>
+    focusSquare(clamp(i, 0, size.width * size.height - 1));
   return (
     <Grid
       squares={squares}
       size={size}
       focusedSquareId={focusedSquareId}
-      onSquareClicked={focusSquare}
+      onSquareClicked={focusSquareClamped}
       onSquareDoubleClicked={toggleBlackSquare}
       onKeyPressed={({ key, keyCode }) => {
         switch (keyCode) {
           case 8 /* Backspace */:
-            focusSquare(focusedSquareIndex - 1);
+            focusSquareClamped(focusedSquareIndex - 1);
             return updateSquareValue(focusedSquareId, '');
           case 37 /* Left Arrow */:
-            return focusSquare(focusedSquareIndex - 1);
+            return focusSquareClamped(focusedSquareIndex - 1);
           case 38 /* Up Arrow */:
-            return focusSquare(focusedSquareIndex - size.width);
+            return focusSquareClamped(focusedSquareIndex - size.width);
           case 39 /* Right Arrow */:
-            return focusSquare(focusedSquareIndex + 1);
+            return focusSquareClamped(focusedSquareIndex + 1);
           case 40 /* Down Arrow */:
-            return focusSquare(focusedSquareIndex + size.width);
+            return focusSquareClamped(focusedSquareIndex + size.width);
           default:
             updateSquareValue(focusedSquareId, key);
-            return focusSquare(
-              (focusedSquareIndex + 1) % (size.width * size.height),
-            );
+            return focusSquareClamped(focusedSquareIndex + 1);
         }
       }}
     />
