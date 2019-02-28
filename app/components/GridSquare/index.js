@@ -29,6 +29,8 @@ const NumberWrapper = styled.div`
   position: absolute;
   font-size: 0.25em;
   user-select: none;
+  line-height: 1em;
+  padding-left: 2%;
 `;
 const ValueWrapper = styled.div`
   position: absolute;
