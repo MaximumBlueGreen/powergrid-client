@@ -32,9 +32,10 @@ export function inputFieldUpdatedAction(fieldName, fieldValue) {
   };
 }
 
-export function validatedAction() {
+export function validatedAction(token) {
   return {
     type: SUCCESSFUL_USER_LOGIN_ACTION,
+    token,
   };
 }
 

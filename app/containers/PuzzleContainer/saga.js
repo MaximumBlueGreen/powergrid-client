@@ -5,10 +5,11 @@ import { normalize, denormalize } from 'normalizr';
 import request from 'utils/request';
 import { PUZZLES_LOADED, PUZZLES_SAVED } from './constants';
 
+const selectUserToken = state => state.getIn(['entities', 'users', 'me']);
+
 export function* getPuzzles() {
-  const authenticationToken =
-    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MywiaWF0IjoxNTUxMzc2NTk3LCJleHAiOjE1NTE0NjI5OTd9.gW3GgIma7CHUFm6Vwc3CiPt6cs8juoFHflQ31SoS77U';
   const requestURL = 'http://localhost:3000/users/me/puzzles';
+  const authenticationToken = yield select(selectUserToken);
 
   try {
     const puzzles = yield call(request, requestURL, {
@@ -41,8 +42,7 @@ export function* savePuzzles() {
     };
   });
 
-  const authenticationToken =
-    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MywiaWF0IjoxNTUxMzc2NTk3LCJleHAiOjE1NTE0NjI5OTd9.gW3GgIma7CHUFm6Vwc3CiPt6cs8juoFHflQ31SoS77U';
+  const authenticationToken = yield select(selectUserToken);
   const requestURL = id => `http://localhost:3000/puzzles/${id}`;
 
   try {

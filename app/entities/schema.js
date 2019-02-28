@@ -16,3 +16,4 @@ export const puzzle = new schema.Entity(
     }),
   },
 );
+export const user = new schema.Entity('users');
