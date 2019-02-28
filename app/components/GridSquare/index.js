@@ -14,6 +14,10 @@ const GridSquareWrapper = styled.div`
   position: relative;
 
   ${({ isBlack, isFocused }) => {
+    if (isBlack && isFocused) {
+      return 'background-color: grey';
+    }
+
     if (isBlack) {
       return 'background-color: black;';
     }
