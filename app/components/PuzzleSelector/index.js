@@ -8,13 +8,15 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 
+const StyledPuzzleSelectorWrapper = styled.div``;
+
 const StyledPuzzleSelectorButton = styled.button`
   color: ${props => (props.isActive ? 'blue' : 'black')};
 `;
 
 function PuzzleSelector({ activePuzzleId, puzzles, onPuzzleSelected }) {
   return (
-    <div>
+    <StyledPuzzleSelectorWrapper>
       {puzzles.map(p => (
         <StyledPuzzleSelectorButton
           isActive={p.id === activePuzzleId}
@@ -25,12 +27,12 @@ function PuzzleSelector({ activePuzzleId, puzzles, onPuzzleSelected }) {
           {p.title || `id: ${p.id}`}
         </StyledPuzzleSelectorButton>
       ))}
-    </div>
+    </StyledPuzzleSelectorWrapper>
   );
 }
 
 PuzzleSelector.propTypes = {
-  activePuzzleId: PropTypes.string.isRequired,
+  activePuzzleId: PropTypes.string,
   puzzles: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   onPuzzleSelected: PropTypes.func.isRequired,
 };

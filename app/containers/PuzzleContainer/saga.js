@@ -3,7 +3,8 @@ import { loadEntities } from 'entities/actions';
 import { puzzle as puzzleSchema } from 'entities/schema';
 import { normalize, denormalize } from 'normalizr';
 import request from 'utils/request';
-import { PUZZLES_LOADED, PUZZLES_SAVED } from './constants';
+import { times } from 'lodash';
+import { PUZZLES_LOADED, PUZZLES_SAVED, PUZZLE_CREATED } from './constants';
 
 const selectUserToken = state => state.getIn(['entities', 'users', 'me']);
 
@@ -65,9 +66,37 @@ export function* savePuzzles() {
   }
 }
 
+export function* createPuzzle() {
+  const authenticationToken = yield select(selectUserToken);
+  const requestURL = 'http://localhost:3000/puzzles';
+
+  try {
+    yield call(request, requestURL, {
+      method: 'POST',
+      body: JSON.stringify({
+        puzzle: {
+          squares: times(25, () => ({})),
+          size: {
+            height: 5,
+            width: 5,
+          },
+        },
+      }),
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${authenticationToken}`,
+      },
+    });
+    yield* getPuzzles();
+  } catch (err) {
+    /* TODO handle error */
+  }
+}
+
 export default function* saga() {
   yield all([
     takeLatest(PUZZLES_LOADED, getPuzzles),
     takeLatest(PUZZLES_SAVED, savePuzzles),
+    takeLatest(PUZZLE_CREATED, createPuzzle),
   ]);
 }

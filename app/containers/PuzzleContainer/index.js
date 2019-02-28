@@ -19,7 +19,12 @@ import {
   makeSelectPuzzleContainerData,
 } from './selectors';
 import reducer from './reducer';
-import { loadPuzzles, selectPuzzle, savePuzzles } from './actions';
+import {
+  loadPuzzles,
+  selectPuzzle,
+  savePuzzles,
+  createPuzzle,
+} from './actions';
 import saga from './saga';
 
 class PuzzleContainer extends React.Component {
@@ -34,6 +39,7 @@ class PuzzleContainer extends React.Component {
       loadPuzzles,
       selectPuzzle,
       savePuzzles,
+      createPuzzle,
     } = this.props;
     return (
       <div>
@@ -49,6 +55,9 @@ class PuzzleContainer extends React.Component {
         <button type="button" onClick={savePuzzles}>
           SAVE PUZZLES
         </button>
+        <button type="button" onClick={createPuzzle}>
+          CREATE PUZZLE
+        </button>
       </div>
     );
   }
@@ -63,6 +72,7 @@ PuzzleContainer.propTypes = {
   loadPuzzles: PropTypes.func.isRequired,
   selectPuzzle: PropTypes.func.isRequired,
   savePuzzles: PropTypes.func.isRequired,
+  createPuzzle: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = createStructuredSelector({
@@ -72,7 +82,7 @@ const mapStateToProps = createStructuredSelector({
 
 function mapDispatchToProps(dispatch) {
   return bindActionCreators(
-    { loadPuzzles, selectPuzzle, savePuzzles },
+    { loadPuzzles, selectPuzzle, savePuzzles, createPuzzle },
     dispatch,
   );
 }
