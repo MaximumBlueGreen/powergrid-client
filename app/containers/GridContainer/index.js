@@ -37,13 +37,16 @@ function GridContainer({
       onSquareDoubleClicked={toggleBlackSquare}
       onKeyPressed={({ key, keyCode }) => {
         switch (keyCode) {
-          case 37:
+          case 8 /* Backspace */:
+            focusSquare(focusedSquareIndex - 1);
+            return updateSquareValue(focusedSquareId, '');
+          case 37 /* Left Arrow */:
             return focusSquare(focusedSquareIndex - 1);
-          case 38:
+          case 38 /* Up Arrow */:
             return focusSquare(focusedSquareIndex - size.width);
-          case 39:
+          case 39 /* Right Arrow */:
             return focusSquare(focusedSquareIndex + 1);
-          case 40:
+          case 40 /* Down Arrow */:
             return focusSquare(focusedSquareIndex + size.width);
           default:
             updateSquareValue(focusedSquareId, key);
