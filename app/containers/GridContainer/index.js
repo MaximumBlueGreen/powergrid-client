@@ -35,8 +35,22 @@ function GridContainer({
       focusedSquareId={focusedSquareId}
       onSquareClicked={focusSquare}
       onSquareDoubleClicked={toggleBlackSquare}
-      onKeyPressed={value => {
-        updateSquareValue(focusedSquareId, value);
+      onKeyPressed={({ key, keyCode }) => {
+        switch (keyCode) {
+          case 37:
+            return focusSquare(focusedSquareIndex - 1);
+          case 38:
+            return focusSquare(focusedSquareIndex - size.width);
+          case 39:
+            return focusSquare(focusedSquareIndex + 1);
+          case 40:
+            return focusSquare(focusedSquareIndex + size.width);
+          default:
+            updateSquareValue(focusedSquareId, key);
+            return focusSquare(
+              (focusedSquareIndex + 1) % (size.width * size.height),
+            );
+        }
       }}
     />
   );

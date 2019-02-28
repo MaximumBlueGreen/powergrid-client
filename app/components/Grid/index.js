@@ -16,36 +16,50 @@ const StyledGrid = styled.div`
   grid-template-rows: repeat(${props => props.height}, 1fr);
   height: 500px;
   width: 500px;
-  font-size: 24px;
+  font-size: calc(500px / ${props => props.width});
+  outline: none;
 `;
 
-function Grid({
-  squares,
-  size,
-  focusedSquareId,
-  onSquareClicked,
-  onSquareDoubleClicked,
-  onKeyPressed,
-}) {
-  return (
-    <StyledGrid
-      {...size}
-      onKeyPress={e => {
-        onKeyPressed(e.key);
-      }}
-      tabIndex={0}
-    >
-      {squares.map((s, i) => (
-        <GridSquare
-          key={s.id}
-          {...s}
-          isFocused={focusedSquareId === s.id}
-          onClick={() => onSquareClicked(i)}
-          onDoubleClick={() => onSquareDoubleClicked(s.id)}
-        />
-      ))}
-    </StyledGrid>
-  );
+class Grid extends React.Component {
+  componentDidMount() {
+    this.gridRef.focus();
+  }
+
+  componentDidUpdate() {
+    this.gridRef.focus();
+  }
+
+  render() {
+    const {
+      squares,
+      size,
+      focusedSquareId,
+      onSquareClicked,
+      onSquareDoubleClicked,
+      onKeyPressed,
+    } = this.props;
+
+    return (
+      <StyledGrid
+        {...size}
+        onKeyDown={onKeyPressed}
+        tabIndex={0}
+        ref={c => {
+          this.gridRef = c;
+        }}
+      >
+        {squares.map((s, i) => (
+          <GridSquare
+            key={s.id}
+            {...s}
+            isFocused={focusedSquareId === s.id}
+            onClick={() => onSquareClicked(i)}
+            onDoubleClick={() => onSquareDoubleClicked(s.id)}
+          />
+        ))}
+      </StyledGrid>
+    );
+  }
 }
 
 Grid.propTypes = {

@@ -19,36 +19,50 @@ import {
   makeSelectPuzzleContainerData,
 } from './selectors';
 import reducer from './reducer';
-import { loadPuzzles, selectPuzzle } from './actions';
+import { loadPuzzles, selectPuzzle, savePuzzles } from './actions';
 import saga from './saga';
 
-const PuzzleContainer = ({
-  ui: { activePuzzleId, puzzleIds },
-  data: puzzles,
-  loadPuzzles,
-  selectPuzzle,
-}) => (
-  <div>
-    <GridContainer puzzleId={activePuzzleId} />
-    <PuzzleSelector
-      puzzles={puzzleIds.map(id => puzzles[id])}
-      activePuzzleId={activePuzzleId}
-      onPuzzleSelected={selectPuzzle}
-    />
-    <button type="button" onClick={loadPuzzles}>
-      LOAD PUZZLES
-    </button>
-  </div>
-);
+class PuzzleContainer extends React.Component {
+  componentDidMount() {
+    this.props.loadPuzzles();
+  }
+
+  render() {
+    const {
+      ui: { activePuzzleId, puzzleIds },
+      data: puzzles,
+      loadPuzzles,
+      selectPuzzle,
+      savePuzzles,
+    } = this.props;
+    return (
+      <div>
+        {activePuzzleId && <GridContainer puzzleId={activePuzzleId} />}
+        <PuzzleSelector
+          puzzles={puzzleIds.map(id => puzzles[id])}
+          activePuzzleId={activePuzzleId}
+          onPuzzleSelected={selectPuzzle}
+        />
+        <button type="button" onClick={loadPuzzles}>
+          LOAD PUZZLES
+        </button>
+        <button type="button" onClick={savePuzzles}>
+          SAVE PUZZLES
+        </button>
+      </div>
+    );
+  }
+}
 
 PuzzleContainer.propTypes = {
   ui: PropTypes.shape({
-    activePuzzleId: PropTypes.string.isRequired,
+    activePuzzleId: PropTypes.string,
     puzzleIds: PropTypes.array.isRequired,
   }).isRequired,
   data: PropTypes.shape({}).isRequired,
   loadPuzzles: PropTypes.func.isRequired,
   selectPuzzle: PropTypes.func.isRequired,
+  savePuzzles: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = createStructuredSelector({
@@ -57,7 +71,10 @@ const mapStateToProps = createStructuredSelector({
 });
 
 function mapDispatchToProps(dispatch) {
-  return bindActionCreators({ loadPuzzles, selectPuzzle }, dispatch);
+  return bindActionCreators(
+    { loadPuzzles, selectPuzzle, savePuzzles },
+    dispatch,
+  );
 }
 
 const withConnect = connect(

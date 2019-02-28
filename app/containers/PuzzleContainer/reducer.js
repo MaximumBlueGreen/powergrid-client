@@ -10,17 +10,18 @@ import { ENTITIES_LOADED } from 'entities/constants';
 import { PUZZLE_SELECTED } from './constants';
 
 export const initialState = fromJS({
-  activePuzzleId: 'puzzle_id_1',
-  puzzleIds: ['puzzle_id_1'],
+  activePuzzleId: undefined,
+  puzzleIds: [],
 });
 
 function puzzleContainerReducer(state = initialState, action) {
   switch (action.type) {
-    case ENTITIES_LOADED:
-      return state.update('puzzleIds', puzzleIds => [
-        ...puzzleIds,
-        ...Object.keys(action.entities.puzzles),
-      ]);
+    case ENTITIES_LOADED: {
+      const puzzleIds = Object.keys(action.entities.puzzles);
+      return state
+        .set('puzzleIds', fromJS(puzzleIds))
+        .set('activePuzzleId', puzzleIds[0]);
+    }
     case PUZZLE_SELECTED:
       return state.set('activePuzzleId', action.id);
     default:

@@ -1,14 +1,8 @@
 import { fromJS } from 'immutable';
-import { times, zipObject } from 'lodash';
 import { ENTITIES_LOADED } from 'entities/constants';
 import { SQUARE_BLACK_TOGGLED, SQUARE_VALUE_UPDATED } from './constants';
 
-const ids = times(225, String);
-const squares = times(225, () => ({
-  isBlack: false,
-  value: '',
-}));
-const initialState = fromJS(zipObject(ids, squares));
+const initialState = fromJS({});
 
 export default function(state = initialState, action) {
   switch (action.type) {

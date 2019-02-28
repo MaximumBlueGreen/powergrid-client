@@ -4,7 +4,12 @@
  *
  */
 
-import { DEFAULT_ACTION, PUZZLES_LOADED, PUZZLE_SELECTED } from './constants';
+import {
+  DEFAULT_ACTION,
+  PUZZLES_LOADED,
+  PUZZLES_SAVED,
+  PUZZLE_SELECTED,
+} from './constants';
 
 export function defaultAction() {
   return {
@@ -15,6 +20,12 @@ export function defaultAction() {
 export function loadPuzzles() {
   return {
     type: PUZZLES_LOADED,
+  };
+}
+
+export function savePuzzles() {
+  return {
+    type: PUZZLES_SAVED,
   };
 }
 

@@ -11,7 +11,6 @@ import styled from 'styled-components';
 const GridSquareWrapper = styled.div`
   border: 1px solid black;
   background-color: white;
-  font-size: 0.35em;
   position: relative;
 
   ${({ isBlack, isFocused }) => {
@@ -27,7 +26,8 @@ const GridSquareWrapper = styled.div`
 `;
 
 const NumberWrapper = styled.div`
-  padding-left: 1px;
+  position: absolute;
+  font-size: 0.25em;
   user-select: none;
 `;
 const ValueWrapper = styled.div`
@@ -37,7 +37,7 @@ const ValueWrapper = styled.div`
   left: 50%;
   transform: translate(-50%, -50%);
 
-  font-size: 1.6em;
+  font-size: 0.5em;
   text-align: center;
   text-transform: uppercase;
   user-select: none;
@@ -67,7 +67,7 @@ function GridSquare({
 GridSquare.propTypes = {
   number: PropTypes.number,
   value: PropTypes.string,
-  isBlack: PropTypes.bool.isRequired,
+  isBlack: PropTypes.bool,
   onClick: PropTypes.func.isRequired,
   onDoubleClick: PropTypes.func.isRequired,
   isFocused: PropTypes.bool,
@@ -75,6 +75,7 @@ GridSquare.propTypes = {
 
 GridSquare.defaultProps = {
   isFocused: false,
+  isBlack: false,
 };
 
 export default GridSquare;
