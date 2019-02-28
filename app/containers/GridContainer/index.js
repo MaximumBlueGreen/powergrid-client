@@ -19,10 +19,11 @@ import {
   makeSelectGridContainerDomain,
 } from './selectors';
 import reducer from './reducer';
+import { ACROSS } from './constants';
 
 function GridContainer({
   data: { squares, size },
-  ui: { focusedSquareIndex },
+  ui: { focusedSquareIndex, focusedDirection },
   toggleBlackSquare,
   updateSquareValue,
   focusSquare,
@@ -40,7 +41,11 @@ function GridContainer({
       onKeyPressed={({ key, keyCode }) => {
         switch (keyCode) {
           case 8 /* Backspace */:
-            focusSquareClamped(focusedSquareIndex - 1);
+            if (focusedDirection === ACROSS) {
+              focusSquareClamped(focusedSquareIndex - 1);
+            } else {
+              focusSquareClamped(focusedSquareIndex - size.width);
+            }
             return updateSquareValue(focusedSquareId, '');
           case 37 /* Left Arrow */:
             return focusSquareClamped(focusedSquareIndex - 1);
@@ -52,7 +57,10 @@ function GridContainer({
             return focusSquareClamped(focusedSquareIndex + size.width);
           default:
             updateSquareValue(focusedSquareId, key);
-            return focusSquareClamped(focusedSquareIndex + 1);
+            if (focusedDirection === ACROSS) {
+              return focusSquareClamped(focusedSquareIndex + 1);
+            }
+            return focusSquareClamped(focusedSquareIndex + size.width);
         }
       }}
     />
