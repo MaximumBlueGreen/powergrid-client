@@ -43,12 +43,6 @@ class PuzzleContainer extends React.Component {
     } = this.props;
     return (
       <div>
-        {activePuzzleId && <GridContainer puzzleId={activePuzzleId} />}
-        <PuzzleSelector
-          puzzles={puzzleIds.map(id => puzzles[id])}
-          activePuzzleId={activePuzzleId}
-          onPuzzleSelected={selectPuzzle}
-        />
         <button type="button" onClick={loadPuzzles}>
           LOAD PUZZLES
         </button>
@@ -58,6 +52,12 @@ class PuzzleContainer extends React.Component {
         <button type="button" onClick={createPuzzle}>
           CREATE PUZZLE
         </button>
+        {activePuzzleId && <GridContainer puzzleId={activePuzzleId} />}
+        <PuzzleSelector
+          puzzles={puzzleIds.map(id => puzzles[id])}
+          activePuzzleId={activePuzzleId}
+          onPuzzleSelected={selectPuzzle}
+        />
       </div>
     );
   }

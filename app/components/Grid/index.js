@@ -14,9 +14,9 @@ const StyledGrid = styled.div`
   display: grid;
   grid-template-columns: repeat(${props => props.width}, 1fr);
   grid-template-rows: repeat(${props => props.height}, 1fr);
-  height: 500px;
-  width: 500px;
-  font-size: calc(500px / ${props => props.width});
+  height: 450px;
+  width: 450px;
+  font-size: calc(450px / ${props => props.width});
   outline: none;
 `;
 
