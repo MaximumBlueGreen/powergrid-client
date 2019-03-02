@@ -14,6 +14,8 @@ import injectReducer from 'utils/injectReducer';
 import injectSaga from 'utils/injectSaga';
 import GridContainer from 'containers/GridContainer';
 import PuzzleSelector from 'components/PuzzleSelector';
+import WordListContainer from 'containers/WordListContainer';
+import DisplayGrid from '@material-ui/core/Grid';
 import {
   makeSelectPuzzleContainer,
   makeSelectPuzzleContainerData,
@@ -52,7 +54,14 @@ class PuzzleContainer extends React.Component {
         <button type="button" onClick={createPuzzle}>
           CREATE PUZZLE
         </button>
-        {activePuzzleId && <GridContainer puzzleId={activePuzzleId} />}
+        <DisplayGrid container>
+          <DisplayGrid item xs={8}>
+            {activePuzzleId && <GridContainer puzzleId={activePuzzleId} />}
+          </DisplayGrid>
+          <DisplayGrid item xs={4}>
+            <WordListContainer />
+          </DisplayGrid>
+        </DisplayGrid>
         <PuzzleSelector
           puzzles={puzzleIds.map(id => puzzles[id])}
           activePuzzleId={activePuzzleId}
