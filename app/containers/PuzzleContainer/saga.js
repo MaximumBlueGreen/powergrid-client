@@ -1,3 +1,4 @@
+import { delay } from 'redux-saga';
 import { call, all, put, takeLatest, select } from 'redux-saga/effects';
 import { loadEntities } from 'entities/actions';
 import { puzzle as puzzleSchema } from 'entities/schema';
@@ -93,10 +94,18 @@ export function* createPuzzle() {
   }
 }
 
+function* autosave() {
+  while (true) {
+    yield savePuzzles();
+    yield delay(10000);
+  }
+}
+
 export default function* saga() {
   yield all([
     takeLatest(PUZZLES_LOADED, getPuzzles),
     takeLatest(PUZZLES_SAVED, savePuzzles),
     takeLatest(PUZZLE_CREATED, createPuzzle),
+    autosave(),
   ]);
 }
