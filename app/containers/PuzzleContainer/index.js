@@ -14,6 +14,7 @@ import injectReducer from 'utils/injectReducer';
 import injectSaga from 'utils/injectSaga';
 import GridContainer from 'containers/GridContainer';
 import PuzzleSelector from 'components/PuzzleSelector';
+import SyncStatus from 'components/SyncStatus';
 import {
   makeSelectPuzzleContainer,
   makeSelectPuzzleContainerData,
@@ -34,7 +35,7 @@ class PuzzleContainer extends React.Component {
 
   render() {
     const {
-      ui: { activePuzzleId, puzzleIds },
+      ui: { activePuzzleId, puzzleIds, isSyncing, lastSynced },
       data: puzzles,
       loadPuzzles,
       selectPuzzle,
@@ -52,6 +53,7 @@ class PuzzleContainer extends React.Component {
         <button type="button" onClick={createPuzzle}>
           CREATE PUZZLE
         </button>
+        <SyncStatus isSyncing={isSyncing} lastSynced={lastSynced} />
         {activePuzzleId && <GridContainer puzzleId={activePuzzleId} />}
         <PuzzleSelector
           puzzles={puzzleIds.map(id => puzzles[id])}
