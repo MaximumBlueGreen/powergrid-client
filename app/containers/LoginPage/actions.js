@@ -7,7 +7,6 @@
 import {
   DEFAULT_ACTION,
   LOGIN_BUTTON_CLICKED_ACTION,
-  INPUT_FIELD_UPDATED_ACTION,
   SUCCESSFUL_USER_LOGIN_ACTION,
   UNSUCCESSFUL_USER_LOGIN_ACTION,
 } from './constants';
@@ -18,17 +17,10 @@ export function defaultAction() {
   };
 }
 
-export function loginButtonClickedAction() {
+export function loginButtonClickedAction(values) {
   return {
     type: LOGIN_BUTTON_CLICKED_ACTION,
-  };
-}
-
-export function inputFieldUpdatedAction(fieldName, fieldValue) {
-  return {
-    type: INPUT_FIELD_UPDATED_ACTION,
-    fieldName,
-    fieldValue,
+    values,
   };
 }
 

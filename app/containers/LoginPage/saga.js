@@ -1,12 +1,11 @@
-import { call, put, takeLatest, select } from 'redux-saga/effects';
+import { call, put, takeLatest } from 'redux-saga/effects';
 import { push } from 'connected-react-router';
 import request from 'utils/request';
-import makeSelectLoginPage from 'containers/LoginPage/selectors';
 import { validatedAction, invalidatedAction } from './actions';
 import { LOGIN_BUTTON_CLICKED_ACTION } from './constants';
 
-export function* postLoginInfo() {
-  const { username: email, password } = yield select(makeSelectLoginPage());
+export function* postLoginInfo({ values }) {
+  const { email, password } = values.toJS();
   const requestURL = `http://localhost:3000/users/me/authenticationToken`;
 
   try {
