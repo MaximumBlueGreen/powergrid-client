@@ -3,7 +3,7 @@ import { merge } from 'lodash';
 import request from './request';
 
 /* Change this to your local server */
-const BASE_URL = 'http://localhost:3000/';
+const BASE_URL = 'https://powergrid-app.herokuapp.com/';
 
 const selectUserToken = state => state.getIn(['entities', 'users', 'me']);
 
