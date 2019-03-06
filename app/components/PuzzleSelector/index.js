@@ -17,7 +17,7 @@ function PuzzleSelector({ activePuzzleId, puzzles, onPuzzleSelected }) {
       onChange={(e, value) => {
         onPuzzleSelected(value);
       }}
-      centered
+      variant="scrollable"
     >
       {puzzles.map(p => (
         <Tab key={p.id} label={p.title || `id: ${p.id}`} value={p.id} />

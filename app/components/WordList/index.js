@@ -23,6 +23,7 @@ function WordList({ wordList, updateFilterPattern, filterPattern }) {
           type="text"
           value={filterPattern}
           onChange={e => updateFilterPattern(e.target.value)}
+          placeholder="Regex search"
         />
       </div>
       <StyledList>

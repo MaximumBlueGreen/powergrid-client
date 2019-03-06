@@ -16,8 +16,8 @@ const StyledGrid = styled.div`
   grid-template-columns: repeat(${props => props.width}, 1fr);
   grid-auto-rows: 1fr;
 
-  max-height: 75vh;
-  max-width: 75vh;
+  max-height: 70vh;
+  max-width: 70vh;
 
   font-size: calc(450px / ${props => props.width});
   outline: none;
