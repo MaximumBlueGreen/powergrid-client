@@ -15,6 +15,9 @@ import injectSaga from 'utils/injectSaga';
 import GridContainer from 'containers/GridContainer';
 import PuzzleSelector from 'components/PuzzleSelector';
 import SyncStatus from 'components/SyncStatus';
+import Grid from '@material-ui/core/Grid';
+import Button from '@material-ui/core/Button';
+import Paper from '@material-ui/core/Paper';
 import {
   makeSelectPuzzleContainer,
   makeSelectPuzzleContainerData,
@@ -43,23 +46,39 @@ class PuzzleContainer extends React.Component {
       createPuzzle,
     } = this.props;
     return (
-      <div>
-        <button type="button" onClick={loadPuzzles}>
-          LOAD PUZZLES
-        </button>
-        <button type="button" onClick={savePuzzles}>
-          SAVE PUZZLES
-        </button>
-        <button type="button" onClick={createPuzzle}>
-          CREATE PUZZLE
-        </button>
-        <SyncStatus isSyncing={isSyncing} lastSynced={lastSynced} />
-        {activePuzzleId && <GridContainer puzzleId={activePuzzleId} />}
-        <PuzzleSelector
-          puzzles={puzzleIds.map(id => puzzles[id])}
-          activePuzzleId={activePuzzleId}
-          onPuzzleSelected={selectPuzzle}
-        />
+      <div
+        style={{
+          'overflow-x':
+            'hidden' /* https://github.com/mui-org/material-ui/issues/7466 */,
+        }}
+      >
+        <Grid container spacing={24} justify="center">
+          <Grid item xs={8}>
+            <Paper>
+              <Button type="button" color="primary" onClick={loadPuzzles}>
+                LOAD PUZZLES
+              </Button>
+              <Button type="button" color="primary" onClick={savePuzzles}>
+                SAVE PUZZLES
+              </Button>
+              <Button type="button" color="primary" onClick={createPuzzle}>
+                CREATE PUZZLE
+              </Button>
+            </Paper>
+            <Paper>
+              <SyncStatus isSyncing={isSyncing} lastSynced={lastSynced} />
+            </Paper>
+            {activePuzzleId && <GridContainer puzzleId={activePuzzleId} />}
+            <PuzzleSelector
+              puzzles={puzzleIds.map(id => puzzles[id])}
+              activePuzzleId={activePuzzleId}
+              onPuzzleSelected={selectPuzzle}
+            />
+          </Grid>
+          <Grid item xs={4}>
+            {/* Word list, cluing etc... */}
+          </Grid>
+        </Grid>
       </div>
     );
   }
