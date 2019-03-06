@@ -8,6 +8,8 @@ import { fromJS } from 'immutable';
 import {
   SUCCESSFUL_USER_LOGIN_ACTION,
   UNSUCCESSFUL_USER_LOGIN_ACTION,
+  SUCCESSFUL_USER_CREATION_ACTION,
+  UNSUCCESSFUL_USER_CREATION_ACTION,
 } from './constants';
 
 export const initialState = fromJS({});
@@ -17,6 +19,10 @@ function loginPageReducer(state = initialState, action) {
     case SUCCESSFUL_USER_LOGIN_ACTION:
       return state;
     case UNSUCCESSFUL_USER_LOGIN_ACTION:
+      return state;
+    case SUCCESSFUL_USER_CREATION_ACTION:
+      return state;
+    case UNSUCCESSFUL_USER_CREATION_ACTION:
       return state;
     default:
       return state;

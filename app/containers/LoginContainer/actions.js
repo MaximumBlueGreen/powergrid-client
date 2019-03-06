@@ -9,9 +9,6 @@ import {
   LOGIN_BUTTON_CLICKED_ACTION,
   SUCCESSFUL_USER_LOGIN_ACTION,
   UNSUCCESSFUL_USER_LOGIN_ACTION,
-  CREATE_USER_BUTTON_CLICKED_ACTION,
-  SUCCESSFUL_USER_CREATION_ACTION,
-  UNSUCCESSFUL_USER_CREATION_ACTION,
 } from './constants';
 
 export function defaultAction() {
@@ -37,26 +34,6 @@ export function validatedAction(token) {
 export function invalidatedAction(err) {
   return {
     type: UNSUCCESSFUL_USER_LOGIN_ACTION,
-    error: err,
-  };
-}
-
-export function createUserButtonClickedAction(values) {
-  return {
-    type: CREATE_USER_BUTTON_CLICKED_ACTION,
-    values,
-  };
-}
-
-export function validatedCreationAction() {
-  return {
-    type: SUCCESSFUL_USER_CREATION_ACTION,
-  };
-}
-
-export function invalidatedCreationAction(err) {
-  return {
-    type: UNSUCCESSFUL_USER_CREATION_ACTION,
     error: err,
   };
 }
