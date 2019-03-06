@@ -10,13 +10,30 @@ import PropTypes from 'prop-types';
 import GridSquare from 'components/GridSquare';
 import styled from 'styled-components';
 
+/* TODO: handle non-square grids */
 const StyledGrid = styled.div`
   display: grid;
   grid-template-columns: repeat(${props => props.width}, 1fr);
-  grid-template-rows: repeat(${props => props.height}, 1fr);
-  height: 75vh;
+  grid-auto-rows: 1fr;
+
+  max-height: 75vh;
+  max-width: 75vh;
+
   font-size: calc(450px / ${props => props.width});
   outline: none;
+
+  &:before {
+    content: '';
+    width: 0;
+    padding-bottom: 100%;
+    grid-row: 1 / 1;
+    grid-column: 1 / 1;
+  }
+
+  & > *:first-child {
+    grid-row: 1 / 1;
+    grid-column: 1 / 1;
+  }
 `;
 
 class Grid extends React.Component {

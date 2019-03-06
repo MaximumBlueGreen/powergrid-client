@@ -5,67 +5,32 @@
  */
 
 import React from 'react';
-import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 // import { FormattedMessage } from 'react-intl';
-import { createStructuredSelector } from 'reselect';
-import { compose, bindActionCreators } from 'redux';
+import { compose } from 'redux';
+import LoginContainer from 'containers/LoginContainer';
+import CreateUserContainer from 'containers/CreateUserContainer';
+import styled from 'styled-components';
 
-import injectReducer from 'utils/injectReducer';
-import injectSaga from 'utils/injectSaga';
-import makeSelectLoginPage from './selectors';
-import reducer from './reducer';
-import waitForLoginInfo from './saga';
-import { loginButtonClickedAction, inputFieldUpdatedAction } from './actions';
+const LoginWrapper = styled.div`
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+`;
 
-function LoginPage({ loginButtonClickedAction, inputFieldUpdatedAction }) {
-  return (
-    <div>
-      This is our page! Username{' '}
-      <input
-        type="text"
-        onChange={e => inputFieldUpdatedAction('username', e.target.value)}
-        id="username"
-      />
-      Password{' '}
-      <input
-        type="password"
-        onChange={e => inputFieldUpdatedAction('password', e.target.value)}
-        id="password"
-      />
-      <button type="button" onClick={loginButtonClickedAction}>
-        Login
-      </button>
-    </div>
-  );
-}
-
-LoginPage.propTypes = {
-  loginButtonClickedAction: PropTypes.func.isRequired,
-  inputFieldUpdatedAction: PropTypes.func.isRequired,
-};
-
-const mapStateToProps = createStructuredSelector({
-  loginInfo: makeSelectLoginPage(),
-});
-
-function mapDispatchToProps(dispatch) {
-  return bindActionCreators(
-    { loginButtonClickedAction, inputFieldUpdatedAction },
-    dispatch,
-  );
-}
-
-const withConnect = connect(
-  mapStateToProps,
-  mapDispatchToProps,
+const LoginPage = () => (
+  <LoginWrapper>
+    <LoginContainer />
+    <CreateUserContainer />
+  </LoginWrapper>
 );
 
-const withReducer = injectReducer({ key: 'loginPage', reducer });
-const withSaga = injectSaga({ key: 'loginPage', saga: waitForLoginInfo });
+LoginPage.propTypes = {};
 
-export default compose(
-  withReducer,
-  withSaga,
-  withConnect,
-)(LoginPage);
+const withConnect = connect(
+  () => ({}),
+  () => ({}),
+);
+
+export default compose(withConnect)(LoginPage);

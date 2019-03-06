@@ -1,34 +1,28 @@
-import { call, all, put, takeLatest, select } from 'redux-saga/effects';
+import { delay } from 'redux-saga';
+import { all, put, takeLatest, select } from 'redux-saga/effects';
 import { loadEntities } from 'entities/actions';
 import { puzzle as puzzleSchema } from 'entities/schema';
 import { normalize, denormalize } from 'normalizr';
-import request from 'utils/request';
 import { times } from 'lodash';
+import { authenticated } from 'utils/apiRequestSaga';
+import { savePuzzles, savePuzzlesSuccess } from './actions';
 import { PUZZLES_LOADED, PUZZLES_SAVED, PUZZLE_CREATED } from './constants';
 
-const selectUserToken = state => state.getIn(['entities', 'users', 'me']);
-
-export function* getPuzzles() {
-  const requestURL = 'http://localhost:3000/users/me/puzzles';
-  const authenticationToken = yield select(selectUserToken);
-
-  try {
-    const puzzles = yield call(request, requestURL, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${authenticationToken}`,
-      },
-    });
-    const { entities } = normalize(puzzles, [puzzleSchema]);
-    yield put(loadEntities(entities));
-  } catch (err) {
-    /* TODO handle error */
-    yield put(loadEntities([]));
-  }
+export function* getPuzzlesSaga() {
+  yield authenticated(
+    'users/me/puzzles',
+    { method: 'GET' },
+    function* onSuccess(puzzles) {
+      const { entities } = normalize(puzzles, [puzzleSchema]);
+      yield put(loadEntities(entities));
+    },
+    function* onFailure(err) {
+      console.log(err);
+    },
+  );
 }
 
-export function* savePuzzles() {
+export function* savePuzzlesSaga() {
   const entities = yield select(state => state.get('entities').toJS());
 
   /* TODO batch/bulk */
@@ -43,35 +37,30 @@ export function* savePuzzles() {
     };
   });
 
-  const authenticationToken = yield select(selectUserToken);
-  const requestURL = id => `http://localhost:3000/puzzles/${id}`;
-
-  try {
-    yield all(
-      puzzles.map(p =>
-        call(request, requestURL(p.id), {
+  yield all(
+    puzzles.map(p =>
+      authenticated(
+        `puzzles/${p.id}`,
+        {
           method: 'PUT',
           body: JSON.stringify(p),
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${authenticationToken}`,
-          },
-        }),
+        },
+        function* onSuccess() {
+          yield delay(500);
+          yield put(savePuzzlesSuccess());
+        },
+        function* onError(error) {
+          console.log(error);
+        },
       ),
-    );
-
-    /* TODO handle success */
-  } catch (err) {
-    /* TODO handle error */
-  }
+    ),
+  );
 }
 
-export function* createPuzzle() {
-  const authenticationToken = yield select(selectUserToken);
-  const requestURL = 'http://localhost:3000/puzzles';
-
-  try {
-    yield call(request, requestURL, {
+export function* createPuzzleSaga() {
+  yield authenticated(
+    'puzzles',
+    {
       method: 'POST',
       body: JSON.stringify({
         puzzle: {
@@ -82,21 +71,26 @@ export function* createPuzzle() {
           },
         },
       }),
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${authenticationToken}`,
-      },
-    });
-    yield* getPuzzles();
-  } catch (err) {
-    /* TODO handle error */
+    },
+    getPuzzlesSaga,
+    function* onError(error) {
+      console.log(error);
+    },
+  );
+}
+
+function* autosave() {
+  while (true) {
+    yield delay(10000);
+    yield put(savePuzzles());
   }
 }
 
 export default function* saga() {
   yield all([
-    takeLatest(PUZZLES_LOADED, getPuzzles),
-    takeLatest(PUZZLES_SAVED, savePuzzles),
-    takeLatest(PUZZLE_CREATED, createPuzzle),
+    takeLatest(PUZZLES_LOADED, getPuzzlesSaga),
+    takeLatest(PUZZLES_SAVED, savePuzzlesSaga),
+    takeLatest(PUZZLE_CREATED, createPuzzleSaga),
+    autosave(),
   ]);
 }

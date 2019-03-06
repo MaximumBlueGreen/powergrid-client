@@ -8,6 +8,7 @@ import {
   DEFAULT_ACTION,
   PUZZLES_LOADED,
   PUZZLES_SAVED,
+  PUZZLES_SAVED_SUCCESS,
   PUZZLE_CREATED,
   PUZZLE_SELECTED,
 } from './constants';
@@ -27,6 +28,12 @@ export function loadPuzzles() {
 export function savePuzzles() {
   return {
     type: PUZZLES_SAVED,
+  };
+}
+
+export function savePuzzlesSuccess() {
+  return {
+    type: PUZZLES_SAVED_SUCCESS,
   };
 }
 
