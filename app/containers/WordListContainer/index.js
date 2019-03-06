@@ -14,7 +14,10 @@ import WordList from 'components/WordList';
 
 import injectSaga from 'utils/injectSaga';
 import injectReducer from 'utils/injectReducer';
-import { makeSelectWordListContainerData } from './selectors';
+import {
+  makeSelectWordListContainerData,
+  makeSelectWordListContainer,
+} from './selectors';
 import reducer from './reducer';
 import saga from './saga';
 import { loadWordList } from './actions';
@@ -25,8 +28,11 @@ class WordListContainer extends React.Component {
   }
 
   render() {
-    const { data: entries } = this.props;
-    return <WordList wordList={Object.keys(entries).map(id => entries[id])} />;
+    const {
+      data: entries,
+      ui: { entryIds },
+    } = this.props;
+    return <WordList wordList={entryIds.map(id => entries[id])} />;
   }
 }
 
@@ -34,10 +40,14 @@ WordListContainer.propTypes = {
   // dispatch: PropTypes.func.isRequired,
   loadWordList: PropTypes.func.isRequired,
   data: PropTypes.shape({}).isRequired,
+  ui: PropTypes.shape({
+    entryIds: PropTypes.array.isRequired,
+  }),
 };
 
 const mapStateToProps = createStructuredSelector({
   data: makeSelectWordListContainerData(),
+  ui: makeSelectWordListContainer(),
 });
 
 function mapDispatchToProps(dispatch) {
@@ -49,8 +59,8 @@ const withConnect = connect(
   mapDispatchToProps,
 );
 
-const withReducer = injectReducer({ key: 'wordlistContainer', reducer });
-const withSaga = injectSaga({ key: 'wordlistContainer', saga });
+const withReducer = injectReducer({ key: 'wordListContainer', reducer });
+const withSaga = injectSaga({ key: 'wordListContainer', saga });
 
 export default compose(
   withReducer,

@@ -23,10 +23,13 @@ export const initialState = fromJS({
 function puzzleContainerReducer(state = initialState, action) {
   switch (action.type) {
     case ENTITIES_LOADED: {
-      const puzzleIds = Object.keys(action.entities.puzzles || {});
-      return state
-        .set('puzzleIds', fromJS(puzzleIds))
-        .set('activePuzzleId', puzzleIds[0]);
+      if (action.entities.puzzles) {
+        const puzzleIds = Object.keys(action.entities.puzzles);
+        return state
+          .set('puzzleIds', fromJS(puzzleIds))
+          .set('activePuzzleId', puzzleIds[0]);
+      }
+      return state;
     }
     case PUZZLE_SELECTED:
       return state.set('activePuzzleId', action.id);

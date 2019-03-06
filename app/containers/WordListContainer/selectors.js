@@ -1,6 +1,6 @@
 import { createSelector } from 'reselect';
 import entriesSelector from 'entities/Entries/selectors';
-// import { initialState } from './reducer';
+import { initialState } from './reducer';
 
 /**
  * Direct selector to the WordListContainer state domain
@@ -8,17 +8,17 @@ import entriesSelector from 'entities/Entries/selectors';
 
 const JSify = state => state.toJS();
 
-// const selectWordListContainerDomain = state =>
-//   state.get('WordListContainer', initialState);
+const selectWordListContainerDomain = state =>
+  state.get('wordListContainer', initialState);
 
 const makeSelectWordListContainerData = () =>
   createSelector(entriesSelector, JSify);
 
-// const makeSelectWordListContainer = () =>
-//   createSelector(selectWordListContainerDomain, JSify);
+const makeSelectWordListContainer = () =>
+  createSelector(selectWordListContainerDomain, JSify);
 
 export {
-  // selectWordListContainerDomain,
-  // makeSelectWordListContainer,
+  selectWordListContainerDomain,
+  makeSelectWordListContainer,
   makeSelectWordListContainerData,
 };
