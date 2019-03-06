@@ -49,7 +49,7 @@ class PuzzleContainer extends React.Component {
     return (
       <div
         style={{
-          'overflow-x':
+          overflowX:
             'hidden' /* https://github.com/mui-org/material-ui/issues/7466 */,
         }}
       >

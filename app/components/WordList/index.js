@@ -15,18 +15,29 @@ const StyledList = styled.div`
   font-size: 24px;
 `;
 
-function WordList({ wordList }) {
+function WordList({ wordList, updateFilterPattern, filterPattern }) {
   return (
-    <StyledList>
-      {wordList.map(s => (
-        <WordListBox word={s.entry} score={s.score} />
-      ))}
-    </StyledList>
+    <div>
+      <div>
+        <input
+          type="text"
+          value={filterPattern}
+          onChange={e => updateFilterPattern(e.target.value)}
+        />
+      </div>
+      <StyledList>
+        {wordList.map(s => (
+          <WordListBox key={s.id} word={s.entry} score={s.score} />
+        ))}
+      </StyledList>
+    </div>
   );
 }
 
 WordList.propTypes = {
-  wordList: PropTypes.arrayOf(PropTypes.string).isRequired,
+  filterPattern: PropTypes.string.isRequired,
+  wordList: PropTypes.array.isRequired,
+  updateFilterPattern: PropTypes.func.isRequired,
 };
 
 export default WordList;

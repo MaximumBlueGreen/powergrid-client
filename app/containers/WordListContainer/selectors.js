@@ -11,8 +11,26 @@ const JSify = state => state.toJS();
 const selectWordListContainerDomain = state =>
   state.get('wordListContainer', initialState);
 
+const makeSelectWordListFiltered = () =>
+  createSelector(
+    entriesSelector,
+    selectWordListContainerDomain,
+    (entries, domain) => {
+      const filterPattern = domain.get('filterPattern');
+      const entryIds = domain.get('entryIds');
+
+      return entryIds.map(id => entries.get(id)).filter(entry => {
+        try {
+          return entry.get('entry').match(filterPattern);
+        } catch {
+          return false;
+        }
+      });
+    },
+  );
+
 const makeSelectWordListContainerData = () =>
-  createSelector(entriesSelector, JSify);
+  createSelector(makeSelectWordListFiltered(), JSify);
 
 const makeSelectWordListContainer = () =>
   createSelector(selectWordListContainerDomain, JSify);

@@ -5,11 +5,12 @@
  */
 
 import { fromJS } from 'immutable';
-import {} from './constants';
 import { ENTITIES_LOADED } from 'entities/constants';
+import { FILTER_PATTERN_UPDATED } from './constants';
 
 export const initialState = fromJS({
   entryIds: [],
+  filterPattern: '.*',
 });
 
 function wordlistContainerReducer(state = initialState, action) {
@@ -21,6 +22,8 @@ function wordlistContainerReducer(state = initialState, action) {
       }
       return state;
     }
+    case FILTER_PATTERN_UPDATED:
+      return state.set('filterPattern', action.pattern);
     default:
       return state;
   }

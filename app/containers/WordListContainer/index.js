@@ -20,7 +20,7 @@ import {
 } from './selectors';
 import reducer from './reducer';
 import saga from './saga';
-import { loadWordList } from './actions';
+import { loadWordList, updateFilterPattern } from './actions';
 
 class WordListContainer extends React.Component {
   componentDidMount() {
@@ -30,19 +30,28 @@ class WordListContainer extends React.Component {
   render() {
     const {
       data: entries,
-      ui: { entryIds },
+      ui: { filterPattern },
+      updateFilterPattern,
     } = this.props;
-    return <WordList wordList={entryIds.map(id => entries[id])} />;
+    return (
+      <WordList
+        wordList={entries}
+        filterPattern={filterPattern}
+        updateFilterPattern={updateFilterPattern}
+      />
+    );
   }
 }
 
 WordListContainer.propTypes = {
   // dispatch: PropTypes.func.isRequired,
   loadWordList: PropTypes.func.isRequired,
-  data: PropTypes.shape({}).isRequired,
+  data: PropTypes.array.isRequired,
   ui: PropTypes.shape({
+    filterPattern: PropTypes.string.isRequired,
     entryIds: PropTypes.array.isRequired,
   }),
+  updateFilterPattern: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = createStructuredSelector({
@@ -51,7 +60,7 @@ const mapStateToProps = createStructuredSelector({
 });
 
 function mapDispatchToProps(dispatch) {
-  return bindActionCreators({ loadWordList }, dispatch);
+  return bindActionCreators({ loadWordList, updateFilterPattern }, dispatch);
 }
 
 const withConnect = connect(
