@@ -4,10 +4,10 @@
  *
  */
 
-import { DEFAULT_ACTION } from './constants';
+import { WORDLIST_LOADED } from './constants';
 
-export function defaultAction() {
+export function loadWordList() {
   return {
-    type: DEFAULT_ACTION,
+    type: WORDLIST_LOADED,
   };
 }

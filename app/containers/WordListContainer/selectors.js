@@ -1,23 +1,24 @@
 import { createSelector } from 'reselect';
-import { initialState } from './reducer';
+import entriesSelector from 'entities/Entries/selectors';
+// import { initialState } from './reducer';
 
 /**
- * Direct selector to the wordlistContainer state domain
+ * Direct selector to the WordListContainer state domain
  */
 
-const selectWordListContainerDomain = state =>
-  state.get('wordlistContainer', initialState);
+const JSify = state => state.toJS();
 
-/**
- * Other specific selectors
- */
+// const selectWordListContainerDomain = state =>
+//   state.get('WordListContainer', initialState);
 
-/**
- * Default selector used by WordListContainer
- */
+const makeSelectWordListContainerData = () =>
+  createSelector(entriesSelector, JSify);
 
-const makeSelectWordListContainer = () =>
-  createSelector(selectWordListContainerDomain, substate => substate.toJS());
+// const makeSelectWordListContainer = () =>
+//   createSelector(selectWordListContainerDomain, JSify);
 
-export default makeSelectWordListContainer;
-export { selectWordListContainerDomain };
+export {
+  // selectWordListContainerDomain,
+  // makeSelectWordListContainer,
+  makeSelectWordListContainerData,
+};

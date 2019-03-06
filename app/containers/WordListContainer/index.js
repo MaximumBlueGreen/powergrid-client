@@ -5,43 +5,43 @@
  */
 
 import React from 'react';
-// import PropTypes from 'prop-types';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
-import { compose } from 'redux';
+import { compose, bindActionCreators } from 'redux';
 
 import WordList from 'components/WordList';
 
 import injectSaga from 'utils/injectSaga';
 import injectReducer from 'utils/injectReducer';
-import makeSelectWordListContainer from './selectors';
+import { makeSelectWordListContainerData } from './selectors';
 import reducer from './reducer';
 import saga from './saga';
+import { loadWordList } from './actions';
 
-function WordListContainer() {
-  return (
-    <WordList
-      wordList={[
-        { word: 'POWERGRID', score: 10 },
-        { word: 'MING', score: 20 },
-        { word: 'CHOW', score: 30 },
-      ]}
-    />
-  );
+class WordListContainer extends React.Component {
+  componentDidMount() {
+    this.props.loadWordList();
+  }
+
+  render() {
+    const { data: entries } = this.props;
+    return <WordList wordList={Object.keys(entries).map(id => entries[id])} />;
+  }
 }
 
 WordListContainer.propTypes = {
   // dispatch: PropTypes.func.isRequired,
+  loadWordList: PropTypes.func.isRequired,
+  data: PropTypes.shape({}).isRequired,
 };
 
 const mapStateToProps = createStructuredSelector({
-  wordlistContainer: makeSelectWordListContainer(),
+  data: makeSelectWordListContainerData(),
 });
 
 function mapDispatchToProps(dispatch) {
-  return {
-    dispatch,
-  };
+  return bindActionCreators({ loadWordList }, dispatch);
 }
 
 const withConnect = connect(

@@ -4,4 +4,4 @@
  *
  */
 
-export const DEFAULT_ACTION = 'app/WordListContainer/DEFAULT_ACTION';
+export const WORDLIST_LOADED = 'app/WordListContainer/WORDLIST_LOADED';

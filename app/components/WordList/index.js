@@ -19,7 +19,7 @@ function WordList({ wordList }) {
   return (
     <StyledList>
       {wordList.map(s => (
-        <WordListBox word={s.word} score={s.score} />
+        <WordListBox word={s.entry} score={s.score} />
       ))}
     </StyledList>
   );
