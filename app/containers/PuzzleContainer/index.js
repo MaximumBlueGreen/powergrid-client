@@ -18,6 +18,7 @@ import SyncStatus from 'components/SyncStatus';
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 import Paper from '@material-ui/core/Paper';
+import WordListContainer from 'containers/WordListContainer';
 import {
   makeSelectPuzzleContainer,
   makeSelectPuzzleContainerData,
@@ -48,12 +49,12 @@ class PuzzleContainer extends React.Component {
     return (
       <div
         style={{
-          'overflow-x':
+          overflowX:
             'hidden' /* https://github.com/mui-org/material-ui/issues/7466 */,
         }}
       >
         <Grid container spacing={24} justify="center">
-          <Grid item xs={8}>
+          <Grid item xs={6}>
             <Paper>
               <Button type="button" color="primary" onClick={loadPuzzles}>
                 LOAD PUZZLES
@@ -75,8 +76,8 @@ class PuzzleContainer extends React.Component {
               onPuzzleSelected={selectPuzzle}
             />
           </Grid>
-          <Grid item xs={4}>
-            {/* Word list, cluing etc... */}
+          <Grid item xs={6}>
+            <WordListContainer />
           </Grid>
         </Grid>
       </div>

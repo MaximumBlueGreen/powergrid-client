@@ -12,6 +12,8 @@ const GridSquareWrapper = styled.div`
   border: 1px solid black;
   background-color: white;
   position: relative;
+  width: 100%;
+  padding-top: 100%;
 
   ${({ isBlack, isFocused }) => {
     if (isBlack && isFocused) {
@@ -31,10 +33,12 @@ const GridSquareWrapper = styled.div`
 
 const NumberWrapper = styled.div`
   position: absolute;
+  top: 0;
   font-size: 0.25em;
   user-select: none;
   line-height: 1em;
   padding-left: 2%;
+  padding-top: 2%;
 `;
 const ValueWrapper = styled.div`
   position: absolute;
