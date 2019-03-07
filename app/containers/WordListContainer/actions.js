@@ -4,7 +4,11 @@
  *
  */
 
-import { WORDLIST_LOADED, FILTER_PATTERN_UPDATED } from './constants';
+import {
+  WORDLIST_LOADED,
+  FILTER_PATTERN_UPDATED,
+  ENTRY_ADDED,
+} from './constants';
 
 export function loadWordList() {
   return {
@@ -16,5 +20,12 @@ export function updateFilterPattern(pattern) {
   return {
     type: FILTER_PATTERN_UPDATED,
     pattern,
+  };
+}
+
+export function addEntry(entry) {
+  return {
+    type: ENTRY_ADDED,
+    entry,
   };
 }

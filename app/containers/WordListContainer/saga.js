@@ -3,7 +3,7 @@ import { loadEntities } from 'entities/actions';
 import { entry as entrySchema } from 'entities/schema';
 import { normalize } from 'normalizr';
 import { authenticated } from 'utils/apiRequestSaga';
-import { WORDLIST_LOADED } from './constants';
+import { WORDLIST_LOADED, ENTRY_ADDED } from './constants';
 
 export function* getEntries() {
   yield authenticated(
@@ -21,7 +21,26 @@ export function* getEntries() {
   );
 }
 
+export function* setEntry({ entry }) {
+  yield authenticated(
+    'entries',
+    {
+      method: 'POST',
+      body: JSON.stringify(entry),
+    },
+    function* onSuccess() {
+      yield getEntries();
+    },
+    function* onError(error) {
+      console.log(error);
+    },
+  );
+}
+
 // Individual exports for testing
 export default function* wordlistContainerSaga() {
-  yield all([takeLatest(WORDLIST_LOADED, getEntries)]);
+  yield all([
+    takeLatest(WORDLIST_LOADED, getEntries),
+    takeLatest(ENTRY_ADDED, setEntry),
+  ]);
 }

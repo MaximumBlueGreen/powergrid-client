@@ -9,6 +9,7 @@ import PropTypes from 'prop-types';
 import styled from 'styled-components';
 
 import WordListBox from 'components/WordListBox';
+import AddEntryContainer from 'containers/AddEntryContainer';
 
 const StyledList = styled.div`
   width: 500px;
@@ -31,6 +32,7 @@ function WordList({ wordList, updateFilterPattern, filterPattern }) {
           <WordListBox key={s.id} word={s.entry} score={s.score} />
         ))}
       </StyledList>
+      <AddEntryContainer />
     </div>
   );
 }
