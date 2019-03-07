@@ -10,7 +10,7 @@ import { connect } from 'react-redux';
 // import { FormattedMessage } from 'react-intl';
 // import { createStructuredSelector } from 'reselect';
 import { compose, bindActionCreators } from 'redux';
-import { reduxForm } from 'redux-form/immutable';
+import { reduxForm, Field } from 'redux-form/immutable';
 // import { TextField, Button } from '@material-ui/core';
 
 // import injectReducer from 'utils/injectReducer';
@@ -21,7 +21,7 @@ import { addEntry } from './actions';
 
 const AddEntryContainer = ({ handleSubmit, addEntry }) => (
   <form onSubmit={handleSubmit(addEntry)}>
-    <input type="text" name="entry" />
+    <Field type="text" component="input" name="entry" placeholder="New word" />
     <button type="submit">Add</button>
   </form>
 );

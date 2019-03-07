@@ -33,6 +33,7 @@ export function* savePuzzlesSaga() {
       puzzle: {
         squares: denormalizedPuzzle.squares,
         size: denormalizedPuzzle.size,
+        title: denormalizedPuzzle.title,
       },
     };
   });

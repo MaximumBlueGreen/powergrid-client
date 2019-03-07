@@ -96,6 +96,7 @@
     "reselect": "4.0.0",
     "sanitize.css": "4.1.0",
     "styled-components": "^4.0.2",
+    "typeface-roboto": "0.0.54",
     "warning": "4.0.2"
   },
   "devDependencies": {

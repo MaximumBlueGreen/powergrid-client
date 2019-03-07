@@ -16,11 +16,11 @@ const StyledGrid = styled.div`
   grid-template-columns: repeat(${props => props.width}, 1fr);
   grid-auto-rows: 1fr;
 
+  font-size: calc(40vmax / ${props => props.width});
+  outline: none;
+
   max-height: 70vh;
   max-width: 70vh;
-
-  font-size: calc(450px / ${props => props.width});
-  outline: none;
 
   &:before {
     content: '';
@@ -38,10 +38,6 @@ const StyledGrid = styled.div`
 
 class Grid extends React.Component {
   componentDidMount() {
-    this.gridRef.focus();
-  }
-
-  componentDidUpdate() {
     this.gridRef.focus();
   }
 

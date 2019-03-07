@@ -3,15 +3,17 @@ import { authenticated } from 'utils/apiRequestSaga';
 import { loadWordList } from 'containers/WordListContainer/actions';
 import { ENTRY_ADDED } from './constants';
 
-export function* setEntry({ entry }) {
+export function* setEntry({ values }) {
+  console.log(values.toJS());
+  const { entry } = values.toJS();
   yield authenticated(
     'entries',
     {
       method: 'POST',
-      body: JSON.stringify(entry),
+      body: JSON.stringify({ entry }),
     },
     function* onSuccess() {
-      yield put(loadWordList);
+      yield put(loadWordList());
     },
     function* onError(error) {
       console.log(error);

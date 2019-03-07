@@ -6,15 +6,11 @@
 
 import React from 'react';
 import PropTypes from 'prop-types';
-import styled from 'styled-components';
-
 import WordListBox from 'components/WordListBox';
 import AddEntryContainer from 'containers/AddEntryContainer';
 
-const StyledList = styled.div`
-  width: 500px;
-  font-size: 24px;
-`;
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
 
 function WordList({ wordList, updateFilterPattern, filterPattern }) {
   return (
@@ -27,11 +23,17 @@ function WordList({ wordList, updateFilterPattern, filterPattern }) {
           placeholder="Regex search"
         />
       </div>
-      <StyledList>
+      <List>
         {wordList.map(s => (
-          <WordListBox key={s.id} word={s.entry} score={s.score} />
+          <ListItem
+            component={WordListBox}
+            selected
+            key={s.id}
+            word={s.entry}
+            score={s.score}
+          />
         ))}
-      </StyledList>
+      </List>
       <AddEntryContainer />
     </div>
   );

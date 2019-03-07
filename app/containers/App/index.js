@@ -14,17 +14,27 @@ import HomePage from 'containers/HomePage/Loadable';
 import LoginPage from 'containers/LoginPage';
 import NotFoundPage from 'containers/NotFoundPage/Loadable';
 
+import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
+import { ThemeProvider } from 'styled-components';
+
 import GlobalStyle from '../../global-styles';
 
+const theme = createMuiTheme({
+  useNextVariants: true,
+});
+
 export default function App() {
-  console.log('The app');
   return (
     <div>
-      <Switch>
-        <Route exact path="/home" component={HomePage} />
-        <Route exact path="/Login" component={LoginPage} />
-        <Route component={NotFoundPage} />
-      </Switch>
+      <MuiThemeProvider theme={theme}>
+        <ThemeProvider theme={theme}>
+          <Switch>
+            <Route exact path="/home" component={HomePage} />
+            <Route exact path="/Login" component={LoginPage} />
+            <Route component={NotFoundPage} />
+          </Switch>
+        </ThemeProvider>
+      </MuiThemeProvider>
       <GlobalStyle />
     </div>
   );

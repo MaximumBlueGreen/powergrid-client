@@ -7,20 +7,15 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import moment from 'moment';
-import styled from 'styled-components';
-
-const SyncStatusWrapper = styled.p`
-  font-size: 0.85em;
-  color: grey;
-`;
+import Typography from '@material-ui/core/Typography';
 
 function SyncStatus({ lastSynced, isSyncing }) {
   return (
-    <SyncStatusWrapper>
+    <Typography variant="caption" gutterBottom>
       {isSyncing
         ? 'Syncing...'
-        : `Last saved at ${moment(lastSynced).format('H:mm:ss')}`}
-    </SyncStatusWrapper>
+        : `Last saved at ${moment(lastSynced).format('h:mm:ss a')}`}
+    </Typography>
   );
 }
 

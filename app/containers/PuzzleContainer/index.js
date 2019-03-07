@@ -22,6 +22,8 @@ import Paper from '@material-ui/core/Paper';
 import WordListContainer from 'containers/WordListContainer';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
+import styled from 'styled-components';
+import { updatePuzzleTitle } from 'entities/Puzzles/actions';
 import {
   makeSelectPuzzleContainer,
   makeSelectPuzzleContainerData,
@@ -33,7 +35,15 @@ import {
   savePuzzles,
   createPuzzle,
 } from './actions';
+
 import saga from './saga';
+
+const PuzzleContainerWrapper = styled.div`
+  overflow-x: hidden;
+  overflow-y: hidden;
+  font-size: ${props => props.theme.typography.fontSize}px;
+  font-family: ${props => props.theme.typography.fontFamily};
+`;
 
 class PuzzleContainer extends React.Component {
   componentDidMount() {
@@ -48,16 +58,11 @@ class PuzzleContainer extends React.Component {
       selectPuzzle,
       savePuzzles,
       createPuzzle,
+      updatePuzzleTitle,
     } = this.props;
 
     return (
-      <div
-        style={{
-          overflowX:
-            'hidden' /* https://github.com/mui-org/material-ui/issues/7466 */,
-          overflowY: 'hidden',
-        }}
-      >
+      <PuzzleContainerWrapper>
         <Paper>
           <Button type="button" color="primary" onClick={loadPuzzles}>
             LOAD PUZZLES
@@ -70,11 +75,16 @@ class PuzzleContainer extends React.Component {
           </Button>
         </Paper>
         <Grid container spacing={40} justify="center">
-          <Grid item container xs={5}>
+          <Grid item container xs={10} md={5}>
             <Grid item xs={12}>
               <TextField
                 value={activePuzzleId && puzzles[activePuzzleId].title}
-                placeholder="Title"
+                placeholder="Untitled"
+                margin="normal"
+                name="title"
+                onChange={e =>
+                  updatePuzzleTitle(activePuzzleId, e.target.value)
+                }
               />
             </Grid>
             <Grid
@@ -85,7 +95,7 @@ class PuzzleContainer extends React.Component {
               isSyncing={isSyncing}
               lastSynced={lastSynced}
             />
-            <Grid item xs={12} alignContent="center">
+            <Grid item xs={12}>
               {activePuzzleId && <GridContainer puzzleId={activePuzzleId} />}
             </Grid>
             <Grid
@@ -97,7 +107,7 @@ class PuzzleContainer extends React.Component {
               onPuzzleSelected={selectPuzzle}
             />
           </Grid>
-          <Grid item xs={6}>
+          <Grid item xs={10} md={6}>
             <Tabs value="WordList">
               <Tab key="WordList" label="WordList" value="WordList" />
               <Tab key="Dictionary" label="Dictionary" value="Dictionary" />
@@ -107,62 +117,8 @@ class PuzzleContainer extends React.Component {
             <WordListContainer />
           </Grid>
         </Grid>
-      </div>
+      </PuzzleContainerWrapper>
     );
-
-    // return (
-    //   <div
-    //     style={{
-    //       overflowX:
-    //         'hidden' /* https://github.com/mui-org/material-ui/issues/7466 */,
-    //     }}
-    //   >
-    //     <Paper>
-    //       <Button type="button" color="primary" onClick={loadPuzzles}>
-    //         LOAD PUZZLES
-    //       </Button>
-    //       <Button type="button" color="primary" onClick={savePuzzles}>
-    //         SAVE PUZZLES
-    //       </Button>
-    //       <Button type="button" color="primary" onClick={createPuzzle}>
-    //         CREATE PUZZLE
-    //       </Button>
-    //     </Paper>
-    //     <Grid container spacing={24}>
-    //       <Grid item container xs={6}>
-    //         <Grid item component={Paper} xs={12}>
-    //           <SyncStatus isSyncing={isSyncing} lastSynced={lastSynced} />
-    //         </Grid>
-    //         <Grid xs={12} item component={TextField}>
-    //           Title
-    //         </Grid>
-    //         <Grid
-    //           xs={12}
-    //           item
-    //           component={GridContainer}
-    //           puzzleId={activePuzzleId}
-    //         />
-    //         <Grid
-    //           xs={12}
-    //           item
-    //           component={PuzzleSelector}
-    //           puzzles={puzzleIds.map(id => puzzles[id])}
-    //           activePuzzleId={activePuzzleId}
-    //           onPuzzleSelected={selectPuzzle}
-    //         />
-    //       </Grid>
-    //     </Grid>
-    //     <Grid item xs={6}>
-    //       <Tabs centered value="WordList">
-    //         <Tab key="WordList" label="WordList" value="WordList" />
-    //         <Tab key="Dictionary" label="Dictionary" value="Dictionary" />
-    //         <Tab key="PuzzleData" label="PuzzleData" value="PuzzleData" />
-    //         <Tab key="Notes" label="Notes" value="Notes" />
-    //       </Tabs>
-    //       <WordListContainer />
-    //     </Grid>
-    //   </Grd
-    //   </div>
   }
 }
 
@@ -176,6 +132,7 @@ PuzzleContainer.propTypes = {
   selectPuzzle: PropTypes.func.isRequired,
   savePuzzles: PropTypes.func.isRequired,
   createPuzzle: PropTypes.func.isRequired,
+  updatePuzzleTitle: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = createStructuredSelector({
@@ -185,7 +142,7 @@ const mapStateToProps = createStructuredSelector({
 
 function mapDispatchToProps(dispatch) {
   return bindActionCreators(
-    { loadPuzzles, selectPuzzle, savePuzzles, createPuzzle },
+    { loadPuzzles, selectPuzzle, savePuzzles, createPuzzle, updatePuzzleTitle },
     dispatch,
   );
 }

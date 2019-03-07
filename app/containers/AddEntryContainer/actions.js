@@ -6,9 +6,9 @@
 
 import { ENTRY_ADDED } from './constants';
 
-export function addEntry(entry) {
+export function addEntry(values) {
   return {
     type: ENTRY_ADDED,
-    entry,
+    values,
   };
 }
