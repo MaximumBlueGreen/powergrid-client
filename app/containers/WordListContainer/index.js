@@ -14,6 +14,7 @@ import WordList from 'components/WordList';
 
 import injectSaga from 'utils/injectSaga';
 import injectReducer from 'utils/injectReducer';
+import { updateEntry } from 'entities/Entries/actions';
 import {
   makeSelectWordListContainerData,
   makeSelectWordListContainer,
@@ -32,12 +33,14 @@ class WordListContainer extends React.Component {
       data: entries,
       ui: { filterPattern },
       updateFilterPattern,
+      updateEntry,
     } = this.props;
     return (
       <WordList
         wordList={entries}
         filterPattern={filterPattern}
         updateFilterPattern={updateFilterPattern}
+        updateEntry={updateEntry}
       />
     );
   }
@@ -52,6 +55,7 @@ WordListContainer.propTypes = {
     entryIds: PropTypes.array.isRequired,
   }),
   updateFilterPattern: PropTypes.func.isRequired,
+  updateEntry: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = createStructuredSelector({
@@ -60,7 +64,10 @@ const mapStateToProps = createStructuredSelector({
 });
 
 function mapDispatchToProps(dispatch) {
-  return bindActionCreators({ loadWordList, updateFilterPattern }, dispatch);
+  return bindActionCreators(
+    { loadWordList, updateFilterPattern, updateEntry },
+    dispatch,
+  );
 }
 
 const withConnect = connect(

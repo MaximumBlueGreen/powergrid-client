@@ -7,24 +7,29 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import Grid from '@material-ui/core/Grid';
+import Input from '@material-ui/core/Input';
+import TableRow from '@material-ui/core/TableRow';
+import TableCell from '@material-ui/core/TableCell';
 
-function WordListBox({ word, score }) {
+function WordListBox({ word, score, updateEntry }) {
   return (
-    <Grid container justify="space-between">
-      <Grid item xs={4}>
-        {word}
-      </Grid>
-      <Grid item xs={1} style={{ textAlign: 'right' }}>
-        {score}
-      </Grid>
-    </Grid>
+    <TableRow>
+      <TableCell style={{ width: '40%' }}>{word}</TableCell>
+      <TableCell style={{ width: '5%' }} align="right">
+        <Input
+          onChange={e => updateEntry({ score: e.target.value })}
+          type="number"
+          value={score}
+        />
+      </TableCell>
+    </TableRow>
   );
 }
 
 WordListBox.propTypes = {
   word: PropTypes.string.isRequired,
   score: PropTypes.number,
+  updateEntry: PropTypes.func.isRequired,
 };
 
 WordListBox.defaultProps = {

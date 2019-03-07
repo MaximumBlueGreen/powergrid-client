@@ -1,8 +1,10 @@
-import { put, all, takeLatest } from 'redux-saga/effects';
+import { put, all, takeLatest, select } from 'redux-saga/effects';
 import { loadEntities } from 'entities/actions';
 import { entry as entrySchema } from 'entities/schema';
 import { normalize } from 'normalizr';
 import { authenticated } from 'utils/apiRequestSaga';
+import selectEntries from 'entities/Entries/selectors';
+import { ENTRY_UPDATED } from 'entities/Entries/constants';
 import { WORDLIST_LOADED, ENTRY_ADDED } from './constants';
 
 export function* getEntries() {
@@ -21,7 +23,7 @@ export function* getEntries() {
   );
 }
 
-export function* setEntry({ entry }) {
+export function* addEntry({ entry }) {
   yield authenticated(
     'entries',
     {
@@ -37,10 +39,32 @@ export function* setEntry({ entry }) {
   );
 }
 
+export function* updateEntry({ id }) {
+  const entries = yield select(selectEntries);
+  const entry = entries.get(id);
+
+  console.log(entry);
+
+  yield authenticated(
+    `entries/${id}`,
+    {
+      method: 'PUT',
+      body: JSON.stringify(entry),
+    },
+    function* onSuccess() {
+      console.log('We did it!');
+    },
+    function* onError(error) {
+      console.log(error);
+    },
+  );
+}
+
 // Individual exports for testing
 export default function* wordlistContainerSaga() {
   yield all([
     takeLatest(WORDLIST_LOADED, getEntries),
-    takeLatest(ENTRY_ADDED, setEntry),
+    takeLatest(ENTRY_ADDED, addEntry),
+    takeLatest(ENTRY_UPDATED, updateEntry),
   ]);
 }
