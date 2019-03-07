@@ -13,6 +13,7 @@ import { clamp } from 'lodash';
 import injectReducer from 'utils/injectReducer';
 import Grid from 'components/Grid';
 import { toggleBlackSquare, updateSquareValue } from 'entities/Squares/actions';
+import { ActionCreators } from 'redux-undo';
 import { focusSquare } from './actions';
 import {
   makeSelectGridContainer,
@@ -27,43 +28,67 @@ function GridContainer({
   toggleBlackSquare,
   updateSquareValue,
   focusSquare,
+  undo,
+  redo,
 }) {
   const focusedSquareId = squares[focusedSquareIndex].id;
   const focusSquareClamped = i =>
     focusSquare(clamp(i, 0, size.width * size.height - 1));
   return (
-    <Grid
-      squares={squares}
-      size={size}
-      focusedSquareId={focusedSquareId}
-      onSquareClicked={focusSquareClamped}
-      onSquareDoubleClicked={toggleBlackSquare}
-      onKeyPressed={({ key, keyCode }) => {
-        switch (keyCode) {
-          case 8 /* Backspace */:
-            if (focusedDirection === ACROSS) {
-              focusSquareClamped(focusedSquareIndex - 1);
-            } else {
-              focusSquareClamped(focusedSquareIndex - size.width);
-            }
-            return updateSquareValue(focusedSquareId, '');
-          case 37 /* Left Arrow */:
-            return focusSquareClamped(focusedSquareIndex - 1);
-          case 38 /* Up Arrow */:
-            return focusSquareClamped(focusedSquareIndex - size.width);
-          case 39 /* Right Arrow */:
-            return focusSquareClamped(focusedSquareIndex + 1);
-          case 40 /* Down Arrow */:
-            return focusSquareClamped(focusedSquareIndex + size.width);
-          default:
-            updateSquareValue(focusedSquareId, key);
-            if (focusedDirection === ACROSS) {
+    <div>
+      <button type="button" onClick={undo}>
+        Undo
+      </button>
+      <button type="button" onClick={redo}>
+        Redo
+      </button>
+      <Grid
+        squares={squares}
+        size={size}
+        focusedSquareId={focusedSquareId}
+        onSquareClicked={focusSquareClamped}
+        onSquareDoubleClicked={toggleBlackSquare}
+        onKeyPressed={e => {
+          const { keyCode, metaKey, key, shiftKey } = e;
+          e.preventDefault();
+          if (metaKey && keyCode === 90) {
+            return undo();
+          }
+          if (
+            (metaKey && keyCode === 89) ||
+            (metaKey && keyCode === 90 && shiftKey)
+          ) {
+            return redo();
+          }
+          switch (keyCode) {
+            case 8 /* Backspace */:
+              if (focusedDirection === ACROSS) {
+                focusSquareClamped(focusedSquareIndex - 1);
+              } else {
+                focusSquareClamped(focusedSquareIndex - size.width);
+              }
+              return updateSquareValue(focusedSquareId, '');
+            case 37 /* Left Arrow */:
+              return focusSquareClamped(focusedSquareIndex - 1);
+            case 38 /* Up Arrow */:
+              return focusSquareClamped(focusedSquareIndex - size.width);
+            case 39 /* Right Arrow */:
               return focusSquareClamped(focusedSquareIndex + 1);
-            }
-            return focusSquareClamped(focusedSquareIndex + size.width);
-        }
-      }}
-    />
+            case 40 /* Down Arrow */:
+              return focusSquareClamped(focusedSquareIndex + size.width);
+            default:
+              if (keyCode > 47 && keyCode < 91) {
+                updateSquareValue(focusedSquareId, key);
+                if (focusedDirection === ACROSS) {
+                  return focusSquareClamped(focusedSquareIndex + 1);
+                }
+                return focusSquareClamped(focusedSquareIndex + size.width);
+              }
+          }
+          return false;
+        }}
+      />
+    </div>
   );
 }
 
@@ -82,6 +107,8 @@ GridContainer.propTypes = {
   focusSquare: PropTypes.func.isRequired,
   toggleBlackSquare: PropTypes.func.isRequired,
   updateSquareValue: PropTypes.func.isRequired,
+  undo: PropTypes.func.isRequired,
+  redo: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = createStructuredSelector({
@@ -91,7 +118,13 @@ const mapStateToProps = createStructuredSelector({
 
 function mapDispatchToProps(dispatch) {
   return bindActionCreators(
-    { toggleBlackSquare, updateSquareValue, focusSquare },
+    {
+      toggleBlackSquare,
+      updateSquareValue,
+      focusSquare,
+      undo: ActionCreators.undo,
+      redo: ActionCreators.redo,
+    },
     dispatch,
   );
 }
