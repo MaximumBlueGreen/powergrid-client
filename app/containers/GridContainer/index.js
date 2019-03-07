@@ -51,7 +51,7 @@ function GridContainer({
         onKeyPressed={e => {
           const { keyCode, metaKey, key, shiftKey } = e;
           e.preventDefault();
-          if (metaKey && keyCode === 90) {
+          if (metaKey && keyCode === 90 && !shiftKey) {
             return undo();
           }
           if (
