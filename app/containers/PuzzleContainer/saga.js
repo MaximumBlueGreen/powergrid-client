@@ -5,6 +5,7 @@ import { puzzle as puzzleSchema } from 'entities/schema';
 import { normalize, denormalize } from 'normalizr';
 import { times } from 'lodash';
 import { authenticated } from 'utils/apiRequestSaga';
+import entitiesSelector from 'entities/selectors';
 import { savePuzzles, savePuzzlesSuccess } from './actions';
 import { PUZZLES_LOADED, PUZZLES_SAVED, PUZZLE_CREATED } from './constants';
 
@@ -23,7 +24,7 @@ export function* getPuzzlesSaga() {
 }
 
 export function* savePuzzlesSaga() {
-  const entities = yield select(state => state.get('entities').toJS());
+  const entities = yield select(entitiesSelector);
 
   /* TODO batch/bulk */
   const puzzles = Object.values(entities.puzzles).map(p => {
