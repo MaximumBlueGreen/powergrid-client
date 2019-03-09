@@ -34,6 +34,7 @@ import {
   selectPuzzle,
   savePuzzles,
   createPuzzle,
+  uploadPuzzle,
 } from './actions';
 
 import saga from './saga';
@@ -59,6 +60,7 @@ class PuzzleContainer extends React.Component {
       savePuzzles,
       createPuzzle,
       updatePuzzleTitle,
+      uploadPuzzle,
     } = this.props;
 
     return (
@@ -73,6 +75,11 @@ class PuzzleContainer extends React.Component {
           <Button type="button" color="primary" onClick={createPuzzle}>
             CREATE PUZZLE
           </Button>
+          <input
+            type="file"
+            onChange={e => uploadPuzzle(e.target.files[0])}
+            accept=".puz"
+          />
         </Paper>
         <Grid container spacing={40} justify="center">
           <Grid item container xs={10} md={5}>
@@ -133,6 +140,7 @@ PuzzleContainer.propTypes = {
   savePuzzles: PropTypes.func.isRequired,
   createPuzzle: PropTypes.func.isRequired,
   updatePuzzleTitle: PropTypes.func.isRequired,
+  uploadPuzzle: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = createStructuredSelector({
@@ -142,7 +150,14 @@ const mapStateToProps = createStructuredSelector({
 
 function mapDispatchToProps(dispatch) {
   return bindActionCreators(
-    { loadPuzzles, selectPuzzle, savePuzzles, createPuzzle, updatePuzzleTitle },
+    {
+      loadPuzzles,
+      selectPuzzle,
+      savePuzzles,
+      createPuzzle,
+      updatePuzzleTitle,
+      uploadPuzzle,
+    },
     dispatch,
   );
 }

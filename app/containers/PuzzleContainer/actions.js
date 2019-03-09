@@ -11,6 +11,7 @@ import {
   PUZZLES_SAVED_SUCCESS,
   PUZZLE_CREATED,
   PUZZLE_SELECTED,
+  PUZZLE_UPLOADED,
 } from './constants';
 
 export function defaultAction() {
@@ -47,5 +48,12 @@ export function selectPuzzle(id) {
   return {
     type: PUZZLE_SELECTED,
     id,
+  };
+}
+
+export function uploadPuzzle(puzzleFile) {
+  return {
+    type: PUZZLE_UPLOADED,
+    puzzleFile,
   };
 }
