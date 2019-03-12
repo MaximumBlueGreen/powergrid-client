@@ -104,10 +104,12 @@ export function* uploadPuzzleSaga({ puzzleFile }) {
     {
       method: 'POST',
       body: JSON.stringify({
-        squares: puzzle,
-        size: {
-          height,
-          width,
+        puzzle: {
+          squares: puzzle,
+          size: {
+            height,
+            width,
+          },
         },
       }),
     },
