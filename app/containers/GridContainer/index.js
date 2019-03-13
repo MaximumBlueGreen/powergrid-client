@@ -76,6 +76,8 @@ function GridContainer({
               return focusSquareClamped(focusedSquareIndex + 1);
             case 40 /* Down Arrow */:
               return focusSquareClamped(focusedSquareIndex + size.width);
+            case 190:
+              return toggleBlackSquare(focusedSquareId);
             default:
               if (keyCode > 47 && keyCode < 91) {
                 updateSquareValue(focusedSquareId, key);
