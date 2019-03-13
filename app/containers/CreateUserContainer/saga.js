@@ -1,7 +1,8 @@
 import { put, takeLatest } from 'redux-saga/effects';
 // import { push } from 'connected-react-router';
 import { unauthenticated } from 'utils/apiRequestSaga';
-import { loginButtonClickedAction } from 'containers/LoginContainer/actions';
+import { changeMode } from 'containers/LoginPage/actions';
+// import { loginButtonClickedAction } from 'containers/LoginContainer/actions';
 import { CREATE_USER_BUTTON_CLICKED_ACTION } from './constants';
 
 export function* createUser({ values }) {
@@ -14,7 +15,7 @@ export function* createUser({ values }) {
       body: JSON.stringify({ email, password, handle, name }),
     },
     function* onSuccess() {
-      yield put(loginButtonClickedAction(values));
+      yield put(changeMode());
     },
     function* onError(error) {
       console.log(error);

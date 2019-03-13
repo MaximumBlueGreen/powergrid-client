@@ -12,6 +12,7 @@ import {
   CREATE_USER_BUTTON_CLICKED_ACTION,
   SUCCESSFUL_USER_CREATION_ACTION,
   UNSUCCESSFUL_USER_CREATION_ACTION,
+  CHANGE_MODE_ACTION,
 } from './constants';
 
 export function defaultAction() {
@@ -58,5 +59,11 @@ export function invalidatedCreationAction(err) {
   return {
     type: UNSUCCESSFUL_USER_CREATION_ACTION,
     error: err,
+  };
+}
+
+export function changeMode() {
+  return {
+    type: CHANGE_MODE_ACTION,
   };
 }
