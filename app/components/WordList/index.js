@@ -9,6 +9,7 @@ import PropTypes from 'prop-types';
 import WordListBox from 'components/WordListBox';
 import AddEntryContainer from 'containers/AddEntryContainer';
 
+import TextField from '@material-ui/core/TextField';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableHead from '@material-ui/core/TableHead';
@@ -24,7 +25,7 @@ function WordList({
   return (
     <div>
       <div>
-        <input
+        <TextField
           type="text"
           value={filterPattern}
           onChange={e => updateFilterPattern(e.target.value)}

@@ -10,7 +10,7 @@ import { FILTER_PATTERN_UPDATED } from './constants';
 
 export const initialState = fromJS({
   entryIds: [],
-  filterPattern: '.*',
+  filterPattern: '',
 });
 
 function wordlistContainerReducer(state = initialState, action) {
