@@ -9,7 +9,6 @@ import {
   PUZZLES_LOADED,
   PUZZLES_SAVED,
   PUZZLES_SAVED_SUCCESS,
-  PUZZLE_CREATED,
   PUZZLE_SELECTED,
   PUZZLE_UPLOADED,
 } from './constants';
@@ -35,12 +34,6 @@ export function savePuzzles() {
 export function savePuzzlesSuccess() {
   return {
     type: PUZZLES_SAVED_SUCCESS,
-  };
-}
-
-export function createPuzzle() {
-  return {
-    type: PUZZLE_CREATED,
   };
 }
 

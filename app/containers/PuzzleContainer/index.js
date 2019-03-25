@@ -20,10 +20,12 @@ import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import Paper from '@material-ui/core/Paper';
 import WordListContainer from 'containers/WordListContainer';
+import CreatePuzzleModal from 'containers/CreatePuzzleModal';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import styled from 'styled-components';
 import { updatePuzzleTitle } from 'entities/Puzzles/actions';
+import { openModal } from 'containers/CreatePuzzleModal/actions';
 import {
   makeSelectPuzzleContainer,
   makeSelectPuzzleContainerData,
@@ -33,7 +35,6 @@ import {
   loadPuzzles,
   selectPuzzle,
   savePuzzles,
-  createPuzzle,
   uploadPuzzle,
 } from './actions';
 
@@ -58,13 +59,14 @@ class PuzzleContainer extends React.Component {
       loadPuzzles,
       selectPuzzle,
       savePuzzles,
-      createPuzzle,
+      openModal,
       updatePuzzleTitle,
       uploadPuzzle,
     } = this.props;
 
     return (
       <PuzzleContainerWrapper>
+        <CreatePuzzleModal />
         <Paper>
           <Button type="button" color="primary" onClick={loadPuzzles}>
             LOAD PUZZLES
@@ -72,7 +74,7 @@ class PuzzleContainer extends React.Component {
           <Button type="button" color="primary" onClick={savePuzzles}>
             SAVE PUZZLES
           </Button>
-          <Button type="button" color="primary" onClick={createPuzzle}>
+          <Button type="button" color="primary" onClick={openModal}>
             CREATE PUZZLE
           </Button>
           <input
@@ -138,9 +140,9 @@ PuzzleContainer.propTypes = {
   loadPuzzles: PropTypes.func.isRequired,
   selectPuzzle: PropTypes.func.isRequired,
   savePuzzles: PropTypes.func.isRequired,
-  createPuzzle: PropTypes.func.isRequired,
   updatePuzzleTitle: PropTypes.func.isRequired,
   uploadPuzzle: PropTypes.func.isRequired,
+  openModal: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = createStructuredSelector({
@@ -154,9 +156,9 @@ function mapDispatchToProps(dispatch) {
       loadPuzzles,
       selectPuzzle,
       savePuzzles,
-      createPuzzle,
       updatePuzzleTitle,
       uploadPuzzle,
+      openModal,
     },
     dispatch,
   );
