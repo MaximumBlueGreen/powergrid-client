@@ -83,7 +83,7 @@ class PuzzleContainer extends React.Component {
             accept=".puz"
           />
         </Paper>
-        <Grid container spacing={40} justify="center">
+        <Grid container spacing={40} justify="center" alignItems="flex-start">
           <Grid item container xs={10} md={5}>
             <Grid item xs={12}>
               <TextField
@@ -99,7 +99,6 @@ class PuzzleContainer extends React.Component {
             <Grid
               item
               xs={12}
-              lg={6}
               component={SyncStatus}
               isSyncing={isSyncing}
               lastSynced={lastSynced}
