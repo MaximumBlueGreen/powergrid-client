@@ -18,6 +18,7 @@ import { focusSquare } from './actions';
 import {
   makeSelectGridContainer,
   makeSelectGridContainerDomain,
+  makeSelectGridContainerFocusedWord,
 } from './selectors';
 import reducer from './reducer';
 import { ACROSS } from './constants';
@@ -25,6 +26,7 @@ import { ACROSS } from './constants';
 function GridContainer({
   data: { squares, size },
   ui: { focusedSquareIndex, focusedDirection },
+  focusedWord,
   toggleBlackSquare,
   updateSquareValue,
   focusSquare,
@@ -46,14 +48,7 @@ function GridContainer({
         squares={squares}
         size={size}
         focusedSquareId={focusedSquareId}
-        focusedWordSquareIds={squares
-          .filter(
-            s =>
-              focusedDirection === ACROSS
-                ? s.acrossNumber === squares[focusedSquareIndex].acrossNumber
-                : s.downNumber === squares[focusedSquareIndex].downNumber,
-          )
-          .map(s => s.id)}
+        focusedWordSquareIds={focusedWord.map(s => s.id)}
         onSquareClicked={focusSquareClamped}
         onSquareDoubleClicked={toggleBlackSquare}
         onKeyPressed={e => {
@@ -119,11 +114,13 @@ GridContainer.propTypes = {
   updateSquareValue: PropTypes.func.isRequired,
   undo: PropTypes.func.isRequired,
   redo: PropTypes.func.isRequired,
+  focusedWord: PropTypes.array.isRequired,
 };
 
 const mapStateToProps = createStructuredSelector({
   ui: makeSelectGridContainerDomain(),
   data: makeSelectGridContainer(),
+  focusedWord: makeSelectGridContainerFocusedWord(),
 });
 
 function mapDispatchToProps(dispatch) {

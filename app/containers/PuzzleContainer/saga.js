@@ -5,8 +5,12 @@ import { puzzle as puzzleSchema } from 'entities/schema';
 import { normalize, denormalize } from 'normalizr';
 import { authenticated } from 'utils/apiRequestSaga';
 import entitiesSelector from 'entities/selectors';
+import { SQUARE_FOCUSED } from 'containers/GridContainer/constants';
+import { makeSelectGridContainerFocusedWord } from 'containers/GridContainer/selectors';
+import { updateFilterPattern } from 'containers/WordListContainer/actions';
 import { savePuzzles, savePuzzlesSuccess } from './actions';
 import { PUZZLES_LOADED, PUZZLES_SAVED, PUZZLE_UPLOADED } from './constants';
+import { makeSelectPuzzleContainer } from './selectors';
 
 export function* getPuzzlesSaga() {
   yield authenticated(
@@ -92,6 +96,16 @@ export function* uploadPuzzleSaga({ puzzleFile }) {
   );
 }
 
+function* updateFilterPatternFromGrid() {
+  const { activePuzzleId } = yield select(makeSelectPuzzleContainer());
+  const focusedWord = yield select(makeSelectGridContainerFocusedWord(), {
+    puzzleId: activePuzzleId,
+  });
+  yield put(
+    updateFilterPattern(`^${focusedWord.map(s => s.value || '.').join('')}$`),
+  );
+}
+
 function* autosave() {
   while (true) {
     yield delay(10000);
@@ -104,6 +118,7 @@ export default function* saga() {
     takeLatest(PUZZLES_LOADED, getPuzzlesSaga),
     takeLatest(PUZZLES_SAVED, savePuzzlesSaga),
     takeLatest(PUZZLE_UPLOADED, uploadPuzzleSaga),
+    takeLatest(SQUARE_FOCUSED, updateFilterPatternFromGrid),
     autosave(),
   ]);
 }

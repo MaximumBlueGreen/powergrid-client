@@ -2,6 +2,7 @@ import { createSelector } from 'reselect';
 import puzzlesSelector from 'entities/Puzzles/selectors';
 import squaresSelector from 'entities/Squares/selectors';
 import { initialState } from './reducer';
+import { ACROSS } from './constants';
 
 /**
  * Direct selector to the gridContainer state domain
@@ -61,6 +62,23 @@ const makeSelectGridContainerSquareNumbers = () =>
     }),
   );
 
+const makeSelectGridContainerFocusedWord = () =>
+  createSelector(
+    [makeSelectGridContainerDomain(), makeSelectGridContainerSquareNumbers()],
+    ({ focusedDirection, focusedSquareIndex }, state) =>
+      state
+        .get('squares')
+        .filter(
+          s =>
+            focusedDirection === ACROSS
+              ? s.get('acrossNumber') ===
+                state.getIn(['squares', focusedSquareIndex, 'acrossNumber'])
+              : s.get('downNumber') ===
+                state.getIn(['squares', focusedSquareIndex, 'downNumber']),
+        )
+        .toJS(),
+  );
+
 const makeSelectGridContainer = () =>
   createSelector(makeSelectGridContainerSquareNumbers(), JSify);
 
@@ -68,4 +86,5 @@ export {
   makeSelectGridContainerDomain,
   makeSelectGridContainer,
   makeSelectGridContainerSquareNumbers,
+  makeSelectGridContainerFocusedWord,
 };
