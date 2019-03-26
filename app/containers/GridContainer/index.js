@@ -46,6 +46,14 @@ function GridContainer({
         squares={squares}
         size={size}
         focusedSquareId={focusedSquareId}
+        focusedWordSquareIds={squares
+          .filter(
+            s =>
+              focusedDirection === ACROSS
+                ? s.acrossNumber === squares[focusedSquareIndex].acrossNumber
+                : s.downNumber === squares[focusedSquareIndex].downNumber,
+          )
+          .map(s => s.id)}
         onSquareClicked={focusSquareClamped}
         onSquareDoubleClicked={toggleBlackSquare}
         onKeyPressed={e => {

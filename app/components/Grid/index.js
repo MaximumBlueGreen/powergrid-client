@@ -46,6 +46,7 @@ class Grid extends React.Component {
       squares,
       size,
       focusedSquareId,
+      focusedWordSquareIds,
       onSquareClicked,
       onSquareDoubleClicked,
       onKeyPressed,
@@ -65,6 +66,7 @@ class Grid extends React.Component {
             key={s.id}
             {...s}
             isFocused={focusedSquareId === s.id}
+            isPartOfFocusedWord={focusedWordSquareIds.includes(s.id)}
             onClick={() => onSquareClicked(i)}
             onDoubleClick={() => onSquareDoubleClicked(s.id)}
           />
@@ -81,6 +83,7 @@ Grid.propTypes = {
   }),
   squares: PropTypes.arrayOf(PropTypes.object).isRequired,
   focusedSquareId: PropTypes.string.isRequired,
+  focusedWordSquareIds: PropTypes.arrayOf(PropTypes.string).isRequired,
   onSquareClicked: PropTypes.func.isRequired,
   onSquareDoubleClicked: PropTypes.func.isRequired,
   onKeyPressed: PropTypes.func.isRequired,

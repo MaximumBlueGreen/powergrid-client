@@ -15,7 +15,7 @@ const GridSquareWrapper = styled.div`
   width: 100%;
   padding-top: 100%;
 
-  ${({ isBlack, isFocused }) => {
+  ${({ isBlack, isFocused, isPartOfFocusedWord }) => {
     if (isBlack && isFocused) {
       return 'background-color: #383838';
     }
@@ -26,6 +26,10 @@ const GridSquareWrapper = styled.div`
 
     if (isFocused) {
       return 'background-color: lightblue;';
+    }
+
+    if (isPartOfFocusedWord) {
+      return 'background-color: yellow';
     }
     return '';
   }};
@@ -60,11 +64,13 @@ function GridSquare({
   onClick,
   onDoubleClick,
   isFocused,
+  isPartOfFocusedWord,
 }) {
   return (
     <GridSquareWrapper
       isBlack={isBlack}
       isFocused={isFocused}
+      isPartOfFocusedWord={isPartOfFocusedWord}
       onClick={onClick}
       onDoubleClick={onDoubleClick}
     >
@@ -81,6 +87,7 @@ GridSquare.propTypes = {
   onClick: PropTypes.func.isRequired,
   onDoubleClick: PropTypes.func.isRequired,
   isFocused: PropTypes.bool,
+  isPartOfFocusedWord: PropTypes.bool,
 };
 
 GridSquare.defaultProps = {
