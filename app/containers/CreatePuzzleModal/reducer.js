@@ -13,7 +13,7 @@ import {
 } from './constants';
 
 export const initialState = fromJS({
-  open: true,
+  open: false,
   size: {
     height: 15,
     width: 15,
