@@ -19,7 +19,7 @@ function reducer(state = initialState, action) {
     case SQUARE_VALUE_UPDATED:
       return state.setIn([action.squareId, 'value'], action.value);
     case SQUARES_CLEARED:
-      return state.merge(
+      return state.mergeDeep(
         fromJS(
           Object.assign(
             {},
