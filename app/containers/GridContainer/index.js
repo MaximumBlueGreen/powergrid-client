@@ -12,11 +12,16 @@ import { compose, bindActionCreators } from 'redux';
 import { clamp } from 'lodash';
 import injectReducer from 'utils/injectReducer';
 import GridComponent from 'components/Grid';
-import { toggleBlackSquare, updateSquareValue } from 'entities/Squares/actions';
+import {
+  toggleBlackSquare,
+  updateSquareValue,
+  clearSquares,
+} from 'entities/Squares/actions';
 import { ActionCreators } from 'redux-undo';
 import Grid from '@material-ui/core/Grid';
 import UndoIcon from '@material-ui/icons/Undo';
 import RedoIcon from '@material-ui/icons/Redo';
+import ClearIcon from '@material-ui/icons/Clear';
 import IconButton from '@material-ui/core/IconButton';
 
 import { focusSquare } from './actions';
@@ -37,6 +42,7 @@ function GridContainer({
   focusSquare,
   undo,
   redo,
+  clearSquares,
 }) {
   const focusedSquareId = squares[focusedSquareIndex].id;
   const focusSquareClamped = i =>
@@ -50,6 +56,9 @@ function GridContainer({
           </IconButton>
           <IconButton color="primary">
             <RedoIcon onClick={redo} />
+          </IconButton>
+          <IconButton color="primary">
+            <ClearIcon onClick={() => clearSquares(squares.map(s => s.id))} />
           </IconButton>
         </Grid>
         <GridComponent
@@ -123,6 +132,7 @@ GridContainer.propTypes = {
   updateSquareValue: PropTypes.func.isRequired,
   undo: PropTypes.func.isRequired,
   redo: PropTypes.func.isRequired,
+  clearSquares: PropTypes.func.isRequired,
   focusedWord: PropTypes.array.isRequired,
 };
 
@@ -140,6 +150,7 @@ function mapDispatchToProps(dispatch) {
       focusSquare,
       undo: ActionCreators.undo,
       redo: ActionCreators.redo,
+      clearSquares,
     },
     dispatch,
   );
