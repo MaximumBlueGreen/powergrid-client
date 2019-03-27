@@ -7,11 +7,19 @@
 import { fromJS } from 'immutable';
 import { PUZZLE_SELECTED } from 'containers/PuzzleContainer/constants';
 import { ENTITIES_LOADED } from 'entities/constants';
-import { ACROSS, DOWN, SQUARE_FOCUSED } from './constants';
+import {
+  ACROSS,
+  DOWN,
+  SQUARE_FOCUSED,
+  CLICK_MODE_FILL,
+  CLICK_MODE_BLACK_SQUARE,
+  CLICK_MODE_TOGGLED,
+} from './constants';
 
 export const initialState = fromJS({
   focusedSquareIndex: 0,
   focusedDirection: ACROSS,
+  clickMode: CLICK_MODE_FILL,
 });
 
 function gridContainerReducer(state = initialState, action) {
@@ -28,6 +36,13 @@ function gridContainerReducer(state = initialState, action) {
         )
         .set('focusedSquareIndex', action.index);
     }
+    case CLICK_MODE_TOGGLED:
+      return state.set(
+        'clickMode',
+        state.get('clickMode') === CLICK_MODE_FILL
+          ? CLICK_MODE_BLACK_SQUARE
+          : CLICK_MODE_FILL,
+      );
     /* TODO refactor */
     case PUZZLE_SELECTED:
     case ENTITIES_LOADED:

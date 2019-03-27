@@ -19,25 +19,23 @@ import {
 } from 'entities/Squares/actions';
 import { ActionCreators } from 'redux-undo';
 import Grid from '@material-ui/core/Grid';
-import UndoIcon from '@material-ui/icons/Undo';
-import RedoIcon from '@material-ui/icons/Redo';
-import ClearIcon from '@material-ui/icons/Clear';
-import IconButton from '@material-ui/core/IconButton';
 
-import { focusSquare } from './actions';
+import GridActionBar from 'components/GridActionBar';
+import { focusSquare, toggleClickMode } from './actions';
 import {
   makeSelectGridContainer,
   makeSelectGridContainerDomain,
   makeSelectGridContainerFocusedWord,
 } from './selectors';
 import reducer from './reducer';
-import { ACROSS } from './constants';
+import { ACROSS, CLICK_MODE_FILL } from './constants';
 
 function GridContainer({
   data: { squares, size },
-  ui: { focusedSquareIndex, focusedDirection },
+  ui: { focusedSquareIndex, focusedDirection, clickMode },
   focusedWord,
   toggleBlackSquare,
+  toggleClickMode,
   updateSquareValue,
   focusSquare,
   undo,
@@ -50,23 +48,26 @@ function GridContainer({
   return (
     <Grid container alignItems="flex-start">
       <Grid item xs={12}>
-        <Grid item xs={12}>
-          <IconButton color="primary">
-            <UndoIcon onClick={undo} />
-          </IconButton>
-          <IconButton color="primary">
-            <RedoIcon onClick={redo} />
-          </IconButton>
-          <IconButton color="primary">
-            <ClearIcon onClick={() => clearSquares(squares.map(s => s.id))} />
-          </IconButton>
-        </Grid>
+        <Grid
+          item
+          xs={12}
+          component={GridActionBar}
+          undo={undo}
+          redo={redo}
+          toggleClickMode={toggleClickMode}
+          clearSquares={() => clearSquares(squares.map(s => s.id))}
+          clickMode={clickMode}
+        />
         <GridComponent
           squares={squares}
           size={size}
           focusedSquareId={focusedSquareId}
           focusedWordSquareIds={focusedWord.map(s => s.id)}
-          onSquareClicked={focusSquareClamped}
+          onSquareClicked={
+            clickMode === CLICK_MODE_FILL
+              ? id => focusSquareClamped(squares.findIndex(s => s.id === id))
+              : toggleBlackSquare
+          }
           onSquareDoubleClicked={toggleBlackSquare}
           onKeyPressed={e => {
             const { keyCode, metaKey, key, shiftKey } = e;
@@ -126,6 +127,7 @@ GridContainer.propTypes = {
   ui: PropTypes.shape({
     focusedSquareIndex: PropTypes.number.isRequired,
     focusedDirection: PropTypes.string.isRequired,
+    clickMode: PropTypes.string.isRequired,
   }).isRequired,
   focusSquare: PropTypes.func.isRequired,
   toggleBlackSquare: PropTypes.func.isRequired,
@@ -134,6 +136,7 @@ GridContainer.propTypes = {
   redo: PropTypes.func.isRequired,
   clearSquares: PropTypes.func.isRequired,
   focusedWord: PropTypes.array.isRequired,
+  toggleClickMode: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = createStructuredSelector({
@@ -151,6 +154,7 @@ function mapDispatchToProps(dispatch) {
       undo: ActionCreators.undo,
       redo: ActionCreators.redo,
       clearSquares,
+      toggleClickMode,
     },
     dispatch,
   );

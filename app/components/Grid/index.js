@@ -60,13 +60,13 @@ class Grid extends React.Component {
           this.gridRef = c;
         }}
       >
-        {squares.map((s, i) => (
+        {squares.map(s => (
           <GridSquare
             key={s.id}
             {...s}
             isFocused={focusedSquareId === s.id}
             isPartOfFocusedWord={focusedWordSquareIds.includes(s.id)}
-            onClick={() => onSquareClicked(i)}
+            onClick={() => onSquareClicked(s.id)}
             onDoubleClick={() => onSquareDoubleClicked(s.id)}
           />
         ))}

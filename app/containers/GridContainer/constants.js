@@ -7,4 +7,8 @@
 export const ACROSS = 'ACROSS';
 export const DOWN = 'DOWN';
 
+export const CLICK_MODE_FILL = 'CLICK_MODE_FILL';
+export const CLICK_MODE_BLACK_SQUARE = 'CLICK_MODE_BLACK_SQUARE';
+
 export const SQUARE_FOCUSED = 'app/GridContainer/SQUARE_FOCUSED';
+export const CLICK_MODE_TOGGLED = 'app/GridContainer/CLICK_MODE_TOGGLED';
