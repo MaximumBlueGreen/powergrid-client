@@ -30,7 +30,7 @@ export default function App() {
         <ThemeProvider theme={theme}>
           <Switch>
             <Route exact path="/home" component={HomePage} />
-            <Route exact path="/Login" component={LoginPage} />
+            <Route exact path="/login" component={LoginPage} />
             <Route component={NotFoundPage} />
           </Switch>
         </ThemeProvider>

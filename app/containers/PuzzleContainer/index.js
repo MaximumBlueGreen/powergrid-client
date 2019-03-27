@@ -67,24 +67,64 @@ class PuzzleContainer extends React.Component {
     return (
       <PuzzleContainerWrapper>
         <CreatePuzzleModal />
-        <Paper>
-          <Button type="button" color="primary" onClick={loadPuzzles}>
-            LOAD PUZZLES
-          </Button>
-          <Button type="button" color="primary" onClick={savePuzzles}>
-            SAVE PUZZLES
-          </Button>
-          <Button type="button" color="primary" onClick={openModal}>
-            CREATE PUZZLE
-          </Button>
-          <input
-            type="file"
-            onChange={e => uploadPuzzle(e.target.files[0])}
-            accept=".puz"
+        <Grid
+          component={Paper}
+          container
+          justify="space-evenly"
+          alignItems="center"
+          spacing={8}
+        >
+          <Grid item xs={3} container>
+            <Grid
+              item
+              component={Button}
+              xs={4}
+              type="button"
+              color="primary"
+              onClick={openModal}
+            >
+              NEW PUZZLE
+            </Grid>
+            <Grid
+              item
+              component={Button}
+              xs={4}
+              type="button"
+              color="primary"
+              onClick={savePuzzles}
+            >
+              SAVE PUZZLES
+            </Grid>
+            <Grid
+              item
+              component={Button}
+              xs={4}
+              type="button"
+              color="primary"
+              onClick={loadPuzzles}
+            >
+              LOAD PUZZLES
+            </Grid>
+          </Grid>
+          <Grid
+            item
+            xs={5}
+            component={PuzzleSelector}
+            puzzles={puzzleIds.map(id => puzzles[id])}
+            activePuzzleId={activePuzzleId}
+            onPuzzleSelected={selectPuzzle}
           />
-        </Paper>
-        <Grid container spacing={40} justify="center" alignItems="flex-start">
-          <Grid item container xs={10} md={5}>
+
+          <Grid item xs={2}>
+            <input
+              type="file"
+              onChange={e => uploadPuzzle(e.target.files[0])}
+              accept=".puz"
+            />
+          </Grid>
+        </Grid>
+        <Grid container justify="center" alignItems="flex-start" spacing={16}>
+          <Grid item container xs={11} md={5}>
             <Grid item xs={12}>
               <TextField
                 value={activePuzzleId && puzzles[activePuzzleId].title}
@@ -106,16 +146,8 @@ class PuzzleContainer extends React.Component {
             <Grid item xs={12}>
               {activePuzzleId && <GridContainer puzzleId={activePuzzleId} />}
             </Grid>
-            <Grid
-              item
-              xs={12}
-              component={PuzzleSelector}
-              puzzles={puzzleIds.map(id => puzzles[id])}
-              activePuzzleId={activePuzzleId}
-              onPuzzleSelected={selectPuzzle}
-            />
           </Grid>
-          <Grid item xs={10} md={6}>
+          <Grid item xs={11} md={6}>
             <Tabs value="WordList">
               <Tab key="WordList" label="WordList" value="WordList" />
               <Tab key="Dictionary" label="Dictionary" value="Dictionary" />

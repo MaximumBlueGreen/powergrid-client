@@ -11,9 +11,14 @@ import { createStructuredSelector } from 'reselect';
 import { compose, bindActionCreators } from 'redux';
 import { clamp } from 'lodash';
 import injectReducer from 'utils/injectReducer';
-import Grid from 'components/Grid';
+import GridComponent from 'components/Grid';
 import { toggleBlackSquare, updateSquareValue } from 'entities/Squares/actions';
 import { ActionCreators } from 'redux-undo';
+import Grid from '@material-ui/core/Grid';
+import UndoIcon from '@material-ui/icons/Undo';
+import RedoIcon from '@material-ui/icons/Redo';
+import IconButton from '@material-ui/core/IconButton';
+
 import { focusSquare } from './actions';
 import {
   makeSelectGridContainer,
@@ -37,63 +42,67 @@ function GridContainer({
   const focusSquareClamped = i =>
     focusSquare(clamp(i, 0, size.width * size.height - 1));
   return (
-    <div>
-      <button type="button" onClick={undo}>
-        Undo
-      </button>
-      <button type="button" onClick={redo}>
-        Redo
-      </button>
-      <Grid
-        squares={squares}
-        size={size}
-        focusedSquareId={focusedSquareId}
-        focusedWordSquareIds={focusedWord.map(s => s.id)}
-        onSquareClicked={focusSquareClamped}
-        onSquareDoubleClicked={toggleBlackSquare}
-        onKeyPressed={e => {
-          const { keyCode, metaKey, key, shiftKey } = e;
-          e.preventDefault();
-          if (metaKey && keyCode === 90 && !shiftKey) {
-            return undo();
-          }
-          if (
-            (metaKey && keyCode === 89) ||
-            (metaKey && keyCode === 90 && shiftKey)
-          ) {
-            return redo();
-          }
-          switch (keyCode) {
-            case 8 /* Backspace */:
-              if (focusedDirection === ACROSS) {
-                focusSquareClamped(focusedSquareIndex - 1);
-              } else {
-                focusSquareClamped(focusedSquareIndex - size.width);
-              }
-              return updateSquareValue(focusedSquareId, '');
-            case 37 /* Left Arrow */:
-              return focusSquareClamped(focusedSquareIndex - 1);
-            case 38 /* Up Arrow */:
-              return focusSquareClamped(focusedSquareIndex - size.width);
-            case 39 /* Right Arrow */:
-              return focusSquareClamped(focusedSquareIndex + 1);
-            case 40 /* Down Arrow */:
-              return focusSquareClamped(focusedSquareIndex + size.width);
-            case 190:
-              return toggleBlackSquare(focusedSquareId);
-            default:
-              if (keyCode > 47 && keyCode < 91) {
-                updateSquareValue(focusedSquareId, key);
+    <Grid container alignItems="flex-start">
+      <Grid item xs={12}>
+        <Grid item xs={12}>
+          <IconButton color="primary">
+            <UndoIcon onClick={undo} />
+          </IconButton>
+          <IconButton color="primary">
+            <RedoIcon onClick={redo} />
+          </IconButton>
+        </Grid>
+        <GridComponent
+          squares={squares}
+          size={size}
+          focusedSquareId={focusedSquareId}
+          focusedWordSquareIds={focusedWord.map(s => s.id)}
+          onSquareClicked={focusSquareClamped}
+          onSquareDoubleClicked={toggleBlackSquare}
+          onKeyPressed={e => {
+            const { keyCode, metaKey, key, shiftKey } = e;
+            e.preventDefault();
+            if (metaKey && keyCode === 90 && !shiftKey) {
+              return undo();
+            }
+            if (
+              (metaKey && keyCode === 89) ||
+              (metaKey && keyCode === 90 && shiftKey)
+            ) {
+              return redo();
+            }
+            switch (keyCode) {
+              case 8 /* Backspace */:
                 if (focusedDirection === ACROSS) {
-                  return focusSquareClamped(focusedSquareIndex + 1);
+                  focusSquareClamped(focusedSquareIndex - 1);
+                } else {
+                  focusSquareClamped(focusedSquareIndex - size.width);
                 }
+                return updateSquareValue(focusedSquareId, '');
+              case 37 /* Left Arrow */:
+                return focusSquareClamped(focusedSquareIndex - 1);
+              case 38 /* Up Arrow */:
+                return focusSquareClamped(focusedSquareIndex - size.width);
+              case 39 /* Right Arrow */:
+                return focusSquareClamped(focusedSquareIndex + 1);
+              case 40 /* Down Arrow */:
                 return focusSquareClamped(focusedSquareIndex + size.width);
-              }
-          }
-          return false;
-        }}
-      />
-    </div>
+              case 190:
+                return toggleBlackSquare(focusedSquareId);
+              default:
+                if (keyCode > 47 && keyCode < 91) {
+                  updateSquareValue(focusedSquareId, key);
+                  if (focusedDirection === ACROSS) {
+                    return focusSquareClamped(focusedSquareIndex + 1);
+                  }
+                  return focusSquareClamped(focusedSquareIndex + size.width);
+                }
+            }
+            return false;
+          }}
+        />
+      </Grid>
+    </Grid>
   );
 }
 
