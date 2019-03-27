@@ -10,15 +10,19 @@ import { Grid, IconButton, Tooltip } from '@material-ui/core';
 import {
   Undo as UndoIcon,
   Redo as RedoIcon,
-  Clear as ClearIcon,
-  Stop as StopIcon,
-  TextFormat as TextFormatIcon,
+  Clear as ClearSquaresIcon,
+  Stop as BlackSquareModeIcon,
+  TextFormat as FillModeIcon,
+  CompareArrows as DiagonalSymmetryModeIcon,
+  NotInterested as NoneSymmetryModeIcon,
 } from '@material-ui/icons';
 import { ToggleButton, ToggleButtonGroup } from '@material-ui/lab';
 
 import {
   CLICK_MODE_FILL,
   CLICK_MODE_BLACK_SQUARE,
+  SYMMETRY_MODE_NONE,
+  SYMMETRY_MODE_DIAGONAL,
 } from 'containers/GridContainer/constants';
 import PropTypes from 'prop-types';
 
@@ -28,9 +32,11 @@ function GridActionBar({
   clearSquares,
   clickMode,
   toggleClickMode,
+  symmetryMode,
+  toggleSymmetryMode,
 }) {
   return (
-    <Grid container alignItems="center">
+    <Grid container alignItems="center" spacing={8}>
       <Grid item>
         <Tooltip title="Undo" placement="top">
           <IconButton color="primary">
@@ -46,7 +52,7 @@ function GridActionBar({
       <Grid item>
         <Tooltip title="Clear Grid" placement="top">
           <IconButton color="primary">
-            <ClearIcon fontSize="small" onClick={clearSquares} />
+            <ClearSquaresIcon fontSize="small" onClick={clearSquares} />
           </IconButton>
         </Tooltip>
       </Grid>
@@ -56,18 +62,44 @@ function GridActionBar({
           value={clickMode}
           onChange={toggleClickMode}
         >
+          <Tooltip title="Fill mode" placement="top" value={CLICK_MODE_FILL}>
+            <ToggleButton>
+              <FillModeIcon fontSize="small" />
+            </ToggleButton>
+          </Tooltip>
           <Tooltip
             title="Black Square mode"
             placement="top"
             value={CLICK_MODE_BLACK_SQUARE}
           >
             <ToggleButton>
-              <StopIcon fontSize="small" />
+              <BlackSquareModeIcon fontSize="small" />
             </ToggleButton>
           </Tooltip>
-          <Tooltip title="Fill mode" placement="top" value={CLICK_MODE_FILL}>
+        </ToggleButtonGroup>
+      </Grid>
+      <Grid item>
+        <ToggleButtonGroup
+          exclusive
+          value={symmetryMode}
+          onChange={toggleSymmetryMode}
+        >
+          <Tooltip
+            title="No symmetry"
+            placement="top"
+            value={SYMMETRY_MODE_NONE}
+          >
             <ToggleButton>
-              <TextFormatIcon fontSize="small" />
+              <NoneSymmetryModeIcon fontSize="small" />
+            </ToggleButton>
+          </Tooltip>
+          <Tooltip
+            title="Diagonal Symmetry"
+            placement="top"
+            value={SYMMETRY_MODE_DIAGONAL}
+          >
+            <ToggleButton>
+              <DiagonalSymmetryModeIcon fontSize="small" />
             </ToggleButton>
           </Tooltip>
         </ToggleButtonGroup>
@@ -82,6 +114,8 @@ GridActionBar.propTypes = {
   toggleClickMode: PropTypes.func.isRequired,
   clearSquares: PropTypes.func.isRequired,
   clickMode: PropTypes.string.isRequired,
+  symmetryMode: PropTypes.string.isRequired,
+  toggleSymmetryMode: PropTypes.func.isRequired,
 };
 
 export default GridActionBar;

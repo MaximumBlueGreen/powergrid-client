@@ -12,10 +12,17 @@ const initialState = fromJS({});
 
 function reducer(state = initialState, action) {
   switch (action.type) {
-    case SQUARE_BLACK_TOGGLED:
-      return state
-        .updateIn([action.squareId, 'isBlack'], isBlack => !isBlack)
-        .setIn([action.squareId, 'value'], '');
+    case SQUARE_BLACK_TOGGLED: {
+      const currentIsBlack = state.getIn([action.squareId, 'isBlack']);
+      return state.mergeDeep(
+        Object.assign(
+          {},
+          ...[...action.symmetricSquareIds, action.squareId].map(id => ({
+            [id]: { isBlack: !currentIsBlack, value: undefined },
+          })),
+        ),
+      );
+    }
     case SQUARE_VALUE_UPDATED:
       return state.setIn([action.squareId, 'value'], action.value);
     case SQUARES_CLEARED:

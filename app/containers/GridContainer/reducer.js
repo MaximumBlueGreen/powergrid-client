@@ -14,12 +14,16 @@ import {
   CLICK_MODE_FILL,
   CLICK_MODE_BLACK_SQUARE,
   CLICK_MODE_TOGGLED,
+  SYMMETRY_MODE_NONE,
+  SYMMETRY_MODE_DIAGONAL,
+  SYMMETRY_MODE_TOGGLED,
 } from './constants';
 
 export const initialState = fromJS({
   focusedSquareIndex: 0,
   focusedDirection: ACROSS,
   clickMode: CLICK_MODE_FILL,
+  symmetryMode: SYMMETRY_MODE_NONE,
 });
 
 function gridContainerReducer(state = initialState, action) {
@@ -43,7 +47,13 @@ function gridContainerReducer(state = initialState, action) {
           ? CLICK_MODE_BLACK_SQUARE
           : CLICK_MODE_FILL,
       );
-    /* TODO refactor */
+    case SYMMETRY_MODE_TOGGLED:
+      return state.set(
+        'symmetryMode',
+        state.get('symmetryMode') === SYMMETRY_MODE_NONE
+          ? SYMMETRY_MODE_DIAGONAL
+          : SYMMETRY_MODE_NONE,
+      ); /* TODO refactor */
     case PUZZLE_SELECTED:
     case ENTITIES_LOADED:
       return state.set('focusedSquareIndex', 0).set('focusedDirection', ACROSS);

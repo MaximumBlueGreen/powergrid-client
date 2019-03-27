@@ -10,10 +10,11 @@ import {
   SQUARES_CLEARED,
 } from './constants';
 
-export function toggleBlackSquare(squareId) {
+export function toggleBlackSquare(squareId, symmetricSquareIds = []) {
   return {
     type: SQUARE_BLACK_TOGGLED,
     squareId,
+    symmetricSquareIds,
   };
 }
 

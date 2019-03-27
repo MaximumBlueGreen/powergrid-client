@@ -21,18 +21,18 @@ import { ActionCreators } from 'redux-undo';
 import Grid from '@material-ui/core/Grid';
 
 import GridActionBar from 'components/GridActionBar';
-import { focusSquare, toggleClickMode } from './actions';
+import { focusSquare, toggleClickMode, toggleSymmetryMode } from './actions';
 import {
   makeSelectGridContainer,
   makeSelectGridContainerDomain,
   makeSelectGridContainerFocusedWord,
 } from './selectors';
 import reducer from './reducer';
-import { ACROSS, CLICK_MODE_FILL } from './constants';
+import { ACROSS, CLICK_MODE_FILL, SYMMETRY_MODE_DIAGONAL } from './constants';
 
 function GridContainer({
   data: { squares, size },
-  ui: { focusedSquareIndex, focusedDirection, clickMode },
+  ui: { focusedSquareIndex, focusedDirection, clickMode, symmetryMode },
   focusedWord,
   toggleBlackSquare,
   toggleClickMode,
@@ -41,10 +41,23 @@ function GridContainer({
   undo,
   redo,
   clearSquares,
+  toggleSymmetryMode,
 }) {
   const focusedSquareId = squares[focusedSquareIndex].id;
   const focusSquareClamped = i =>
     focusSquare(clamp(i, 0, size.width * size.height - 1));
+
+  const toggleBlackSquareWithSymmetry = id => {
+    toggleBlackSquare(
+      id,
+      symmetryMode === SYMMETRY_MODE_DIAGONAL && [
+        squares[
+          size.height * size.width - squares.findIndex(s => s.id === id) - 1
+        ].id,
+      ],
+    );
+  };
+
   return (
     <Grid container alignItems="flex-start">
       <Grid item xs={12}>
@@ -57,6 +70,8 @@ function GridContainer({
           toggleClickMode={toggleClickMode}
           clearSquares={() => clearSquares(squares.map(s => s.id))}
           clickMode={clickMode}
+          toggleSymmetryMode={toggleSymmetryMode}
+          symmetryMode={symmetryMode}
         />
         <GridComponent
           squares={squares}
@@ -66,9 +81,9 @@ function GridContainer({
           onSquareClicked={
             clickMode === CLICK_MODE_FILL
               ? id => focusSquareClamped(squares.findIndex(s => s.id === id))
-              : toggleBlackSquare
+              : toggleBlackSquareWithSymmetry
           }
-          onSquareDoubleClicked={toggleBlackSquare}
+          onSquareDoubleClicked={toggleBlackSquareWithSymmetry}
           onKeyPressed={e => {
             const { keyCode, metaKey, key, shiftKey } = e;
             e.preventDefault();
@@ -98,7 +113,7 @@ function GridContainer({
               case 40 /* Down Arrow */:
                 return focusSquareClamped(focusedSquareIndex + size.width);
               case 190:
-                return toggleBlackSquare(focusedSquareId);
+                return toggleBlackSquareWithSymmetry(focusedSquareId);
               default:
                 if (keyCode > 47 && keyCode < 91) {
                   updateSquareValue(focusedSquareId, key);
@@ -128,6 +143,7 @@ GridContainer.propTypes = {
     focusedSquareIndex: PropTypes.number.isRequired,
     focusedDirection: PropTypes.string.isRequired,
     clickMode: PropTypes.string.isRequired,
+    symmetryMode: PropTypes.string.isRequired,
   }).isRequired,
   focusSquare: PropTypes.func.isRequired,
   toggleBlackSquare: PropTypes.func.isRequired,
@@ -137,6 +153,7 @@ GridContainer.propTypes = {
   clearSquares: PropTypes.func.isRequired,
   focusedWord: PropTypes.array.isRequired,
   toggleClickMode: PropTypes.func.isRequired,
+  toggleSymmetryMode: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = createStructuredSelector({
@@ -155,6 +172,7 @@ function mapDispatchToProps(dispatch) {
       redo: ActionCreators.redo,
       clearSquares,
       toggleClickMode,
+      toggleSymmetryMode,
     },
     dispatch,
   );
