@@ -19,7 +19,6 @@ const StyledGrid = styled.div`
   font-size: calc(40vmax / ${props => props.width});
   outline: none;
 
-  max-height: 70vh;
   max-width: 70vh;
 
   &:before {
