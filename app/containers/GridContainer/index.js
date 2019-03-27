@@ -50,11 +50,12 @@ function GridContainer({
   const toggleBlackSquareWithSymmetry = id => {
     toggleBlackSquare(
       id,
-      symmetryMode === SYMMETRY_MODE_DIAGONAL && [
+      (symmetryMode === SYMMETRY_MODE_DIAGONAL && [
         squares[
           size.height * size.width - squares.findIndex(s => s.id === id) - 1
         ].id,
-      ],
+      ]) ||
+        [],
     );
   };
 
