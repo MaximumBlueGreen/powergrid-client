@@ -20,6 +20,7 @@ import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import Paper from '@material-ui/core/Paper';
 import WordListContainer from 'containers/WordListContainer';
+import DictionaryContainer from 'containers/DictionaryContainer';
 import CreatePuzzleModal from 'containers/CreatePuzzleModal';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
@@ -155,6 +156,7 @@ class PuzzleContainer extends React.Component {
               <Tab key="Notes" label="Notes" value="Notes" />
             </Tabs>
             <WordListContainer />
+            <DictionaryContainer />
           </Grid>
         </Grid>
       </PuzzleContainerWrapper>
