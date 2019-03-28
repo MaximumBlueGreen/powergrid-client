@@ -2,6 +2,7 @@ import { createSelector } from 'reselect';
 import puzzlesSelector from 'entities/Puzzles/selectors';
 import squaresSelector from 'entities/Squares/selectors';
 import { initialState } from './reducer';
+import { ACROSS } from './constants';
 
 /**
  * Direct selector to the gridContainer state domain
@@ -31,20 +32,51 @@ const makeSelectGridContainerSquareNumbers = () =>
     state.update('squares', squares => {
       const width = state.get('size').get('width');
       let currentNumber = 0;
+      let currentAcrossNumber = 0;
+      const currentDownNumbers = [];
       return squares.map((s, i) => {
-        const needsNumber =
-          !s.get('isBlack') &&
-          (i % width === 0 ||
-            i < width ||
-            squares.getIn([i - 1, 'isBlack']) ||
-            squares.getIn([i - width, 'isBlack']));
+        if (s.get('isBlack')) {
+          return s;
+        }
+
+        const needsAcrossNumber =
+          i % width === 0 || squares.getIn([i - 1, 'isBlack']);
+        const needsDownNumber =
+          i < width || squares.getIn([i - width, 'isBlack']);
+        const needsNumber = needsAcrossNumber || needsDownNumber;
 
         if (needsNumber) {
           currentNumber += 1;
         }
-        return s.set('number', needsNumber ? currentNumber : undefined);
+        if (needsAcrossNumber) {
+          currentAcrossNumber = currentNumber;
+        }
+        if (needsDownNumber) {
+          currentDownNumbers[i % width] = currentNumber;
+        }
+        return s
+          .set('number', needsNumber ? currentNumber : undefined)
+          .set('acrossNumber', currentAcrossNumber)
+          .set('downNumber', currentDownNumbers[i % width]);
       });
     }),
+  );
+
+const makeSelectGridContainerFocusedWord = () =>
+  createSelector(
+    [makeSelectGridContainerDomain(), makeSelectGridContainerSquareNumbers()],
+    ({ focusedDirection, focusedSquareIndex }, state) =>
+      state
+        .get('squares')
+        .filter(
+          s =>
+            focusedDirection === ACROSS
+              ? s.get('acrossNumber') ===
+                state.getIn(['squares', focusedSquareIndex, 'acrossNumber'])
+              : s.get('downNumber') ===
+                state.getIn(['squares', focusedSquareIndex, 'downNumber']),
+        )
+        .toJS(),
   );
 
 const makeSelectGridContainer = () =>
@@ -54,4 +86,5 @@ export {
   makeSelectGridContainerDomain,
   makeSelectGridContainer,
   makeSelectGridContainerSquareNumbers,
+  makeSelectGridContainerFocusedWord,
 };

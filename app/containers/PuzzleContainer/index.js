@@ -21,10 +21,12 @@ import Button from '@material-ui/core/Button';
 import Paper from '@material-ui/core/Paper';
 import WordListContainer from 'containers/WordListContainer';
 import DictionaryContainer from 'containers/DictionaryContainer';
+import CreatePuzzleModal from 'containers/CreatePuzzleModal';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import styled from 'styled-components';
 import { updatePuzzleTitle } from 'entities/Puzzles/actions';
+import { openModal } from 'containers/CreatePuzzleModal/actions';
 import {
   makeSelectPuzzleContainer,
   makeSelectPuzzleContainerData,
@@ -34,7 +36,6 @@ import {
   loadPuzzles,
   selectPuzzle,
   savePuzzles,
-  createPuzzle,
   uploadPuzzle,
 } from './actions';
 
@@ -59,31 +60,72 @@ class PuzzleContainer extends React.Component {
       loadPuzzles,
       selectPuzzle,
       savePuzzles,
-      createPuzzle,
+      openModal,
       updatePuzzleTitle,
       uploadPuzzle,
     } = this.props;
 
     return (
       <PuzzleContainerWrapper>
-        <Paper>
-          <Button type="button" color="primary" onClick={loadPuzzles}>
-            LOAD PUZZLES
-          </Button>
-          <Button type="button" color="primary" onClick={savePuzzles}>
-            SAVE PUZZLES
-          </Button>
-          <Button type="button" color="primary" onClick={createPuzzle}>
-            CREATE PUZZLE
-          </Button>
-          <input
-            type="file"
-            onChange={e => uploadPuzzle(e.target.files[0])}
-            accept=".puz"
+        <CreatePuzzleModal />
+        <Grid
+          component={Paper}
+          container
+          justify="space-evenly"
+          alignItems="center"
+          spacing={8}
+        >
+          <Grid item xs={3} container>
+            <Grid
+              item
+              component={Button}
+              xs={4}
+              type="button"
+              color="primary"
+              onClick={openModal}
+            >
+              NEW PUZZLE
+            </Grid>
+            <Grid
+              item
+              component={Button}
+              xs={4}
+              type="button"
+              color="primary"
+              onClick={savePuzzles}
+            >
+              SAVE PUZZLES
+            </Grid>
+            <Grid
+              item
+              component={Button}
+              xs={4}
+              type="button"
+              color="primary"
+              onClick={loadPuzzles}
+            >
+              LOAD PUZZLES
+            </Grid>
+          </Grid>
+          <Grid
+            item
+            xs={5}
+            component={PuzzleSelector}
+            puzzles={puzzleIds.map(id => puzzles[id])}
+            activePuzzleId={activePuzzleId}
+            onPuzzleSelected={selectPuzzle}
           />
-        </Paper>
-        <Grid container spacing={40} justify="center">
-          <Grid item container xs={10} md={5}>
+
+          <Grid item xs={2}>
+            <input
+              type="file"
+              onChange={e => uploadPuzzle(e.target.files[0])}
+              accept=".puz"
+            />
+          </Grid>
+        </Grid>
+        <Grid container justify="center" alignItems="flex-start" spacing={16}>
+          <Grid item container xs={11} md={5}>
             <Grid item xs={12}>
               <TextField
                 value={activePuzzleId && puzzles[activePuzzleId].title}
@@ -98,7 +140,6 @@ class PuzzleContainer extends React.Component {
             <Grid
               item
               xs={12}
-              lg={6}
               component={SyncStatus}
               isSyncing={isSyncing}
               lastSynced={lastSynced}
@@ -106,16 +147,8 @@ class PuzzleContainer extends React.Component {
             <Grid item xs={12}>
               {activePuzzleId && <GridContainer puzzleId={activePuzzleId} />}
             </Grid>
-            <Grid
-              item
-              xs={12}
-              component={PuzzleSelector}
-              puzzles={puzzleIds.map(id => puzzles[id])}
-              activePuzzleId={activePuzzleId}
-              onPuzzleSelected={selectPuzzle}
-            />
           </Grid>
-          <Grid item xs={10} md={6}>
+          <Grid item xs={11} md={6}>
             <Tabs value="WordList">
               <Tab key="WordList" label="WordList" value="WordList" />
               <Tab key="Dictionary" label="Dictionary" value="Dictionary" />
@@ -140,9 +173,9 @@ PuzzleContainer.propTypes = {
   loadPuzzles: PropTypes.func.isRequired,
   selectPuzzle: PropTypes.func.isRequired,
   savePuzzles: PropTypes.func.isRequired,
-  createPuzzle: PropTypes.func.isRequired,
   updatePuzzleTitle: PropTypes.func.isRequired,
   uploadPuzzle: PropTypes.func.isRequired,
+  openModal: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = createStructuredSelector({
@@ -156,9 +189,9 @@ function mapDispatchToProps(dispatch) {
       loadPuzzles,
       selectPuzzle,
       savePuzzles,
-      createPuzzle,
       updatePuzzleTitle,
       uploadPuzzle,
+      openModal,
     },
     dispatch,
   );

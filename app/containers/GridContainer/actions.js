@@ -4,11 +4,27 @@
  *
  */
 
-import { SQUARE_FOCUSED } from './constants';
+import {
+  SQUARE_FOCUSED,
+  CLICK_MODE_TOGGLED,
+  SYMMETRY_MODE_TOGGLED,
+} from './constants';
 
 export function focusSquare(index) {
   return {
     type: SQUARE_FOCUSED,
     index,
+  };
+}
+
+export function toggleClickMode() {
+  return {
+    type: CLICK_MODE_TOGGLED,
+  };
+}
+
+export function toggleSymmetryMode() {
+  return {
+    type: SYMMETRY_MODE_TOGGLED,
   };
 }

@@ -61,7 +61,7 @@ export function* updateEntry({ id }) {
 }
 
 // Individual exports for testing
-export default function* wordlistContainerSaga() {
+export default function* wordListContainerSaga() {
   yield all([
     takeLatest(WORDLIST_LOADED, getEntries),
     takeLatest(ENTRY_ADDED, addEntry),

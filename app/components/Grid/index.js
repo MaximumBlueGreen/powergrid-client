@@ -19,7 +19,6 @@ const StyledGrid = styled.div`
   font-size: calc(40vmax / ${props => props.width});
   outline: none;
 
-  max-height: 70vh;
   max-width: 70vh;
 
   &:before {
@@ -46,6 +45,7 @@ class Grid extends React.Component {
       squares,
       size,
       focusedSquareId,
+      focusedWordSquareIds,
       onSquareClicked,
       onSquareDoubleClicked,
       onKeyPressed,
@@ -60,12 +60,13 @@ class Grid extends React.Component {
           this.gridRef = c;
         }}
       >
-        {squares.map((s, i) => (
+        {squares.map(s => (
           <GridSquare
             key={s.id}
             {...s}
             isFocused={focusedSquareId === s.id}
-            onClick={() => onSquareClicked(i)}
+            isPartOfFocusedWord={focusedWordSquareIds.includes(s.id)}
+            onClick={() => onSquareClicked(s.id)}
             onDoubleClick={() => onSquareDoubleClicked(s.id)}
           />
         ))}
@@ -81,6 +82,7 @@ Grid.propTypes = {
   }),
   squares: PropTypes.arrayOf(PropTypes.object).isRequired,
   focusedSquareId: PropTypes.string.isRequired,
+  focusedWordSquareIds: PropTypes.arrayOf(PropTypes.string).isRequired,
   onSquareClicked: PropTypes.func.isRequired,
   onSquareDoubleClicked: PropTypes.func.isRequired,
   onKeyPressed: PropTypes.func.isRequired,

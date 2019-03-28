@@ -3,16 +3,14 @@ import { all, put, takeLatest, select } from 'redux-saga/effects';
 import { loadEntities } from 'entities/actions';
 import { puzzle as puzzleSchema } from 'entities/schema';
 import { normalize, denormalize } from 'normalizr';
-import { times } from 'lodash';
 import { authenticated } from 'utils/apiRequestSaga';
 import entitiesSelector from 'entities/selectors';
+import { SQUARE_FOCUSED } from 'containers/GridContainer/constants';
+import { makeSelectGridContainerFocusedWord } from 'containers/GridContainer/selectors';
+import { updateFilterPattern } from 'containers/WordListContainer/actions';
 import { savePuzzles, savePuzzlesSuccess } from './actions';
-import {
-  PUZZLES_LOADED,
-  PUZZLES_SAVED,
-  PUZZLE_CREATED,
-  PUZZLE_UPLOADED,
-} from './constants';
+import { PUZZLES_LOADED, PUZZLES_SAVED, PUZZLE_UPLOADED } from './constants';
+import { makeSelectPuzzleContainer } from './selectors';
 
 export function* getPuzzlesSaga() {
   yield authenticated(
@@ -64,28 +62,6 @@ export function* savePuzzlesSaga() {
   );
 }
 
-export function* createPuzzleSaga() {
-  yield authenticated(
-    'puzzles',
-    {
-      method: 'POST',
-      body: JSON.stringify({
-        puzzle: {
-          squares: times(25, () => ({})),
-          size: {
-            height: 5,
-            width: 5,
-          },
-        },
-      }),
-    },
-    getPuzzlesSaga,
-    function* onError(error) {
-      console.log(error);
-    },
-  );
-}
-
 export function* uploadPuzzleSaga({ puzzleFile }) {
   const fileReader = new FileReader();
   let height;
@@ -120,6 +96,16 @@ export function* uploadPuzzleSaga({ puzzleFile }) {
   );
 }
 
+function* updateFilterPatternFromGrid() {
+  const { activePuzzleId } = yield select(makeSelectPuzzleContainer());
+  const focusedWord = yield select(makeSelectGridContainerFocusedWord(), {
+    puzzleId: activePuzzleId,
+  });
+  yield put(
+    updateFilterPattern(`^${focusedWord.map(s => s.value || '.').join('')}$`),
+  );
+}
+
 function* autosave() {
   while (true) {
     yield delay(10000);
@@ -131,8 +117,8 @@ export default function* saga() {
   yield all([
     takeLatest(PUZZLES_LOADED, getPuzzlesSaga),
     takeLatest(PUZZLES_SAVED, savePuzzlesSaga),
-    takeLatest(PUZZLE_CREATED, createPuzzleSaga),
     takeLatest(PUZZLE_UPLOADED, uploadPuzzleSaga),
+    takeLatest(SQUARE_FOCUSED, updateFilterPatternFromGrid),
     autosave(),
   ]);
 }
