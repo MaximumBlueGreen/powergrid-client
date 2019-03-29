@@ -20,7 +20,7 @@ function ResultBoxList({ resultList }) {
       <TableHead>
         <TableRow>
           <TableCell>Word</TableCell>
-          <TableCell align="right">Description</TableCell>
+          <TableCell align="right">Score</TableCell>
         </TableRow>
       </TableHead>
       <TableBody>
