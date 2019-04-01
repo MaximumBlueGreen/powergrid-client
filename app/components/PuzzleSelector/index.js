@@ -19,7 +19,7 @@ function PuzzleSelector({ activePuzzleId, puzzles, onPuzzleSelected }) {
       }}
     >
       {puzzles.map(p => (
-        <Tab key={p.id} label={p.title || `id: ${p.id}`} value={p.id} />
+        <Tab key={p.id} label={p.title || `Untitled`} value={p.id} />
       ))}
     </Tabs>
   );

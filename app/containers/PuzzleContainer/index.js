@@ -57,12 +57,12 @@ class PuzzleContainer extends React.Component {
     const {
       ui: { activePuzzleId, puzzleIds, isSyncing, lastSynced },
       data: puzzles,
-      loadPuzzles,
+      // loadPuzzles,
       selectPuzzle,
-      savePuzzles,
+      // savePuzzles,
       openModal,
       updatePuzzleTitle,
-      uploadPuzzle,
+      // uploadPuzzle,
     } = this.props;
 
     return (
@@ -70,12 +70,13 @@ class PuzzleContainer extends React.Component {
         <CreatePuzzleModal />
         <Grid
           component={Paper}
+          square
           container
-          justify="space-evenly"
+          justify="space-between"
           alignItems="center"
-          spacing={8}
+          style={{ paddingRight: '8px' }}
         >
-          <Grid item xs={3} container>
+          {/* <Grid item xs={3} container>
             <Grid
               item
               component={Button}
@@ -106,23 +107,32 @@ class PuzzleContainer extends React.Component {
             >
               LOAD PUZZLES
             </Grid>
-          </Grid>
+          </Grid> */}
           <Grid
             item
-            xs={5}
+            xs
             component={PuzzleSelector}
             puzzles={puzzleIds.map(id => puzzles[id])}
             activePuzzleId={activePuzzleId}
             onPuzzleSelected={selectPuzzle}
           />
-
-          <Grid item xs={2}>
+          <Grid
+            item
+            component={Button}
+            type="button"
+            color="primary"
+            onClick={openModal}
+            variant="outlined"
+          >
+            NEW PUZZLE
+          </Grid>
+          {/* <Grid item xs={2}>
             <input
               type="file"
               onChange={e => uploadPuzzle(e.target.files[0])}
               accept=".puz"
             />
-          </Grid>
+        </Grid> */}
         </Grid>
         <Grid container justify="center" alignItems="flex-start" spacing={16}>
           <Grid item container xs={11} md={5}>
@@ -172,9 +182,9 @@ PuzzleContainer.propTypes = {
   data: PropTypes.shape({}).isRequired,
   loadPuzzles: PropTypes.func.isRequired,
   selectPuzzle: PropTypes.func.isRequired,
-  savePuzzles: PropTypes.func.isRequired,
+  // savePuzzles: PropTypes.func.isRequired,
   updatePuzzleTitle: PropTypes.func.isRequired,
-  uploadPuzzle: PropTypes.func.isRequired,
+  // uploadPuzzle: PropTypes.func.isRequired,
   openModal: PropTypes.func.isRequired,
   puzzleId: PropTypes.string,
 };
