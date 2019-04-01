@@ -1,4 +1,5 @@
-import { call, select } from 'redux-saga/effects';
+import { call, select, put } from 'redux-saga/effects';
+import { push } from 'connected-react-router';
 import { merge } from 'lodash';
 import request from './request';
 
@@ -42,6 +43,12 @@ export function* authenticated(requestURL, options, onSuccess, onFailure) {
       options,
     ),
     onSuccess,
-    onFailure,
+    function* onFailureWithRedirect(error) {
+      if (error.response.status === 401) {
+        yield put(push('/login'));
+      } else {
+        yield onFailure(error);
+      }
+    },
   );
 }
