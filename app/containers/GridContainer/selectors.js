@@ -70,11 +70,12 @@ const makeSelectGridContainerFocusedWord = () =>
         .get('squares')
         .filter(
           s =>
-            focusedDirection === ACROSS
+            !s.get('isBlack') &&
+            (focusedDirection === ACROSS
               ? s.get('acrossNumber') ===
                 state.getIn(['squares', focusedSquareIndex, 'acrossNumber'])
               : s.get('downNumber') ===
-                state.getIn(['squares', focusedSquareIndex, 'downNumber']),
+                state.getIn(['squares', focusedSquareIndex, 'downNumber'])),
         )
         .toJS(),
   );

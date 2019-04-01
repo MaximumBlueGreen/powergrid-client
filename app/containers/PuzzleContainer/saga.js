@@ -101,9 +101,11 @@ function* updateFilterPatternFromGrid() {
   const focusedWord = yield select(makeSelectGridContainerFocusedWord(), {
     puzzleId: activePuzzleId,
   });
-  yield put(
-    updateFilterPattern(`^${focusedWord.map(s => s.value || '.').join('')}$`),
-  );
+  if (focusedWord.length !== 0) {
+    yield put(
+      updateFilterPattern(`^${focusedWord.map(s => s.value || '.').join('')}$`),
+    );
+  }
 }
 
 function* autosave() {
