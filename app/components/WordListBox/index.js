@@ -14,7 +14,9 @@ import TableCell from '@material-ui/core/TableCell';
 function WordListBox({ word, score, updateEntry }) {
   return (
     <TableRow>
-      <TableCell style={{ width: '40%' }}>{word}</TableCell>
+      <TableCell style={{ width: '40%', textTransform: 'uppercase' }}>
+        {word}
+      </TableCell>
       <TableCell style={{ width: '5%' }} align="right">
         <Input
           onChange={e => updateEntry({ score: e.target.value })}
