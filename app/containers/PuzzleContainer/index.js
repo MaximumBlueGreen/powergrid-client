@@ -50,7 +50,7 @@ const PuzzleContainerWrapper = styled.div`
 
 class PuzzleContainer extends React.Component {
   componentDidMount() {
-    this.props.loadPuzzles();
+    this.props.loadPuzzles(this.props.puzzleId);
   }
 
   render() {
@@ -128,7 +128,7 @@ class PuzzleContainer extends React.Component {
           <Grid item container xs={11} md={5}>
             <Grid item xs={12}>
               <TextField
-                value={activePuzzleId && puzzles[activePuzzleId].title}
+                value={(activePuzzleId && puzzles[activePuzzleId].title) || ''}
                 placeholder="Untitled"
                 margin="normal"
                 name="title"
@@ -176,6 +176,7 @@ PuzzleContainer.propTypes = {
   updatePuzzleTitle: PropTypes.func.isRequired,
   uploadPuzzle: PropTypes.func.isRequired,
   openModal: PropTypes.func.isRequired,
+  puzzleId: PropTypes.string,
 };
 
 const mapStateToProps = createStructuredSelector({

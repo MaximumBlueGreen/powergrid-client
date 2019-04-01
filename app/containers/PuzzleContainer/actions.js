@@ -19,9 +19,10 @@ export function defaultAction() {
   };
 }
 
-export function loadPuzzles() {
+export function loadPuzzles(selectedPuzzleId) {
   return {
     type: PUZZLES_LOADED,
+    selectedPuzzleId,
   };
 }
 

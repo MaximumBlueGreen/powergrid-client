@@ -8,17 +8,18 @@ import entitiesSelector from 'entities/selectors';
 import { SQUARE_FOCUSED } from 'containers/GridContainer/constants';
 import { makeSelectGridContainerFocusedWord } from 'containers/GridContainer/selectors';
 import { updateFilterPattern } from 'containers/WordListContainer/actions';
-import { savePuzzles, savePuzzlesSuccess } from './actions';
+import { savePuzzles, savePuzzlesSuccess, selectPuzzle } from './actions';
 import { PUZZLES_LOADED, PUZZLES_SAVED, PUZZLE_UPLOADED } from './constants';
 import { makeSelectPuzzleContainer } from './selectors';
 
-export function* getPuzzlesSaga() {
+export function* getPuzzlesSaga({ selectedPuzzleId }) {
   yield authenticated(
     'users/me/puzzles',
     { method: 'GET' },
     function* onSuccess(puzzles) {
       const { entities } = normalize(puzzles, [puzzleSchema]);
       yield put(loadEntities(entities));
+      yield put(selectPuzzle(selectedPuzzleId));
     },
     function* onFailure(err) {
       console.log(err);

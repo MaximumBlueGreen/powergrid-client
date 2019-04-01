@@ -12,9 +12,19 @@
 import React from 'react';
 
 import PuzzleContainer from 'containers/PuzzleContainer';
+import PropTypes from 'prop-types';
 /* eslint-disable react/prefer-stateless-function */
 export default class HomePage extends React.PureComponent {
   render() {
-    return <PuzzleContainer />;
+    const { match } = this.props;
+    return <PuzzleContainer puzzleId={match.params.puzzleId} />;
   }
 }
+
+HomePage.propTypes = {
+  match: PropTypes.shape({
+    params: PropTypes.shape({
+      puzzleId: PropTypes.string,
+    }),
+  }),
+};

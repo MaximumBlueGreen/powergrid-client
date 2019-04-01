@@ -25,14 +25,15 @@ function puzzleContainerReducer(state = initialState, action) {
     case ENTITIES_LOADED: {
       if (action.entities.puzzles) {
         const puzzleIds = Object.keys(action.entities.puzzles);
-        return state
-          .set('puzzleIds', fromJS(puzzleIds))
-          .set('activePuzzleId', puzzleIds[0]);
+        return state.set('puzzleIds', fromJS(puzzleIds));
       }
       return state;
     }
     case PUZZLE_SELECTED:
-      return state.set('activePuzzleId', action.id);
+      if (state.get('puzzleIds').includes(action.id)) {
+        return state.set('activePuzzleId', action.id);
+      }
+      return state;
     case PUZZLES_SAVED:
       return state.set('isSyncing', true);
     case PUZZLES_SAVED_SUCCESS:

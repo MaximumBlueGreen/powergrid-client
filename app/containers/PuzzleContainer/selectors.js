@@ -15,7 +15,11 @@ const makeSelectPuzzleContainerData = () =>
   createSelector(puzzlesSelector, JSify);
 
 const makeSelectPuzzleContainer = () =>
-  createSelector(selectPuzzleContainerDomain, JSify);
+  createSelector(selectPuzzleContainerDomain, state =>
+    state
+      .update('activePuzzleId', id => id || state.getIn(['puzzleIds', 0]))
+      .toJS(),
+  );
 
 export {
   selectPuzzleContainerDomain,

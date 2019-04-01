@@ -29,7 +29,7 @@ export default function App() {
       <MuiThemeProvider theme={theme}>
         <ThemeProvider theme={theme}>
           <Switch>
-            <Route exact path="/home" component={HomePage} />
+            <Route path="/home/:puzzleId?" component={HomePage} />
             <Route exact path="/login" component={LoginPage} />
             <Route component={NotFoundPage} />
           </Switch>

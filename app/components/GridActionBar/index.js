@@ -39,20 +39,20 @@ function GridActionBar({
     <Grid container alignItems="center" spacing={8}>
       <Grid item>
         <Tooltip title="Undo" placement="top">
-          <IconButton color="primary">
-            <UndoIcon onClick={undo} fontSize="small" />
+          <IconButton color="primary" onClick={undo}>
+            <UndoIcon fontSize="small" />
           </IconButton>
         </Tooltip>
         <Tooltip title="Redo" placement="top">
-          <IconButton color="primary">
-            <RedoIcon onClick={redo} fontSize="small" />
+          <IconButton color="primary" onClick={redo}>
+            <RedoIcon fontSize="small" />
           </IconButton>
         </Tooltip>
       </Grid>
       <Grid item>
         <Tooltip title="Clear Grid" placement="top">
-          <IconButton color="primary">
-            <ClearSquaresIcon fontSize="small" onClick={clearSquares} />
+          <IconButton color="primary" onClick={clearSquares}>
+            <ClearSquaresIcon fontSize="small" />
           </IconButton>
         </Tooltip>
       </Grid>
