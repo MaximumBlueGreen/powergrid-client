@@ -14,8 +14,8 @@ export function* getEntries() {
       method: 'GET',
     },
     function* onSuccess(entries) {
-      const { entities } = normalize(entries, [entrySchema]);
-      yield put(loadEntities(entities));
+      const { entities, result } = normalize(entries, [entrySchema]);
+      yield put(loadEntities(entities, result));
     },
     function* onError(error) {
       console.log(error);

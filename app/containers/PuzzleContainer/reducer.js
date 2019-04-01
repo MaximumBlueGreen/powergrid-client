@@ -24,7 +24,7 @@ function puzzleContainerReducer(state = initialState, action) {
   switch (action.type) {
     case ENTITIES_LOADED: {
       if (action.entities.puzzles) {
-        const puzzleIds = Object.keys(action.entities.puzzles);
+        const puzzleIds = action.result.map(String);
         return state.set('puzzleIds', fromJS(puzzleIds));
       }
       return state;

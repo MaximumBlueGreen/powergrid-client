@@ -17,8 +17,8 @@ export function* getPuzzlesSaga({ selectedPuzzleId }) {
     'users/me/puzzles',
     { method: 'GET' },
     function* onSuccess(puzzles) {
-      const { entities } = normalize(puzzles, [puzzleSchema]);
-      yield put(loadEntities(entities));
+      const { entities, result } = normalize(puzzles, [puzzleSchema]);
+      yield put(loadEntities(entities, result));
       yield put(selectPuzzle(selectedPuzzleId));
     },
     function* onFailure(err) {
