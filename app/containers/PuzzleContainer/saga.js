@@ -29,37 +29,34 @@ export function* getPuzzlesSaga({ selectedPuzzleId }) {
 
 export function* savePuzzlesSaga() {
   const entities = yield select(entitiesSelector);
+  const { activePuzzleId } = yield select(makeSelectPuzzleContainer());
 
-  /* TODO batch/bulk */
-  const puzzles = Object.values(entities.puzzles).map(p => {
-    const denormalizedPuzzle = denormalize(p, puzzleSchema, entities);
-    return {
-      ...denormalizedPuzzle,
-      puzzle: {
-        squares: denormalizedPuzzle.squares,
-        size: denormalizedPuzzle.size,
-        title: denormalizedPuzzle.title,
-      },
-    };
-  });
-
-  yield all(
-    puzzles.map(p =>
-      authenticated(
-        `puzzles/${p.id}`,
-        {
-          method: 'PUT',
-          body: JSON.stringify(p),
-        },
-        function* onSuccess() {
-          yield delay(500);
-          yield put(savePuzzlesSuccess());
-        },
-        function* onError(error) {
-          console.log(error);
-        },
-      ),
-    ),
+  const denormalizedPuzzle = denormalize(
+    entities.puzzles[activePuzzleId],
+    puzzleSchema,
+    entities,
+  );
+  const puzzle = {
+    ...denormalizedPuzzle,
+    puzzle: {
+      squares: denormalizedPuzzle.squares,
+      size: denormalizedPuzzle.size,
+      title: denormalizedPuzzle.title,
+    },
+  };
+  yield authenticated(
+    `puzzles/${puzzle.id}`,
+    {
+      method: 'PUT',
+      body: JSON.stringify(puzzle),
+    },
+    function* onSuccess() {
+      yield delay(500);
+      yield put(savePuzzlesSuccess());
+    },
+    function* onError(error) {
+      console.log(error);
+    },
   );
 }
 
