@@ -55,7 +55,7 @@ class PuzzleContainer extends React.Component {
 
   render() {
     const {
-      ui: { activePuzzleId, puzzleIds, isSyncing, lastSynced },
+      ui: { activePuzzleId, puzzleIds, isSyncing, lastSynced, loading },
       data: puzzles,
       // loadPuzzles,
       selectPuzzle,
@@ -67,7 +67,7 @@ class PuzzleContainer extends React.Component {
 
     return (
       <PuzzleContainerWrapper>
-        <CreatePuzzleModal />
+        <CreatePuzzleModal forceOpen={!loading && puzzleIds.length === 0} />
         <Grid
           component={Paper}
           square
@@ -134,29 +134,31 @@ class PuzzleContainer extends React.Component {
         </Grid> */}
         </Grid>
         <Grid container justify="center" alignItems="flex-start" spacing={16}>
-          <Grid item container xs={11} md={5}>
-            <Grid item xs={12}>
-              <TextField
-                value={(activePuzzleId && puzzles[activePuzzleId].title) || ''}
-                placeholder="Untitled"
-                margin="normal"
-                name="title"
-                onChange={e =>
-                  updatePuzzleTitle(activePuzzleId, e.target.value)
-                }
+          {activePuzzleId && (
+            <Grid item container xs={11} md={5}>
+              <Grid item xs={12}>
+                <TextField
+                  value={puzzles[activePuzzleId].title || ''}
+                  placeholder="Untitled"
+                  margin="normal"
+                  name="title"
+                  onChange={e =>
+                    updatePuzzleTitle(activePuzzleId, e.target.value)
+                  }
+                />
+              </Grid>
+              <Grid
+                item
+                xs={12}
+                component={SyncStatus}
+                isSyncing={isSyncing}
+                lastSynced={lastSynced}
               />
+              <Grid item xs={12}>
+                <GridContainer puzzleId={activePuzzleId} />
+              </Grid>
             </Grid>
-            <Grid
-              item
-              xs={12}
-              component={SyncStatus}
-              isSyncing={isSyncing}
-              lastSynced={lastSynced}
-            />
-            <Grid item xs={12}>
-              {activePuzzleId && <GridContainer puzzleId={activePuzzleId} />}
-            </Grid>
-          </Grid>
+          )}
           <Grid item xs={11} md={6}>
             <Tabs value="WordList">
               <Tab key="WordList" label="WordList" value="WordList" />

@@ -11,6 +11,7 @@ import {
   PUZZLE_SELECTED,
   PUZZLES_SAVED,
   PUZZLES_SAVED_SUCCESS,
+  PUZZLES_LOADED,
 } from './constants';
 
 export const initialState = fromJS({
@@ -18,6 +19,7 @@ export const initialState = fromJS({
   puzzleIds: [],
   lastSynced: Date.now(),
   isSyncing: false,
+  loading: true,
 });
 
 function puzzleContainerReducer(state = initialState, action) {
@@ -25,10 +27,12 @@ function puzzleContainerReducer(state = initialState, action) {
     case ENTITIES_LOADED: {
       if (action.entities.puzzles) {
         const puzzleIds = action.result.map(String);
-        return state.set('puzzleIds', fromJS(puzzleIds));
+        return state.set('puzzleIds', fromJS(puzzleIds)).set('loading', false);
       }
-      return state;
+      return state.set('loading', false);
     }
+    case PUZZLES_LOADED:
+      return state.set('loading', true);
     case PUZZLE_SELECTED:
       if (state.get('puzzleIds').includes(action.id)) {
         return state.set('activePuzzleId', action.id);

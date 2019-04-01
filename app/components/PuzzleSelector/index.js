@@ -12,17 +12,19 @@ import Tab from '@material-ui/core/Tab';
 
 function PuzzleSelector({ activePuzzleId, puzzles, onPuzzleSelected }) {
   return (
-    <Tabs
-      variant="scrollable"
-      value={activePuzzleId}
-      onChange={(e, value) => {
-        onPuzzleSelected(value);
-      }}
-    >
-      {puzzles.map(p => (
-        <Tab key={p.id} label={p.title || `Untitled`} value={p.id} />
-      ))}
-    </Tabs>
+    puzzles.length > 0 && (
+      <Tabs
+        variant="scrollable"
+        value={activePuzzleId}
+        onChange={(e, value) => {
+          onPuzzleSelected(value);
+        }}
+      >
+        {puzzles.map(p => (
+          <Tab key={p.id} label={p.title || `Untitled`} value={p.id} />
+        ))}
+      </Tabs>
+    )
   );
 }
 

@@ -31,6 +31,7 @@ import reducer from './reducer';
 import { makeSelectCreatePuzzleModal } from './selectors';
 
 function CreatePuzzleModal({
+  forceOpen,
   closeModal,
   createPuzzle,
   updateSize,
@@ -44,7 +45,7 @@ function CreatePuzzleModal({
   return (
     <div>
       <Dialog
-        open={open}
+        open={forceOpen || open}
         onClose={closeModal}
         aria-labelledby="form-dialog-title"
       >
@@ -71,7 +72,7 @@ function CreatePuzzleModal({
           </Grid>
         </DialogContent>
         <DialogActions>
-          <Button onClick={closeModal} color="default">
+          <Button onClick={closeModal} color="default" disabled={forceOpen}>
             Cancel
           </Button>
           <Button
@@ -98,6 +99,7 @@ CreatePuzzleModal.propTypes = {
       width: PropTypes.number.isRequired,
     }),
   }).isRequired,
+  forceOpen: PropTypes.bool,
 };
 
 const mapStateToProps = createStructuredSelector({
