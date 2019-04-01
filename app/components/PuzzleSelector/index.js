@@ -13,6 +13,7 @@ import Tab from '@material-ui/core/Tab';
 function PuzzleSelector({ activePuzzleId, puzzles, onPuzzleSelected }) {
   return (
     <Tabs
+      variant="scrollable"
       value={activePuzzleId}
       onChange={(e, value) => {
         onPuzzleSelected(value);

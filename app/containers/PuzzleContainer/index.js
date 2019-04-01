@@ -108,14 +108,13 @@ class PuzzleContainer extends React.Component {
               LOAD PUZZLES
             </Grid>
           </Grid> */}
-          <Grid
-            item
-            xs
-            component={PuzzleSelector}
-            puzzles={puzzleIds.map(id => puzzles[id])}
-            activePuzzleId={activePuzzleId}
-            onPuzzleSelected={selectPuzzle}
-          />
+          <Grid item xs={10}>
+            <PuzzleSelector
+              puzzles={puzzleIds.map(id => puzzles[id])}
+              activePuzzleId={activePuzzleId}
+              onPuzzleSelected={selectPuzzle}
+            />
+          </Grid>
           <Grid
             item
             component={Button}
