@@ -24,6 +24,9 @@ function reducer(state = initialState, action) {
       );
     }
     case SQUARE_VALUE_UPDATED:
+      if (state.getIn([action.squareId, 'isBlack'])) {
+        return state;
+      }
       return state.setIn([action.squareId, 'value'], action.value);
     case SQUARES_CLEARED:
       return state.mergeDeep(
