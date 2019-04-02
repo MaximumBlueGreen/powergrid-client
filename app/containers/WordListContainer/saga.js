@@ -5,7 +5,7 @@ import { normalize } from 'normalizr';
 import { authenticated } from 'utils/apiRequestSaga';
 import selectEntries from 'entities/Entries/selectors';
 import { ENTRY_UPDATED } from 'entities/Entries/constants';
-import { WORDLIST_LOADED, ENTRY_ADDED, ENTRY_DELETED } from './constants';
+import { WORDLIST_LOADED, ENTRY_DELETED } from './constants';
 
 export function* getEntries() {
   yield authenticated(
@@ -16,22 +16,6 @@ export function* getEntries() {
     function* onSuccess(entries) {
       const { entities, result } = normalize(entries, [entrySchema]);
       yield put(loadEntities(entities, result));
-    },
-    function* onError(error) {
-      console.log(error);
-    },
-  );
-}
-
-export function* addEntry({ entry }) {
-  yield authenticated(
-    'entries',
-    {
-      method: 'POST',
-      body: JSON.stringify(entry),
-    },
-    function* onSuccess() {
-      yield getEntries();
     },
     function* onError(error) {
       console.log(error);
@@ -77,7 +61,6 @@ export function* deleteEntry({ entryId }) {
 export default function* wordListContainerSaga() {
   yield all([
     takeLatest(WORDLIST_LOADED, getEntries),
-    takeLatest(ENTRY_ADDED, addEntry),
     takeLatest(ENTRY_UPDATED, updateEntry),
     takeLatest(ENTRY_DELETED, deleteEntry),
   ]);
