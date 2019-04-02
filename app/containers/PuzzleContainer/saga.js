@@ -8,6 +8,8 @@ import entitiesSelector from 'entities/selectors';
 import { SQUARE_FOCUSED } from 'containers/GridContainer/constants';
 import { makeSelectGridContainerFocusedWord } from 'containers/GridContainer/selectors';
 import { updateFilterPattern } from 'containers/WordListContainer/actions';
+import { ENTRY_SELECTED } from 'containers/WordListContainer/constants';
+import { bulkUpdateSquareValue } from 'entities/Squares/actions';
 import { savePuzzles, savePuzzlesSuccess, selectPuzzle } from './actions';
 import { PUZZLES_LOADED, PUZZLES_SAVED, PUZZLE_UPLOADED } from './constants';
 import { makeSelectPuzzleContainer } from './selectors';
@@ -106,6 +108,17 @@ function* updateFilterPatternFromGrid() {
   }
 }
 
+function* updateGridFromEntry({ entry }) {
+  const { activePuzzleId } = yield select(makeSelectPuzzleContainer());
+  const focusedWord = yield select(makeSelectGridContainerFocusedWord(), {
+    puzzleId: activePuzzleId,
+  });
+
+  if (entry.length === focusedWord.length) {
+    yield put(bulkUpdateSquareValue(focusedWord.map(s => s.id), entry));
+  }
+}
+
 function* autosave() {
   while (true) {
     yield delay(10000);
@@ -119,6 +132,7 @@ export default function* saga() {
     takeLatest(PUZZLES_SAVED, savePuzzlesSaga),
     takeLatest(PUZZLE_UPLOADED, uploadPuzzleSaga),
     takeLatest(SQUARE_FOCUSED, updateFilterPatternFromGrid),
+    takeLatest(ENTRY_SELECTED, updateGridFromEntry),
     autosave(),
   ]);
 }

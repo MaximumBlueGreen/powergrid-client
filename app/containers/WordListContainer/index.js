@@ -21,7 +21,7 @@ import {
 } from './selectors';
 import reducer from './reducer';
 import saga from './saga';
-import { loadWordList, updateFilterPattern } from './actions';
+import { loadWordList, updateFilterPattern, selectEntry } from './actions';
 
 class WordListContainer extends React.Component {
   componentDidMount() {
@@ -34,6 +34,7 @@ class WordListContainer extends React.Component {
       ui: { filterPattern },
       updateFilterPattern,
       updateEntry,
+      selectEntry,
     } = this.props;
     return (
       <WordList
@@ -41,6 +42,7 @@ class WordListContainer extends React.Component {
         filterPattern={filterPattern}
         updateFilterPattern={updateFilterPattern}
         updateEntry={updateEntry}
+        selectEntry={selectEntry}
       />
     );
   }
@@ -56,6 +58,7 @@ WordListContainer.propTypes = {
   }),
   updateFilterPattern: PropTypes.func.isRequired,
   updateEntry: PropTypes.func.isRequired,
+  selectEntry: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = createStructuredSelector({
@@ -65,7 +68,7 @@ const mapStateToProps = createStructuredSelector({
 
 function mapDispatchToProps(dispatch) {
   return bindActionCreators(
-    { loadWordList, updateFilterPattern, updateEntry },
+    { loadWordList, updateFilterPattern, updateEntry, selectEntry },
     dispatch,
   );
 }

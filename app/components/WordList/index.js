@@ -21,6 +21,7 @@ function WordList({
   updateFilterPattern,
   filterPattern,
   updateEntry,
+  selectEntry,
 }) {
   return (
     <div>
@@ -48,6 +49,7 @@ function WordList({
               word={w.entry}
               score={w.score}
               updateEntry={entry => updateEntry(w.id, entry)}
+              selectEntry={() => selectEntry(w.entry)}
             />
           ))}
         </TableBody>
@@ -62,6 +64,7 @@ WordList.propTypes = {
   wordList: PropTypes.array.isRequired,
   updateFilterPattern: PropTypes.func.isRequired,
   updateEntry: PropTypes.func.isRequired,
+  selectEntry: PropTypes.func.isRequired,
 };
 
 export default WordList;

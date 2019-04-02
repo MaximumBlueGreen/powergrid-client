@@ -7,6 +7,7 @@
 import {
   SQUARE_BLACK_TOGGLED,
   SQUARE_VALUE_UPDATED,
+  BULK_SQUARE_VALUE_UPDATED,
   SQUARES_CLEARED,
 } from './constants';
 
@@ -23,6 +24,14 @@ export function updateSquareValue(squareId, value) {
     type: SQUARE_VALUE_UPDATED,
     squareId,
     value,
+  };
+}
+
+export function bulkUpdateSquareValue(squareIds, values) {
+  return {
+    type: BULK_SQUARE_VALUE_UPDATED,
+    squareIds,
+    values,
   };
 }
 
