@@ -16,6 +16,8 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import TableCell from '@material-ui/core/TableCell';
 
+import { orderBy } from 'lodash';
+
 function WordList({
   wordList,
   updateFilterPattern,
@@ -41,7 +43,7 @@ function WordList({
           </TableRow>
         </TableHead>
         <TableBody>
-          {wordList.map(w => (
+          {orderBy(wordList, 'score', 'desc').map(w => (
             <WordListBox
               component={WordListBox}
               selected
