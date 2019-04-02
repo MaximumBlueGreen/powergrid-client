@@ -186,6 +186,7 @@ class PuzzleContainer extends React.Component {
                 rows="25"
                 margin="normal"
                 variant="outlined"
+                placeholder="This is your place to brainstorm theme ideas and clues and to leave notes for yourself, the editor or your test solvers."
               />
             )}
           </Grid>
