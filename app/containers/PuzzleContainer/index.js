@@ -37,6 +37,7 @@ import {
   selectPuzzle,
   savePuzzles,
   uploadPuzzle,
+  handleTabChange,
 } from './actions';
 
 import saga from './saga';
@@ -55,7 +56,14 @@ class PuzzleContainer extends React.Component {
 
   render() {
     const {
-      ui: { activePuzzleId, puzzleIds, isSyncing, lastSynced, loading },
+      ui: {
+        activePuzzleId,
+        puzzleIds,
+        isSyncing,
+        lastSynced,
+        loading,
+        tabValue,
+      },
       data: puzzles,
       // loadPuzzles,
       selectPuzzle,
@@ -63,6 +71,7 @@ class PuzzleContainer extends React.Component {
       openModal,
       updatePuzzleTitle,
       // uploadPuzzle,
+      handleTabChange,
     } = this.props;
 
     return (
@@ -160,14 +169,25 @@ class PuzzleContainer extends React.Component {
             </Grid>
           )}
           <Grid item xs={11} md={6}>
-            <Tabs value="WordList">
+            <Tabs value={tabValue} onChange={handleTabChange}>
               <Tab key="WordList" label="WordList" value="WordList" />
               <Tab key="Dictionary" label="Dictionary" value="Dictionary" />
               <Tab key="Puzzle Data" label="Puzzle Data" value="Puzzle Data" />
               <Tab key="Notes" label="Notes" value="Notes" />
             </Tabs>
-            <WordListContainer />
-            <DictionaryContainer />
+            {tabValue === 'WordList' && <WordListContainer />}
+            {tabValue === 'Dictionary' && <DictionaryContainer />}
+            {tabValue === 'Puzzle Data' && <div>Hello</div>}
+            {tabValue === 'Notes' && (
+              <TextField
+                id="standard-multiline-static"
+                multiline
+                fullWidth
+                rows="25"
+                margin="normal"
+                variant="outlined"
+              />
+            )}
           </Grid>
         </Grid>
       </PuzzleContainerWrapper>
@@ -188,6 +208,7 @@ PuzzleContainer.propTypes = {
   // uploadPuzzle: PropTypes.func.isRequired,
   openModal: PropTypes.func.isRequired,
   puzzleId: PropTypes.string,
+  handleTabChange: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = createStructuredSelector({
@@ -204,6 +225,7 @@ function mapDispatchToProps(dispatch) {
       updatePuzzleTitle,
       uploadPuzzle,
       openModal,
+      handleTabChange,
     },
     dispatch,
   );

@@ -12,6 +12,7 @@ import {
   PUZZLES_SAVED,
   PUZZLES_SAVED_SUCCESS,
   PUZZLES_LOADED,
+  TAB_CHANGED,
 } from './constants';
 
 export const initialState = fromJS({
@@ -20,6 +21,7 @@ export const initialState = fromJS({
   lastSynced: Date.now(),
   isSyncing: false,
   loading: true,
+  tabValue: 'WordList',
 });
 
 function puzzleContainerReducer(state = initialState, action) {
@@ -42,6 +44,9 @@ function puzzleContainerReducer(state = initialState, action) {
       return state.set('isSyncing', true);
     case PUZZLES_SAVED_SUCCESS:
       return state.set('isSyncing', false).set('lastSynced', Date.now());
+    case TAB_CHANGED:
+      console.log(state.set('tabValue', action.tabValue));
+      return state.set('tabValue', action.tabValue);
     default:
       return state;
   }

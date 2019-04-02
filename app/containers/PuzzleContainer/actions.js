@@ -11,6 +11,7 @@ import {
   PUZZLES_SAVED_SUCCESS,
   PUZZLE_SELECTED,
   PUZZLE_UPLOADED,
+  TAB_CHANGED,
 } from './constants';
 
 export function defaultAction() {
@@ -49,5 +50,12 @@ export function uploadPuzzle(puzzleFile) {
   return {
     type: PUZZLE_UPLOADED,
     puzzleFile,
+  };
+}
+
+export function handleTabChange(event, value) {
+  return {
+    type: TAB_CHANGED,
+    tabValue: value,
   };
 }
