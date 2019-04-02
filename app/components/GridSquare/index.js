@@ -62,7 +62,6 @@ function GridSquare({
   value,
   isBlack,
   onClick,
-  onDoubleClick,
   isFocused,
   isPartOfFocusedWord,
 }) {
@@ -72,7 +71,6 @@ function GridSquare({
       isFocused={isFocused}
       isPartOfFocusedWord={isPartOfFocusedWord}
       onClick={onClick}
-      onDoubleClick={onDoubleClick}
     >
       {number && <NumberWrapper>{number}</NumberWrapper>}
       <ValueWrapper>{value}</ValueWrapper>
@@ -85,7 +83,6 @@ GridSquare.propTypes = {
   value: PropTypes.string,
   isBlack: PropTypes.bool,
   onClick: PropTypes.func.isRequired,
-  onDoubleClick: PropTypes.func.isRequired,
   isFocused: PropTypes.bool,
   isPartOfFocusedWord: PropTypes.bool,
 };

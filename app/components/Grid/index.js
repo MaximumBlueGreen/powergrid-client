@@ -47,7 +47,6 @@ class Grid extends React.Component {
       focusedSquareId,
       focusedWordSquareIds,
       onSquareClicked,
-      onSquareDoubleClicked,
       onKeyPressed,
     } = this.props;
 
@@ -67,7 +66,6 @@ class Grid extends React.Component {
             isFocused={focusedSquareId === s.id}
             isPartOfFocusedWord={focusedWordSquareIds.includes(s.id)}
             onClick={() => onSquareClicked(s.id)}
-            onDoubleClick={() => onSquareDoubleClicked(s.id)}
           />
         ))}
       </StyledGrid>
@@ -84,7 +82,6 @@ Grid.propTypes = {
   focusedSquareId: PropTypes.string.isRequired,
   focusedWordSquareIds: PropTypes.arrayOf(PropTypes.string).isRequired,
   onSquareClicked: PropTypes.func.isRequired,
-  onSquareDoubleClicked: PropTypes.func.isRequired,
   onKeyPressed: PropTypes.func.isRequired,
 };
 

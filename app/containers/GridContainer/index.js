@@ -84,7 +84,6 @@ function GridContainer({
               ? id => focusSquareClamped(squares.findIndex(s => s.id === id))
               : toggleBlackSquareWithSymmetry
           }
-          onSquareDoubleClicked={toggleBlackSquareWithSymmetry}
           onKeyPressed={e => {
             const { keyCode, metaKey, key, shiftKey } = e;
             e.preventDefault();
