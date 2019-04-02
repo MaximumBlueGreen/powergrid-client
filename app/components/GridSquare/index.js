@@ -25,11 +25,11 @@ const GridSquareWrapper = styled.div`
     }
 
     if (isFocused) {
-      return 'background-color: lightblue;';
+      return 'background-color: yellow;';
     }
 
     if (isPartOfFocusedWord) {
-      return 'background-color: yellow';
+      return 'background-color: lightblue';
     }
     return '';
   }};
