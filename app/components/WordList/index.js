@@ -24,6 +24,7 @@ function WordList({
   filterPattern,
   updateEntry,
   selectEntry,
+  deleteEntry,
 }) {
   return (
     <div>
@@ -39,7 +40,8 @@ function WordList({
         <TableHead>
           <TableRow>
             <TableCell>Word</TableCell>
-            <TableCell align="right">Score</TableCell>
+            <TableCell>Score</TableCell>
+            <TableCell />
           </TableRow>
         </TableHead>
         <TableBody>
@@ -52,6 +54,7 @@ function WordList({
               score={w.score}
               updateEntry={entry => updateEntry(w.id, entry)}
               selectEntry={() => selectEntry(w.entry)}
+              deleteEntry={() => deleteEntry(w.id)}
             />
           ))}
         </TableBody>
@@ -67,6 +70,7 @@ WordList.propTypes = {
   updateFilterPattern: PropTypes.func.isRequired,
   updateEntry: PropTypes.func.isRequired,
   selectEntry: PropTypes.func.isRequired,
+  deleteEntry: PropTypes.func.isRequired,
 };
 
 export default WordList;

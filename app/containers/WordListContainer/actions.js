@@ -9,6 +9,7 @@ import {
   FILTER_PATTERN_UPDATED,
   ENTRY_ADDED,
   ENTRY_SELECTED,
+  ENTRY_DELETED,
 } from './constants';
 
 export function loadWordList() {
@@ -28,6 +29,13 @@ export function addEntry(entry) {
   return {
     type: ENTRY_ADDED,
     entry,
+  };
+}
+
+export function deleteEntry(entryId) {
+  return {
+    type: ENTRY_DELETED,
+    entryId,
   };
 }
 
