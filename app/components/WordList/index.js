@@ -7,16 +7,24 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import WordListBox from 'components/WordListBox';
-import AddEntryContainer from 'containers/AddEntryContainer';
 
 import TextField from '@material-ui/core/TextField';
+import { Field } from 'redux-form/immutable';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import TableCell from '@material-ui/core/TableCell';
+import IconButton from '@material-ui/core/IconButton';
+import { Add as AddIcon } from '@material-ui/icons';
+import Input from '@material-ui/core/Input';
+import Tooltip from '@material-ui/core/Tooltip';
 
 import { orderBy } from 'lodash';
+
+const renderFormComponent = Component => ({ input, label, ...custom }) => (
+  <Component label={label} {...input} {...custom} />
+);
 
 function WordList({
   wordList,
@@ -39,9 +47,29 @@ function WordList({
       <Table>
         <TableHead>
           <TableRow>
-            <TableCell>Word</TableCell>
-            <TableCell>Score</TableCell>
-            <TableCell />
+            <TableCell>
+              <Field
+                component={renderFormComponent(TextField)}
+                type="text"
+                name="entry"
+                placeholder="NEW WORD"
+              />
+            </TableCell>
+            <TableCell>
+              <Field
+                name="score"
+                type="number"
+                component={renderFormComponent(Input)}
+                placeholder="0"
+              />
+            </TableCell>
+            <TableCell>
+              <Tooltip title="Add" placement="right">
+                <IconButton type="submit" color="primary">
+                  <AddIcon />
+                </IconButton>
+              </Tooltip>
+            </TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -59,7 +87,6 @@ function WordList({
           ))}
         </TableBody>
       </Table>
-      <AddEntryContainer />
     </div>
   );
 }

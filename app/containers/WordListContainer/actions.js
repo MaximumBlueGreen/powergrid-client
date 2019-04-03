@@ -25,10 +25,10 @@ export function updateFilterPattern(pattern) {
   };
 }
 
-export function addEntry(entry) {
+export function addEntry(values) {
   return {
     type: ENTRY_ADDED,
-    entry,
+    values,
   };
 }
 

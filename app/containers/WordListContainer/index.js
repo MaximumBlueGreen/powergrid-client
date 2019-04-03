@@ -9,6 +9,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import { compose, bindActionCreators } from 'redux';
+import { reduxForm } from 'redux-form/immutable';
 
 import WordList from 'components/WordList';
 
@@ -26,6 +27,7 @@ import {
   updateFilterPattern,
   selectEntry,
   deleteEntry,
+  addEntry,
 } from './actions';
 
 class WordListContainer extends React.Component {
@@ -41,16 +43,20 @@ class WordListContainer extends React.Component {
       updateEntry,
       selectEntry,
       deleteEntry,
+      handleSubmit,
+      addEntry,
     } = this.props;
     return (
-      <WordList
-        wordList={entries}
-        filterPattern={filterPattern}
-        updateFilterPattern={updateFilterPattern}
-        updateEntry={updateEntry}
-        selectEntry={selectEntry}
-        deleteEntry={deleteEntry}
-      />
+      <form onSubmit={handleSubmit(addEntry)}>
+        <WordList
+          wordList={entries}
+          filterPattern={filterPattern}
+          updateFilterPattern={updateFilterPattern}
+          updateEntry={updateEntry}
+          selectEntry={selectEntry}
+          deleteEntry={deleteEntry}
+        />
+      </form>
     );
   }
 }
@@ -67,6 +73,8 @@ WordListContainer.propTypes = {
   updateEntry: PropTypes.func.isRequired,
   selectEntry: PropTypes.func.isRequired,
   deleteEntry: PropTypes.func.isRequired,
+  handleSubmit: PropTypes.func.isRequired,
+  addEntry: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = createStructuredSelector({
@@ -82,6 +90,7 @@ function mapDispatchToProps(dispatch) {
       updateEntry,
       selectEntry,
       deleteEntry,
+      addEntry,
     },
     dispatch,
   );
@@ -98,5 +107,6 @@ const withSaga = injectSaga({ key: 'wordListContainer', saga });
 export default compose(
   withReducer,
   withSaga,
+  reduxForm({ form: 'addEntry' }),
   withConnect,
 )(WordListContainer);

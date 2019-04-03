@@ -45,7 +45,6 @@ function puzzleContainerReducer(state = initialState, action) {
     case PUZZLES_SAVED_SUCCESS:
       return state.set('isSyncing', false).set('lastSynced', Date.now());
     case TAB_CHANGED:
-      console.log(state.set('tabValue', action.tabValue));
       return state.set('tabValue', action.tabValue);
     default:
       return state;
