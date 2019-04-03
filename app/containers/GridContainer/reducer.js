@@ -23,7 +23,7 @@ export const initialState = fromJS({
   focusedSquareIndex: 0,
   focusedDirection: ACROSS,
   clickMode: CLICK_MODE_FILL,
-  symmetryMode: SYMMETRY_MODE_NONE,
+  symmetryMode: SYMMETRY_MODE_DIAGONAL,
 });
 
 function gridContainerReducer(state = initialState, action) {
