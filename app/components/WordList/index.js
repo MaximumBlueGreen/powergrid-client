@@ -26,6 +26,9 @@ const renderFormComponent = Component => ({ input, label, ...custom }) => (
   <Component label={label} {...input} {...custom} />
 );
 
+const renderTextField = renderFormComponent(TextField);
+const renderInput = renderFormComponent(Input);
+
 function WordList({
   wordList,
   updateFilterPattern,
@@ -49,17 +52,18 @@ function WordList({
           <TableRow>
             <TableCell>
               <Field
-                component={renderFormComponent(TextField)}
+                component={renderTextField}
+                inputProps={{ style: { textTransform: 'uppercase' } }}
                 type="text"
                 name="entry"
-                placeholder="NEW WORD"
+                placeholder="Entry"
               />
             </TableCell>
             <TableCell>
               <Field
                 name="score"
                 type="number"
-                component={renderFormComponent(Input)}
+                component={renderInput}
                 placeholder="0"
               />
             </TableCell>
