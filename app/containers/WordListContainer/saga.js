@@ -65,7 +65,7 @@ export function* addEntry({ values }) {
     'entries',
     {
       method: 'POST',
-      body: JSON.stringify({ entry, score }),
+      body: JSON.stringify({ entry: entry.toUpperCase(), score }),
     },
     function* onSuccess() {
       yield put(reset('addEntry'));
