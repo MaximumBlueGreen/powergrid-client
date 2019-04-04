@@ -13,6 +13,7 @@ import { compose, bindActionCreators } from 'redux';
 import injectReducer from 'utils/injectReducer';
 import injectSaga from 'utils/injectSaga';
 import GridContainer from 'containers/GridContainer';
+import CluesContainer from 'containers/CluesContainer';
 import PuzzleSelector from 'components/PuzzleSelector';
 import SyncStatus from 'components/SyncStatus';
 import Grid from '@material-ui/core/Grid';
@@ -170,11 +171,13 @@ class PuzzleContainer extends React.Component {
           )}
           <Grid item xs={11} md={6}>
             <Tabs value={tabValue} onChange={handleTabChange}>
-              <Tab key="WordList" label="WordList" value="WordList" />
+              <Tab key="Clues" label="Clues" value="Clues" />
+              <Tab key="WordList" label="Word List" value="WordList" />
               <Tab key="Dictionary" label="Dictionary" value="Dictionary" />
               <Tab key="Puzzle Data" label="Puzzle Data" value="Puzzle Data" />
               <Tab key="Notes" label="Notes" value="Notes" />
             </Tabs>
+            {tabValue === 'Clues' && <CluesContainer />}
             {tabValue === 'WordList' && <WordListContainer />}
             {tabValue === 'Dictionary' && <DictionaryContainer />}
             {tabValue === 'Puzzle Data' && <div>Hello</div>}
