@@ -80,6 +80,20 @@ const makeSelectGridContainerFocusedWord = () =>
         .toJS(),
   );
 
+const makeSelectGridContainerWords = () =>
+  createSelector(makeSelectGridContainerSquareNumbers(), state => ({
+    across: state
+      .get('squares')
+      .filterNot(s => s.get('isBlack'))
+      .groupBy(s => s.get('acrossNumber'))
+      .toJS(),
+    down: state
+      .get('squares')
+      .filterNot(s => s.get('isBlack'))
+      .groupBy(s => s.get('downNumber'))
+      .toJS(),
+  }));
+
 const makeSelectGridContainer = () =>
   createSelector(makeSelectGridContainerSquareNumbers(), JSify);
 
@@ -88,4 +102,5 @@ export {
   makeSelectGridContainer,
   makeSelectGridContainerSquareNumbers,
   makeSelectGridContainerFocusedWord,
+  makeSelectGridContainerWords,
 };
