@@ -177,7 +177,9 @@ class PuzzleContainer extends React.Component {
               <Tab key="Puzzle Data" label="Puzzle Data" value="Puzzle Data" />
               <Tab key="Notes" label="Notes" value="Notes" />
             </Tabs>
-            {tabValue === 'Clues' && <CluesContainer />}
+            {tabValue === 'Clues' && (
+              <CluesContainer puzzleId={activePuzzleId} />
+            )}
             {tabValue === 'WordList' && <WordListContainer />}
             {tabValue === 'Dictionary' && <DictionaryContainer />}
             {tabValue === 'Puzzle Data' && <div>Hello</div>}
