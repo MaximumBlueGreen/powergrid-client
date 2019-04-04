@@ -24,7 +24,13 @@ import {
 import injectSaga from 'utils/injectSaga';
 import injectReducer from 'utils/injectReducer';
 import { createStructuredSelector } from 'reselect';
-import { closeModal, createPuzzle, updateSize, updateTitle } from './actions';
+import {
+  closeModal,
+  createPuzzle,
+  updateSize,
+  updateTitle,
+  uploadPuzzle,
+} from './actions';
 import saga from './saga';
 import reducer from './reducer';
 
@@ -36,6 +42,7 @@ function CreatePuzzleModal({
   createPuzzle,
   updateSize,
   updateTitle,
+  uploadPuzzle,
   ui: {
     open,
     size: { height, width },
@@ -69,6 +76,13 @@ function CreatePuzzleModal({
                 <MenuItem value={5}>5x5</MenuItem>
               </Select>
             </Grid>
+            <Grid item xs={2}>
+              <input
+                type="file"
+                onChange={e => uploadPuzzle(e.target.files[0])}
+                accept=".puz"
+              />
+            </Grid>
           </Grid>
         </DialogContent>
         <DialogActions>
@@ -100,6 +114,7 @@ CreatePuzzleModal.propTypes = {
     }),
   }).isRequired,
   forceOpen: PropTypes.bool,
+  uploadPuzzle: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = createStructuredSelector({
@@ -108,7 +123,7 @@ const mapStateToProps = createStructuredSelector({
 
 function mapDispatchToProps(dispatch) {
   return bindActionCreators(
-    { closeModal, createPuzzle, updateSize, updateTitle },
+    { closeModal, createPuzzle, updateSize, updateTitle, uploadPuzzle },
     dispatch,
   );
 }
