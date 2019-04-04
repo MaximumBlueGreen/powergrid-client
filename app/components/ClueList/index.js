@@ -26,7 +26,10 @@ function ClueList({ clues }) {
               .join('')}`}
           </Grid>
           <Grid item xs>
-            <TextField placeholder="Clue" />
+            <TextField
+              placeholder="Clue"
+              disabled={squares.filter(s => !s.value).length > 0}
+            />
           </Grid>
         </Grid>
       ))}
