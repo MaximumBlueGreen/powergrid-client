@@ -41,6 +41,7 @@ export function* savePuzzlesSaga() {
   const puzzle = {
     ...denormalizedPuzzle,
     puzzle: {
+      clues: denormalizedPuzzle.clues,
       squares: denormalizedPuzzle.squares,
       size: denormalizedPuzzle.size,
       title: denormalizedPuzzle.title,

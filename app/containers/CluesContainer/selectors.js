@@ -1,4 +1,8 @@
 import { createSelector } from 'reselect';
+import selectPuzzles from 'entities/Puzzles/selectors';
+import selectClues from 'entities/Clues/selectors';
+import { makeSelectGridContainerWords } from 'containers/GridContainer/selectors';
+import { mapValues } from 'lodash';
 import { initialState } from './reducer';
 
 /**
@@ -12,6 +16,36 @@ const selectCluesContainerDomain = state =>
  * Other specific selectors
  */
 
+const selectPuzzleId = (_, { puzzleId }) => puzzleId;
+
+const makeSelectClues = direction =>
+  createSelector(
+    [selectPuzzleId, selectPuzzles, selectClues],
+    (puzzleId, puzzles, clues) =>
+      puzzles
+        .updateIn([puzzleId, 'clues', direction], clueIds =>
+          clueIds.map(id => clues.get(id)),
+        )
+        .getIn([puzzleId, 'clues', direction])
+        .toJS(),
+  );
+
+const makeSelectWords = () =>
+  createSelector(makeSelectGridContainerWords(), ({ across, down }) => ({
+    across: mapValues(across, word =>
+      word
+        .map(s => s.value || '?')
+        .join('')
+        .toUpperCase(),
+    ),
+    down: mapValues(down, word =>
+      word
+        .map(s => s.value || '?')
+        .join('')
+        .toUpperCase(),
+    ),
+  }));
+
 /**
  * Default selector used by CluesContainer
  */
@@ -20,4 +54,4 @@ const makeSelectCluesContainer = () =>
   createSelector(selectCluesContainerDomain, substate => substate.toJS());
 
 export default makeSelectCluesContainer;
-export { selectCluesContainerDomain };
+export { selectCluesContainerDomain, makeSelectClues, makeSelectWords };
