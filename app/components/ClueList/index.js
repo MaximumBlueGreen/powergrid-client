@@ -8,12 +8,21 @@ import React from 'react';
 import PropTypes from 'prop-types';
 // import styled from 'styled-components';
 
-import { List, ListItem, TextField, Grid } from '@material-ui/core';
+import { map } from 'lodash';
 
-function ClueList({ clues }) {
+import {
+  List,
+  ListItem,
+  ListSubheader,
+  TextField,
+  Grid,
+} from '@material-ui/core';
+
+function ClueList({ clues, words, header, updateClue }) {
   return (
     <List>
-      {clues.map(({ number, squares }) => (
+      <ListSubheader>{header}</ListSubheader>
+      {map(words, (word, number) => (
         <Grid
           component={ListItem}
           container
@@ -21,14 +30,14 @@ function ClueList({ clues }) {
           key={number}
         >
           <Grid item xs={6}>
-            {`${number}. ${squares
-              .map(s => (s.value ? s.value.toUpperCase() : '?'))
-              .join('')}`}
+            {`${number}. ${word}`}
           </Grid>
           <Grid item xs>
             <TextField
+              value={clues[number] ? clues[number].text : ''}
               placeholder="Clue"
-              disabled={squares.filter(s => !s.value).length > 0}
+              disabled={word.includes('?')}
+              onChange={e => updateClue(number, e.target.value)}
             />
           </Grid>
         </Grid>
@@ -38,7 +47,10 @@ function ClueList({ clues }) {
 }
 
 ClueList.propTypes = {
-  clues: PropTypes.array.isRequired,
+  clues: PropTypes.object.isRequired,
+  words: PropTypes.object.isRequired,
+  header: PropTypes.string.isRequired,
+  updateClue: PropTypes.func.isRequired,
 };
 
 export default ClueList;
