@@ -10,37 +10,25 @@ import PropTypes from 'prop-types';
 
 import { map } from 'lodash';
 
-import {
-  List,
-  ListItem,
-  ListSubheader,
-  TextField,
-  Grid,
-} from '@material-ui/core';
+import { List, ListItem, ListSubheader, TextField } from '@material-ui/core';
 
 function ClueList({ clues, words, header, updateClue }) {
   return (
     <List>
       <ListSubheader>{header}</ListSubheader>
       {map(words, (word, number) => (
-        <Grid
-          component={ListItem}
-          container
-          justify="space-between"
-          key={number}
-        >
-          <Grid item xs={6}>
-            {`${number}. ${word}`}
-          </Grid>
-          <Grid item xs>
-            <TextField
-              value={clues[number] ? clues[number].text : ''}
-              placeholder="Clue"
-              disabled={word.includes('?')}
-              onChange={e => updateClue(number, e.target.value)}
-            />
-          </Grid>
-        </Grid>
+        <ListItem key={number}>
+          <TextField
+            label={`${number}. ${word}`}
+            variant="outlined"
+            value={clues[number] ? clues[number].text : ''}
+            disabled={word.includes('?')}
+            onChange={e => updateClue(number, e.target.value)}
+            fullWidth
+            multiline
+            rowsMax={1}
+          />
+        </ListItem>
       ))}
     </List>
   );

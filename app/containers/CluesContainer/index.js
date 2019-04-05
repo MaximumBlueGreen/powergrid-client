@@ -30,25 +30,27 @@ function CluesContainer({
   updateClue,
 }) {
   return (
-    <Grid container justify="space-evenly">
-      <Grid
-        item
-        xs
-        component={ClueList}
-        clues={acrossClues}
-        words={acrossWords}
-        header="Across"
-        updateClue={(number, text) => updateClue(puzzleId, number, true, text)}
-      />
-      <Grid
-        item
-        xs
-        component={ClueList}
-        clues={downClues}
-        words={downWords}
-        header="Down"
-        updateClue={(number, text) => updateClue(puzzleId, number, false, text)}
-      />
+    <Grid container>
+      <Grid item xs={6}>
+        <ClueList
+          clues={acrossClues}
+          words={acrossWords}
+          header="Across"
+          updateClue={(number, text) =>
+            updateClue(puzzleId, number, true, text)
+          }
+        />
+      </Grid>
+      <Grid item xs={6}>
+        <ClueList
+          clues={downClues}
+          words={downWords}
+          header="Down"
+          updateClue={(number, text) =>
+            updateClue(puzzleId, number, false, text)
+          }
+        />
+      </Grid>
     </Grid>
   );
 }
