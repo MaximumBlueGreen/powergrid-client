@@ -3,6 +3,7 @@ import { ENTITIES_LOADED } from 'entities/constants';
 import undoable, { includeAction } from 'redux-undo';
 import {
   SQUARE_BLACK_TOGGLED,
+  SQUARE_BLACK_SET,
   SQUARE_VALUE_UPDATED,
   BULK_SQUARE_VALUE_UPDATED,
   SQUARES_CLEARED,
@@ -24,6 +25,15 @@ function reducer(state = initialState, action) {
         ),
       );
     }
+    case SQUARE_BLACK_SET:
+      return state.mergeDeep(
+        Object.assign(
+          {},
+          ...[...action.symmetricSquareIds, action.squareId].map(id => ({
+            [id]: { isBlack: action.isBlack, value: undefined },
+          })),
+        ),
+      );
     case SQUARE_VALUE_UPDATED:
       if (state.getIn([action.squareId, 'isBlack'])) {
         return state;
@@ -59,6 +69,7 @@ function reducer(state = initialState, action) {
 export default undoable(reducer, {
   filter: includeAction([
     SQUARE_BLACK_TOGGLED,
+    SQUARE_BLACK_SET,
     SQUARE_VALUE_UPDATED,
     BULK_SQUARE_VALUE_UPDATED,
     SQUARES_CLEARED,

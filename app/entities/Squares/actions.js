@@ -6,6 +6,7 @@
 
 import {
   SQUARE_BLACK_TOGGLED,
+  SQUARE_BLACK_SET,
   SQUARE_VALUE_UPDATED,
   BULK_SQUARE_VALUE_UPDATED,
   SQUARES_CLEARED,
@@ -16,6 +17,15 @@ export function toggleBlackSquare(squareId, symmetricSquareIds = []) {
     type: SQUARE_BLACK_TOGGLED,
     squareId,
     symmetricSquareIds,
+  };
+}
+
+export function setBlackSquare(squareId, symmetricSquareIds, isBlack) {
+  return {
+    type: SQUARE_BLACK_SET,
+    squareId,
+    symmetricSquareIds,
+    isBlack,
   };
 }
 

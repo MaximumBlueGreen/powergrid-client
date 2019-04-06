@@ -14,6 +14,7 @@ import injectReducer from 'utils/injectReducer';
 import GridComponent from 'components/Grid';
 import {
   toggleBlackSquare,
+  setBlackSquare,
   updateSquareValue,
   clearSquares,
 } from 'entities/Squares/actions';
@@ -28,13 +29,19 @@ import {
   makeSelectGridContainerFocusedWord,
 } from './selectors';
 import reducer from './reducer';
-import { ACROSS, CLICK_MODE_FILL, SYMMETRY_MODE_DIAGONAL } from './constants';
+import {
+  ACROSS,
+  CLICK_MODE_FILL,
+  CLICK_MODE_BLACK_SQUARE,
+  SYMMETRY_MODE_DIAGONAL,
+} from './constants';
 
 function GridContainer({
   data: { squares, size },
   ui: { focusedSquareIndex, focusedDirection, clickMode, symmetryMode },
   focusedWord,
   toggleBlackSquare,
+  setBlackSquare,
   toggleClickMode,
   updateSquareValue,
   focusSquare,
@@ -50,6 +57,18 @@ function GridContainer({
 
   const toggleBlackSquareWithSymmetry = id => {
     toggleBlackSquare(
+      id,
+      (symmetryMode === SYMMETRY_MODE_DIAGONAL && [
+        squares[
+          size.height * size.width - squares.findIndex(s => s.id === id) - 1
+        ].id,
+      ]) ||
+        [],
+    );
+  };
+
+  const setBlackSquareWithSymmetry = id => {
+    setBlackSquare(
       id,
       (symmetryMode === SYMMETRY_MODE_DIAGONAL && [
         squares[
@@ -103,6 +122,10 @@ function GridContainer({
                   focusSquareClamped(focusedSquareIndex - 1);
                 } else {
                   focusSquareClamped(focusedSquareIndex - size.width);
+                }
+
+                if (clickMode === CLICK_MODE_BLACK_SQUARE) {
+                  return setBlackSquareWithSymmetry(focusedSquareId);
                 }
                 return updateSquareValue(focusedSquareId, '');
               case 9 /* TAB */: {
@@ -173,6 +196,7 @@ GridContainer.propTypes = {
   }).isRequired,
   focusSquare: PropTypes.func.isRequired,
   toggleBlackSquare: PropTypes.func.isRequired,
+  setBlackSquare: PropTypes.func.isRequired,
   updateSquareValue: PropTypes.func.isRequired,
   undo: PropTypes.func.isRequired,
   redo: PropTypes.func.isRequired,
@@ -192,6 +216,7 @@ function mapDispatchToProps(dispatch) {
   return bindActionCreators(
     {
       toggleBlackSquare,
+      setBlackSquare,
       updateSquareValue,
       focusSquare,
       undo: ActionCreators.undo,
