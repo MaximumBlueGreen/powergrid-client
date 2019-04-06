@@ -25,6 +25,7 @@ import DictionaryContainer from 'containers/DictionaryContainer';
 import CreatePuzzleModal from 'containers/CreatePuzzleModal';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
+import { withStyles } from '@material-ui/core/styles';
 import styled from 'styled-components';
 import { updatePuzzleTitle } from 'entities/Puzzles/actions';
 import { openModal } from 'containers/CreatePuzzleModal/actions';
@@ -47,6 +48,15 @@ const PuzzleContainerWrapper = styled.div`
   font-size: ${props => props.theme.typography.fontSize}px;
   font-family: ${props => props.theme.typography.fontFamily};
 `;
+
+const styles = theme => ({
+  conditionalSticky: {
+    [theme.breakpoints.up('md')]: {
+      position: 'sticky',
+      top: 0,
+    },
+  },
+});
 
 class PuzzleContainer extends React.Component {
   componentDidMount() {
@@ -71,6 +81,7 @@ class PuzzleContainer extends React.Component {
       updatePuzzleTitle,
       // uploadPuzzle,
       handleTabChange,
+      classes: { conditionalSticky },
     } = this.props;
 
     return (
@@ -143,13 +154,7 @@ class PuzzleContainer extends React.Component {
         </Grid>
         <Grid container justify="center" alignItems="flex-start" spacing={0}>
           {activePuzzleId && (
-            <Grid
-              item
-              container
-              xs={11}
-              md={5}
-              style={{ position: 'sticky', top: 0 }}
-            >
+            <Grid className={conditionalSticky} item container xs={11} md={5}>
               <Grid item xs={12}>
                 <TextField
                   value={puzzles[activePuzzleId].title || ''}
@@ -219,6 +224,7 @@ PuzzleContainer.propTypes = {
   openModal: PropTypes.func.isRequired,
   puzzleId: PropTypes.string,
   handleTabChange: PropTypes.func.isRequired,
+  classes: PropTypes.object.isRequired,
 };
 
 const mapStateToProps = createStructuredSelector({
@@ -253,4 +259,5 @@ export default compose(
   withReducer,
   withSaga,
   withConnect,
+  withStyles(styles),
 )(PuzzleContainer);
