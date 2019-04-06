@@ -79,10 +79,14 @@ Grid.propTypes = {
     width: PropTypes.number.isRequired,
   }),
   squares: PropTypes.arrayOf(PropTypes.object).isRequired,
-  focusedSquareId: PropTypes.string.isRequired,
-  focusedWordSquareIds: PropTypes.arrayOf(PropTypes.string).isRequired,
+  focusedSquareId: PropTypes.string,
+  focusedWordSquareIds: PropTypes.arrayOf(PropTypes.string),
   onSquareClicked: PropTypes.func.isRequired,
   onKeyPressed: PropTypes.func.isRequired,
+};
+
+Grid.defaultProps = {
+  focusedWordSquareIds: [],
 };
 
 export default Grid;
