@@ -11,13 +11,21 @@ import PropTypes from 'prop-types';
 import { map } from 'lodash';
 
 import { List, ListItem, ListSubheader, TextField } from '@material-ui/core';
+import { withStyles } from '@material-ui/core/styles';
 
-function ClueList({ clues, words, header, updateClue }) {
+const styles = theme => ({
+  listSubheader: {
+    backgroundColor: theme.palette.background.default,
+    zIndex: 5 /* needs to be larger than the placeholder label zIndex of 1 */,
+  },
+});
+
+function ClueList({ clues, words, header, updateClue, classes }) {
   return (
     <List>
-      <ListSubheader>{header}</ListSubheader>
+      <ListSubheader className={classes.listSubheader}>{header}</ListSubheader>
       {map(words, (word, number) => (
-        <ListItem key={number}>
+        <ListItem key={`${number}. ${word}`}>
           <TextField
             label={`${number}. ${word}`}
             variant="outlined"
@@ -39,6 +47,7 @@ ClueList.propTypes = {
   words: PropTypes.object.isRequired,
   header: PropTypes.string.isRequired,
   updateClue: PropTypes.func.isRequired,
+  classes: PropTypes.object.isRequired,
 };
 
-export default ClueList;
+export default withStyles(styles)(ClueList);

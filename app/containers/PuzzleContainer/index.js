@@ -44,8 +44,6 @@ import {
 import saga from './saga';
 
 const PuzzleContainerWrapper = styled.div`
-  overflow-x: hidden;
-  overflow-y: hidden;
   font-size: ${props => props.theme.typography.fontSize}px;
   font-family: ${props => props.theme.typography.fontFamily};
 `;
@@ -143,9 +141,15 @@ class PuzzleContainer extends React.Component {
             />
         </Grid> */}
         </Grid>
-        <Grid container justify="center" alignItems="flex-start" spacing={16}>
+        <Grid container justify="center" alignItems="flex-start" spacing={0}>
           {activePuzzleId && (
-            <Grid item container xs={11} md={5}>
+            <Grid
+              item
+              container
+              xs={11}
+              md={5}
+              style={{ position: 'sticky', top: 0 }}
+            >
               <Grid item xs={12}>
                 <TextField
                   value={puzzles[activePuzzleId].title || ''}
