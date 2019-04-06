@@ -9,7 +9,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import { compose, bindActionCreators } from 'redux';
-import { clamp } from 'lodash';
+import { clamp, find, findLast } from 'lodash';
 import injectReducer from 'utils/injectReducer';
 import GridComponent from 'components/Grid';
 import {
@@ -43,7 +43,8 @@ function GridContainer({
   clearSquares,
   toggleSymmetryMode,
 }) {
-  const focusedSquareId = squares[focusedSquareIndex].id;
+  const focusedSquare = squares[focusedSquareIndex];
+  const focusedSquareId = focusedSquare.id;
   const focusSquareClamped = i =>
     focusSquare(clamp(i, 0, size.width * size.height - 1));
 
@@ -104,6 +105,31 @@ function GridContainer({
                   focusSquareClamped(focusedSquareIndex - size.width);
                 }
                 return updateSquareValue(focusedSquareId, '');
+              case 9 /* TAB */: {
+                const directionKey =
+                  focusedDirection === ACROSS ? 'acrossNumber' : 'downNumber';
+                const relevantSquares = squares.filter(
+                  s => s.number && s.number === s[directionKey],
+                );
+                const previous = findLast(
+                  relevantSquares,
+                  s => s[directionKey] < focusedSquare[directionKey],
+                );
+                const next = find(
+                  relevantSquares,
+                  s => s[directionKey] > focusedSquare[directionKey],
+                );
+
+                if ((shiftKey && !previous) || (!shiftKey && !next)) {
+                  return false;
+                }
+
+                return focusSquareClamped(
+                  squares.findIndex(
+                    s => s.id === (shiftKey ? previous : next).id,
+                  ),
+                );
+              }
               case 37 /* Left Arrow */:
                 return focusSquareClamped(focusedSquareIndex - 1);
               case 38 /* Up Arrow */:
