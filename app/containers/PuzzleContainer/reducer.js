@@ -26,7 +26,12 @@ function puzzleContainerReducer(state = initialState, action) {
   switch (action.type) {
     case ENTITIES_LOADED: {
       if (action.entities.puzzles) {
-        return state.set('puzzleId', action.result[0]).set('loading', false);
+        return state
+          .update(
+            'puzzleId',
+            puzzleId => action.puzzleId || puzzleId || action.result[0],
+          )
+          .set('loading', false);
       }
       return state.set('loading', false);
     }

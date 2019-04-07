@@ -14,13 +14,13 @@ import { savePuzzle, savePuzzleSuccess } from './actions';
 import { PUZZLES_LOADED, PUZZLE_SAVED, PUZZLE_UPLOADED } from './constants';
 import { makeSelectPuzzleContainer } from './selectors';
 
-export function* getPuzzlesSaga() {
+export function* getPuzzlesSaga({ puzzleId }) {
   yield authenticated(
     'users/me/puzzles',
     { method: 'GET' },
     function* onSuccess(puzzles) {
       const { entities, result } = normalize(puzzles, [puzzleSchema]);
-      yield put(loadEntities(entities, result));
+      yield put(loadEntities(entities, result, { puzzleId }));
     },
     function* onFailure(err) {
       console.log(err);
