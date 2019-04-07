@@ -1,5 +1,5 @@
 import { createSelector } from 'reselect';
-import puzzlesSelector from 'entities/Puzzles/selectors';
+import selectPuzzles from 'entities/Puzzles/selectors';
 import { initialState } from './reducer';
 
 /**
@@ -12,7 +12,13 @@ const selectPuzzleContainerDomain = state =>
   state.get('puzzleContainer', initialState);
 
 const makeSelectPuzzleContainerData = () =>
-  createSelector(puzzlesSelector, JSify);
+  createSelector(
+    [selectPuzzles, selectPuzzleContainerDomain],
+    (puzzles, domain) => {
+      const puzzleId = domain.get('puzzleId');
+      return puzzleId && puzzles.get(puzzleId).toJS();
+    },
+  );
 
 const makeSelectPuzzleContainer = () =>
   createSelector(selectPuzzleContainerDomain, JSify);

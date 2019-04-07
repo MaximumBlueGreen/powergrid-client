@@ -64,7 +64,7 @@ class PuzzleContainer extends React.Component {
   render() {
     const {
       ui: { puzzleId, isSyncing, lastSynced, loading, tabValue },
-      data: puzzle,
+      puzzle,
       updatePuzzleTitle,
       editPuzzleNotes,
       handleTabChange,
@@ -79,7 +79,7 @@ class PuzzleContainer extends React.Component {
             <Grid className={conditionalSticky} item container xs={11} md={5}>
               <Grid item xs={12}>
                 <TextField
-                  value={puzzle.title || ''}
+                  value={(puzzle && puzzle.title) || ''}
                   placeholder="Untitled"
                   margin="normal"
                   name="title"
@@ -127,7 +127,7 @@ PuzzleContainer.propTypes = {
   ui: PropTypes.shape({
     puzzleId: PropTypes.string,
   }).isRequired,
-  data: PropTypes.shape({}).isRequired,
+  puzzle: PropTypes.object,
   loadPuzzles: PropTypes.func.isRequired,
   updatePuzzleTitle: PropTypes.func.isRequired,
   editPuzzleNotes: PropTypes.func.isRequired,
@@ -137,7 +137,7 @@ PuzzleContainer.propTypes = {
 };
 
 const mapStateToProps = createStructuredSelector({
-  data: makeSelectPuzzleContainerData(),
+  puzzle: makeSelectPuzzleContainerData(),
   ui: makeSelectPuzzleContainer(),
 });
 
