@@ -4,46 +4,45 @@
  *
  */
 
-import React from 'react';
 import PropTypes from 'prop-types';
+import React from 'react';
 import { connect } from 'react-redux';
+import { bindActionCreators, compose } from 'redux';
 import { createStructuredSelector } from 'reselect';
-import { compose, bindActionCreators } from 'redux';
+import styled from 'styled-components';
+
+import { Button, Grid, Paper, Tab, Tabs, TextField } from '@material-ui/core';
+import { withStyles } from '@material-ui/core/styles';
+
+import CluesContainer from 'containers/CluesContainer';
+import CreatePuzzleModal from 'containers/CreatePuzzleModal';
+import { openModal } from 'containers/CreatePuzzleModal/actions';
+import DictionaryContainer from 'containers/DictionaryContainer';
+import GridContainer from 'containers/GridContainer';
+import WordListContainer from 'containers/WordListContainer';
+
+import Notes from 'components/Notes';
+import PuzzleSelector from 'components/PuzzleSelector';
+import SyncStatus from 'components/SyncStatus';
+
+import { editPuzzleNotes, updatePuzzleTitle } from 'entities/Puzzles/actions';
 
 import injectReducer from 'utils/injectReducer';
 import injectSaga from 'utils/injectSaga';
-import GridContainer from 'containers/GridContainer';
-import CluesContainer from 'containers/CluesContainer';
-import PuzzleSelector from 'components/PuzzleSelector';
-import SyncStatus from 'components/SyncStatus';
-import Grid from '@material-ui/core/Grid';
-import TextField from '@material-ui/core/TextField';
-import Button from '@material-ui/core/Button';
-import Paper from '@material-ui/core/Paper';
-import WordListContainer from 'containers/WordListContainer';
-import DictionaryContainer from 'containers/DictionaryContainer';
-import CreatePuzzleModal from 'containers/CreatePuzzleModal';
-import Notes from 'components/Notes';
-import Tabs from '@material-ui/core/Tabs';
-import Tab from '@material-ui/core/Tab';
-import { withStyles } from '@material-ui/core/styles';
-import styled from 'styled-components';
-import { updatePuzzleTitle, editPuzzleNotes } from 'entities/Puzzles/actions';
-import { openModal } from 'containers/CreatePuzzleModal/actions';
+
+import {
+  handleTabChange,
+  loadPuzzles,
+  savePuzzles,
+  selectPuzzle,
+  uploadPuzzle,
+} from './actions';
+import reducer from './reducer';
+import saga from './saga';
 import {
   makeSelectPuzzleContainer,
   makeSelectPuzzleContainerData,
 } from './selectors';
-import reducer from './reducer';
-import {
-  loadPuzzles,
-  selectPuzzle,
-  savePuzzles,
-  uploadPuzzle,
-  handleTabChange,
-} from './actions';
-
-import saga from './saga';
 
 const PuzzleContainerWrapper = styled.div`
   font-size: ${props => props.theme.typography.fontSize}px;
