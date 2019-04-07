@@ -11,7 +11,7 @@ import { bindActionCreators, compose } from 'redux';
 import { createStructuredSelector } from 'reselect';
 import styled from 'styled-components';
 
-import { Button, Grid, Paper, Tab, Tabs, TextField } from '@material-ui/core';
+import { Grid, Tab, Tabs, TextField } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 
 import CluesContainer from 'containers/CluesContainer';
@@ -65,7 +65,6 @@ class PuzzleContainer extends React.Component {
     const {
       ui: { puzzleId, isSyncing, lastSynced, loading, tabValue },
       data: puzzle,
-      openModal,
       updatePuzzleTitle,
       editPuzzleNotes,
       handleTabChange,
@@ -75,32 +74,6 @@ class PuzzleContainer extends React.Component {
     return (
       <PuzzleContainerWrapper>
         <CreatePuzzleModal forceOpen={!(puzzleId || loading)} />
-        <Grid
-          component={Paper}
-          square
-          container
-          justify="space-between"
-          alignItems="center"
-          style={{ paddingRight: '8px' }}
-        >
-          <Grid
-            item
-            component={Button}
-            type="button"
-            color="primary"
-            onClick={openModal}
-            variant="outlined"
-          >
-            NEW PUZZLE
-          </Grid>
-          {/* <Grid item xs={2}>
-            <input
-              type="file"
-              onChange={e => uploadPuzzle(e.target.files[0])}
-              accept=".puz"
-            />
-        </Grid> */}
-        </Grid>
         <Grid container justify="center" alignItems="flex-start" spacing={0}>
           {puzzleId && (
             <Grid className={conditionalSticky} item container xs={11} md={5}>
@@ -156,11 +129,8 @@ PuzzleContainer.propTypes = {
   }).isRequired,
   data: PropTypes.shape({}).isRequired,
   loadPuzzles: PropTypes.func.isRequired,
-  // savePuzzle: PropTypes.func.isRequired,
   updatePuzzleTitle: PropTypes.func.isRequired,
   editPuzzleNotes: PropTypes.func.isRequired,
-  // uploadPuzzle: PropTypes.func.isRequired,
-  openModal: PropTypes.func.isRequired,
   puzzleId: PropTypes.string,
   handleTabChange: PropTypes.func.isRequired,
   classes: PropTypes.object.isRequired,
