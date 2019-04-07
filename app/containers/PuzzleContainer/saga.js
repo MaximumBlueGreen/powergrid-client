@@ -10,18 +10,17 @@ import { makeSelectGridContainerFocusedWord } from 'containers/GridContainer/sel
 import { updateFilterPattern } from 'containers/WordListContainer/actions';
 import { ENTRY_SELECTED } from 'containers/WordListContainer/constants';
 import { bulkUpdateSquareValue } from 'entities/Squares/actions';
-import { savePuzzles, savePuzzlesSuccess, selectPuzzle } from './actions';
-import { PUZZLES_LOADED, PUZZLES_SAVED, PUZZLE_UPLOADED } from './constants';
+import { savePuzzle, savePuzzleSuccess } from './actions';
+import { PUZZLES_LOADED, PUZZLE_SAVED, PUZZLE_UPLOADED } from './constants';
 import { makeSelectPuzzleContainer } from './selectors';
 
-export function* getPuzzlesSaga({ selectedPuzzleId }) {
+export function* getPuzzlesSaga() {
   yield authenticated(
     'users/me/puzzles',
     { method: 'GET' },
     function* onSuccess(puzzles) {
       const { entities, result } = normalize(puzzles, [puzzleSchema]);
       yield put(loadEntities(entities, result));
-      yield put(selectPuzzle(selectedPuzzleId));
     },
     function* onFailure(err) {
       console.log(err);
@@ -29,12 +28,12 @@ export function* getPuzzlesSaga({ selectedPuzzleId }) {
   );
 }
 
-export function* savePuzzlesSaga() {
+export function* savePuzzleaga() {
   const entities = yield select(entitiesSelector);
-  const { activePuzzleId } = yield select(makeSelectPuzzleContainer());
+  const { puzzleId } = yield select(makeSelectPuzzleContainer());
 
   const denormalizedPuzzle = denormalize(
-    entities.puzzles[activePuzzleId],
+    entities.puzzles[puzzleId],
     puzzleSchema,
     entities,
   );
@@ -55,7 +54,7 @@ export function* savePuzzlesSaga() {
     },
     function* onSuccess() {
       yield delay(500);
-      yield put(savePuzzlesSuccess());
+      yield put(savePuzzleSuccess());
     },
     function* onError(error) {
       console.log(error);
@@ -98,9 +97,9 @@ export function* uploadPuzzleSaga({ puzzleFile }) {
 }
 
 function* updateFilterPatternFromGrid() {
-  const { activePuzzleId } = yield select(makeSelectPuzzleContainer());
+  const { puzzleId } = yield select(makeSelectPuzzleContainer());
   const focusedWord = yield select(makeSelectGridContainerFocusedWord(), {
-    puzzleId: activePuzzleId,
+    puzzleId,
   });
   if (focusedWord.length !== 0) {
     yield put(
@@ -110,9 +109,9 @@ function* updateFilterPatternFromGrid() {
 }
 
 function* updateGridFromEntry({ entry }) {
-  const { activePuzzleId } = yield select(makeSelectPuzzleContainer());
+  const { puzzleId } = yield select(makeSelectPuzzleContainer());
   const focusedWord = yield select(makeSelectGridContainerFocusedWord(), {
-    puzzleId: activePuzzleId,
+    puzzleId,
   });
 
   if (entry.length === focusedWord.length) {
@@ -123,14 +122,14 @@ function* updateGridFromEntry({ entry }) {
 function* autosave() {
   while (true) {
     yield delay(10000);
-    yield put(savePuzzles());
+    yield put(savePuzzle());
   }
 }
 
 export default function* saga() {
   yield all([
     takeLatest(PUZZLES_LOADED, getPuzzlesSaga),
-    takeLatest(PUZZLES_SAVED, savePuzzlesSaga),
+    takeLatest(PUZZLE_SAVED, savePuzzleaga),
     takeLatest(PUZZLE_UPLOADED, uploadPuzzleSaga),
     takeLatest(SQUARE_FOCUSED, updateFilterPatternFromGrid),
     takeLatest(ENTRY_SELECTED, updateGridFromEntry),

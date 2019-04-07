@@ -7,9 +7,8 @@
 import {
   DEFAULT_ACTION,
   PUZZLES_LOADED,
-  PUZZLES_SAVED,
-  PUZZLES_SAVED_SUCCESS,
-  PUZZLE_SELECTED,
+  PUZZLE_SAVED,
+  PUZZLE_SAVED_SUCCESS,
   PUZZLE_UPLOADED,
   TAB_CHANGED,
 } from './constants';
@@ -27,22 +26,15 @@ export function loadPuzzles(selectedPuzzleId) {
   };
 }
 
-export function savePuzzles() {
+export function savePuzzle() {
   return {
-    type: PUZZLES_SAVED,
+    type: PUZZLE_SAVED,
   };
 }
 
-export function savePuzzlesSuccess() {
+export function savePuzzleSuccess() {
   return {
-    type: PUZZLES_SAVED_SUCCESS,
-  };
-}
-
-export function selectPuzzle(id) {
-  return {
-    type: PUZZLE_SELECTED,
-    id,
+    type: PUZZLE_SAVED_SUCCESS,
   };
 }
 
