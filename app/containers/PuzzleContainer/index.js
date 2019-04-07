@@ -23,11 +23,12 @@ import Paper from '@material-ui/core/Paper';
 import WordListContainer from 'containers/WordListContainer';
 import DictionaryContainer from 'containers/DictionaryContainer';
 import CreatePuzzleModal from 'containers/CreatePuzzleModal';
+import Notes from 'components/Notes';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import { withStyles } from '@material-ui/core/styles';
 import styled from 'styled-components';
-import { updatePuzzleTitle } from 'entities/Puzzles/actions';
+import { updatePuzzleTitle, editPuzzleNotes } from 'entities/Puzzles/actions';
 import { openModal } from 'containers/CreatePuzzleModal/actions';
 import {
   makeSelectPuzzleContainer,
@@ -79,6 +80,7 @@ class PuzzleContainer extends React.Component {
       // savePuzzles,
       openModal,
       updatePuzzleTitle,
+      editPuzzleNotes,
       // uploadPuzzle,
       handleTabChange,
       classes: { conditionalSticky },
@@ -193,14 +195,9 @@ class PuzzleContainer extends React.Component {
             {tabValue === 'Dictionary' && <DictionaryContainer />}
             {tabValue === 'Puzzle Data' && <div>Hello</div>}
             {tabValue === 'Notes' && (
-              <TextField
-                id="standard-multiline-static"
-                multiline
-                fullWidth
-                rows="25"
-                margin="normal"
-                variant="outlined"
-                placeholder="This is your place to brainstorm theme ideas and clues and to leave notes for yourself, the editor or your test solvers."
+              <Notes
+                onEdit={notes => editPuzzleNotes(activePuzzleId, notes)}
+                notes={activePuzzleId && puzzles[activePuzzleId].notes}
               />
             )}
           </Grid>
@@ -220,6 +217,7 @@ PuzzleContainer.propTypes = {
   selectPuzzle: PropTypes.func.isRequired,
   // savePuzzles: PropTypes.func.isRequired,
   updatePuzzleTitle: PropTypes.func.isRequired,
+  editPuzzleNotes: PropTypes.func.isRequired,
   // uploadPuzzle: PropTypes.func.isRequired,
   openModal: PropTypes.func.isRequired,
   puzzleId: PropTypes.string,
@@ -239,6 +237,7 @@ function mapDispatchToProps(dispatch) {
       selectPuzzle,
       savePuzzles,
       updatePuzzleTitle,
+      editPuzzleNotes,
       uploadPuzzle,
       openModal,
       handleTabChange,
