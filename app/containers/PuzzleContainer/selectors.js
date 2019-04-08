@@ -1,5 +1,6 @@
 import { createSelector } from 'reselect';
 import selectPuzzles from 'entities/Puzzles/selectors';
+import { fromJS } from 'immutable';
 import { initialState } from './reducer';
 
 /**
@@ -16,7 +17,17 @@ const makeSelectPuzzleContainerData = () =>
     [selectPuzzles, selectPuzzleContainerDomain],
     (puzzles, domain) => {
       const puzzleId = domain.get('puzzleId');
-      return puzzleId && puzzles.get(puzzleId).toJS();
+      if (puzzleId) {
+        const puzzle = puzzles.get(puzzleId);
+        const parentId = puzzle.get('parent_id');
+        const versions = puzzles
+          .filter(p => parentId && p.get('parent_id') === parentId)
+          .valueSeq();
+        return puzzle
+          .set('versions', versions.size > 0 ? versions : fromJS([puzzle]))
+          .toJS();
+      }
+      return undefined;
     },
   );
 

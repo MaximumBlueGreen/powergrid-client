@@ -11,7 +11,18 @@ import { bindActionCreators, compose } from 'redux';
 import { createStructuredSelector } from 'reselect';
 import styled from 'styled-components';
 
-import { Grid, Tab, Tabs, TextField } from '@material-ui/core';
+import {
+  Grid,
+  IconButton,
+  InputAdornment,
+  Menu,
+  MenuItem,
+  Tab,
+  Tabs,
+  TextField,
+  Tooltip,
+} from '@material-ui/core';
+import { ArrowDropDown, Add } from '@material-ui/icons';
 import { withStyles } from '@material-ui/core/styles';
 
 import CluesContainer from 'containers/CluesContainer';
@@ -57,8 +68,29 @@ const styles = theme => ({
 });
 
 class PuzzleContainer extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      versionMenuAnchorElement: null,
+    };
+    this.openVersionMenu = this.openVersionMenu.bind(this);
+    this.closeVersionMenu = this.closeVersionMenu.bind(this);
+  }
+
   componentDidMount() {
     this.props.loadPuzzles(this.props.puzzleId);
+  }
+
+  openVersionMenu({ currentTarget }) {
+    this.setState({
+      versionMenuAnchorElement: currentTarget,
+    });
+  }
+
+  closeVersionMenu() {
+    this.setState({
+      versionMenuAnchorElement: null,
+    });
   }
 
   render() {
@@ -68,31 +100,78 @@ class PuzzleContainer extends React.Component {
       updatePuzzleTitle,
       editPuzzleNotes,
       handleTabChange,
+      loadPuzzles,
+      openModal,
       classes: { conditionalSticky },
     } = this.props;
 
+    const displayVersions = puzzle && puzzle.versions.length > 1;
+
     return (
       <PuzzleContainerWrapper>
-        <CreatePuzzleModal forceOpen={!(puzzleId || loading)} />
+        <CreatePuzzleModal
+          forceOpen={!(puzzleId || loading)}
+          parentId={puzzle && (puzzle.parent_id || puzzleId)}
+          puzzleToCopyId={puzzleId}
+        />
+        {puzzle && (
+          <Menu
+            anchorEl={this.state.versionMenuAnchorElement}
+            open={Boolean(this.state.versionMenuAnchorElement)}
+            onClose={this.closeVersionMenu}
+          >
+            {puzzle.versions.map(({ id, title }) => (
+              <MenuItem
+                key={id}
+                onClick={() => {
+                  loadPuzzles(id);
+                  this.closeVersionMenu();
+                }}
+              >
+                {title || id}
+              </MenuItem>
+            ))}
+          </Menu>
+        )}
         <Grid container justify="center" alignItems="flex-start" spacing={0}>
           {puzzleId && (
-            <Grid className={conditionalSticky} item container xs={11} md={5}>
-              <Grid item xs={12}>
+            <Grid
+              className={conditionalSticky}
+              item
+              container
+              xs={11}
+              md={5}
+              alignItems="center"
+            >
+              <Grid item>
                 <TextField
                   value={(puzzle && puzzle.title) || ''}
                   placeholder="Untitled"
                   margin="normal"
-                  name="title"
                   onChange={e => updatePuzzleTitle(puzzleId, e.target.value)}
+                  InputProps={{
+                    endAdornment: (
+                      <InputAdornment position="end">
+                        {displayVersions && (
+                          <Tooltip title="Select version" placement="bottom">
+                            <IconButton onClick={this.openVersionMenu}>
+                              <ArrowDropDown />
+                            </IconButton>
+                          </Tooltip>
+                        )}
+                        <Tooltip title="Add version" placement="top">
+                          <IconButton onClick={openModal} color="primary">
+                            <Add />
+                          </IconButton>
+                        </Tooltip>
+                      </InputAdornment>
+                    ),
+                  }}
                 />
               </Grid>
-              <Grid
-                item
-                xs={12}
-                component={SyncStatus}
-                isSyncing={isSyncing}
-                lastSynced={lastSynced}
-              />
+              <Grid item xs={12}>
+                <SyncStatus isSyncing={isSyncing} lastSynced={lastSynced} />
+              </Grid>
               <Grid item xs={12}>
                 <GridContainer puzzleId={puzzleId} />
               </Grid>
@@ -133,6 +212,7 @@ PuzzleContainer.propTypes = {
   editPuzzleNotes: PropTypes.func.isRequired,
   puzzleId: PropTypes.string,
   handleTabChange: PropTypes.func.isRequired,
+  openModal: PropTypes.func.isRequired,
   classes: PropTypes.object.isRequired,
 };
 

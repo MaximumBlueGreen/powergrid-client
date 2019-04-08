@@ -28,7 +28,7 @@ export function* getPuzzlesSaga({ puzzleId }) {
   );
 }
 
-export function* savePuzzleaga() {
+export function* savePuzzleSaga() {
   const entities = yield select(entitiesSelector);
   const { puzzleId } = yield select(makeSelectPuzzleContainer());
 
@@ -129,7 +129,7 @@ function* autosave() {
 export default function* saga() {
   yield all([
     takeLatest(PUZZLES_LOADED, getPuzzlesSaga),
-    takeLatest(PUZZLE_SAVED, savePuzzleaga),
+    takeLatest(PUZZLE_SAVED, savePuzzleSaga),
     takeLatest(PUZZLE_UPLOADED, uploadPuzzleSaga),
     takeLatest(SQUARE_FOCUSED, updateFilterPatternFromGrid),
     takeLatest(ENTRY_SELECTED, updateGridFromEntry),

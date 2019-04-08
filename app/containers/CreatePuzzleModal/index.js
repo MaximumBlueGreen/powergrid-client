@@ -41,6 +41,8 @@ function CreatePuzzleModal({
     size: { height, width },
     title,
   },
+  parentId,
+  puzzleToCopyId,
 }) {
   return (
     <div>
@@ -49,26 +51,31 @@ function CreatePuzzleModal({
         onClose={closeModal}
         aria-labelledby="form-dialog-title"
       >
-        <DialogTitle id="form-dialog-title">New Puzzle</DialogTitle>
+        <DialogTitle id="form-dialog-title">{`New ${
+          parentId ? 'Version' : 'Puzzle'
+        }`}</DialogTitle>
         <DialogContent>
           <Grid container justify="space-evenly" spacing={8}>
-            <Grid item xs={7}>
+            <Grid item>
               <TextField
                 value={title || ''}
                 placeholder="Untitled"
                 name="title"
                 onChange={e => updateTitle(e.target.value)}
+                fullWidth
               />
             </Grid>
-            <Grid item xs={3}>
-              <Select
-                value={height}
-                onChange={e => updateSize(e.target.value, e.target.value)}
-              >
-                <MenuItem value={15}>15x15</MenuItem>
-                <MenuItem value={5}>5x5</MenuItem>
-              </Select>
-            </Grid>
+            {!puzzleToCopyId && (
+              <Grid item xs={3}>
+                <Select
+                  value={height}
+                  onChange={e => updateSize(e.target.value, e.target.value)}
+                >
+                  <MenuItem value={15}>15x15</MenuItem>
+                  <MenuItem value={5}>5x5</MenuItem>
+                </Select>
+              </Grid>
+            )}
           </Grid>
         </DialogContent>
         <DialogActions>
@@ -76,7 +83,9 @@ function CreatePuzzleModal({
             Cancel
           </Button>
           <Button
-            onClick={() => createPuzzle({ height, width }, title)}
+            onClick={() =>
+              createPuzzle({ height, width }, title, parentId, puzzleToCopyId)
+            }
             color="primary"
           >
             Create
@@ -100,6 +109,8 @@ CreatePuzzleModal.propTypes = {
     }),
   }).isRequired,
   forceOpen: PropTypes.bool,
+  parentId: PropTypes.string,
+  puzzleToCopyId: PropTypes.string,
 };
 
 const mapStateToProps = createStructuredSelector({

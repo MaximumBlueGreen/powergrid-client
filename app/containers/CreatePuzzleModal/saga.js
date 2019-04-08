@@ -5,7 +5,12 @@ import { loadPuzzles } from 'containers/PuzzleContainer/actions';
 import { closeModal } from './actions';
 import { PUZZLE_CREATED } from './constants';
 
-export function* createPuzzleSaga({ size: { height, width }, title }) {
+export function* createPuzzleSaga({
+  size: { height, width },
+  title,
+  parentId,
+  puzzleToCopyId,
+}) {
   yield authenticated(
     'puzzles',
     {
@@ -14,8 +19,10 @@ export function* createPuzzleSaga({ size: { height, width }, title }) {
         puzzle: {
           squares: times(height * width, () => ({})),
           size: { height, width },
-          title,
         },
+        title,
+        parent_id: parentId,
+        puzzleToCopyId,
       }),
     },
     function* onSuccess() {
