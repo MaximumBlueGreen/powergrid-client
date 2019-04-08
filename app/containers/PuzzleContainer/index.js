@@ -4,46 +4,54 @@
  *
  */
 
-import React from 'react';
 import PropTypes from 'prop-types';
+import React from 'react';
 import { connect } from 'react-redux';
+import { bindActionCreators, compose } from 'redux';
 import { createStructuredSelector } from 'reselect';
-import { compose, bindActionCreators } from 'redux';
+import styled from 'styled-components';
+
+import {
+  Grid,
+  IconButton,
+  InputAdornment,
+  Menu,
+  MenuItem,
+  Tab,
+  Tabs,
+  TextField,
+  Tooltip,
+} from '@material-ui/core';
+import { ArrowDropDown, Add } from '@material-ui/icons';
+import { withStyles } from '@material-ui/core/styles';
+
+import CluesContainer from 'containers/CluesContainer';
+import CreatePuzzleModal from 'containers/CreatePuzzleModal';
+import { openModal } from 'containers/CreatePuzzleModal/actions';
+import DictionaryContainer from 'containers/DictionaryContainer';
+import GridContainer from 'containers/GridContainer';
+import WordListContainer from 'containers/WordListContainer';
+
+import Notes from 'components/Notes';
+import SyncStatus from 'components/SyncStatus';
+
+import { editPuzzleNotes, updatePuzzleTitle } from 'entities/Puzzles/actions';
 
 import injectReducer from 'utils/injectReducer';
 import injectSaga from 'utils/injectSaga';
-import GridContainer from 'containers/GridContainer';
-import CluesContainer from 'containers/CluesContainer';
-import PuzzleSelector from 'components/PuzzleSelector';
-import SyncStatus from 'components/SyncStatus';
-import Grid from '@material-ui/core/Grid';
-import TextField from '@material-ui/core/TextField';
-import Button from '@material-ui/core/Button';
-import Paper from '@material-ui/core/Paper';
-import WordListContainer from 'containers/WordListContainer';
-import DictionaryContainer from 'containers/DictionaryContainer';
-import CreatePuzzleModal from 'containers/CreatePuzzleModal';
-import Notes from 'components/Notes';
-import Tabs from '@material-ui/core/Tabs';
-import Tab from '@material-ui/core/Tab';
-import { withStyles } from '@material-ui/core/styles';
-import styled from 'styled-components';
-import { updatePuzzleTitle, editPuzzleNotes } from 'entities/Puzzles/actions';
-import { openModal } from 'containers/CreatePuzzleModal/actions';
+
+import {
+  handleTabChange,
+  loadPuzzles,
+  savePuzzle,
+  uploadPuzzle,
+} from './actions';
+import reducer from './reducer';
+import saga from './saga';
 import {
   makeSelectPuzzleContainer,
   makeSelectPuzzleContainerData,
 } from './selectors';
-import reducer from './reducer';
-import {
-  loadPuzzles,
-  selectPuzzle,
-  savePuzzles,
-  uploadPuzzle,
-  handleTabChange,
-} from './actions';
-
-import saga from './saga';
 
 const PuzzleContainerWrapper = styled.div`
   font-size: ${props => props.theme.typography.fontSize}px;
@@ -60,123 +68,112 @@ const styles = theme => ({
 });
 
 class PuzzleContainer extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      versionMenuAnchorElement: null,
+    };
+    this.openVersionMenu = this.openVersionMenu.bind(this);
+    this.closeVersionMenu = this.closeVersionMenu.bind(this);
+  }
+
   componentDidMount() {
     this.props.loadPuzzles(this.props.puzzleId);
   }
 
+  openVersionMenu({ currentTarget }) {
+    this.setState({
+      versionMenuAnchorElement: currentTarget,
+    });
+  }
+
+  closeVersionMenu() {
+    this.setState({
+      versionMenuAnchorElement: null,
+    });
+  }
+
   render() {
     const {
-      ui: {
-        activePuzzleId,
-        puzzleIds,
-        isSyncing,
-        lastSynced,
-        loading,
-        tabValue,
-      },
-      data: puzzles,
-      // loadPuzzles,
-      selectPuzzle,
-      // savePuzzles,
-      openModal,
+      ui: { puzzleId, isSyncing, lastSynced, loading, tabValue },
+      puzzle,
       updatePuzzleTitle,
       editPuzzleNotes,
-      // uploadPuzzle,
       handleTabChange,
+      loadPuzzles,
+      openModal,
       classes: { conditionalSticky },
     } = this.props;
 
+    const displayVersions = puzzle && puzzle.versions.length > 1;
+
     return (
       <PuzzleContainerWrapper>
-        <CreatePuzzleModal forceOpen={!loading && puzzleIds.length === 0} />
-        <Grid
-          component={Paper}
-          square
-          container
-          justify="space-between"
-          alignItems="center"
-          style={{ paddingRight: '8px' }}
-        >
-          {/* <Grid item xs={3} container>
-            <Grid
-              item
-              component={Button}
-              xs={4}
-              type="button"
-              color="primary"
-              onClick={openModal}
-            >
-              NEW PUZZLE
-            </Grid>
-            <Grid
-              item
-              component={Button}
-              xs={4}
-              type="button"
-              color="primary"
-              onClick={savePuzzles}
-            >
-              SAVE PUZZLES
-            </Grid>
-            <Grid
-              item
-              component={Button}
-              xs={4}
-              type="button"
-              color="primary"
-              onClick={loadPuzzles}
-            >
-              LOAD PUZZLES
-            </Grid>
-          </Grid> */}
-          <Grid item xs={10}>
-            <PuzzleSelector
-              puzzles={puzzleIds.map(id => puzzles[id])}
-              activePuzzleId={activePuzzleId}
-              onPuzzleSelected={selectPuzzle}
-            />
-          </Grid>
-          <Grid
-            item
-            component={Button}
-            type="button"
-            color="primary"
-            onClick={openModal}
-            variant="outlined"
+        <CreatePuzzleModal
+          forceOpen={!(puzzleId || loading)}
+          parentId={puzzle && (puzzle.parent_id || puzzleId)}
+          puzzleToCopyId={puzzleId}
+        />
+        {puzzle && (
+          <Menu
+            anchorEl={this.state.versionMenuAnchorElement}
+            open={Boolean(this.state.versionMenuAnchorElement)}
+            onClose={this.closeVersionMenu}
           >
-            NEW PUZZLE
-          </Grid>
-          {/* <Grid item xs={2}>
-            <input
-              type="file"
-              onChange={e => uploadPuzzle(e.target.files[0])}
-              accept=".puz"
-            />
-        </Grid> */}
-        </Grid>
+            {puzzle.versions.map(({ id, title }) => (
+              <MenuItem
+                key={id}
+                onClick={() => {
+                  loadPuzzles(id);
+                  this.closeVersionMenu();
+                }}
+              >
+                {title || id}
+              </MenuItem>
+            ))}
+          </Menu>
+        )}
         <Grid container justify="center" alignItems="flex-start" spacing={0}>
-          {activePuzzleId && (
-            <Grid className={conditionalSticky} item container xs={11} md={5}>
-              <Grid item xs={12}>
+          {puzzleId && (
+            <Grid
+              className={conditionalSticky}
+              item
+              container
+              xs={11}
+              md={5}
+              alignItems="center"
+            >
+              <Grid item>
                 <TextField
-                  value={puzzles[activePuzzleId].title || ''}
+                  value={(puzzle && puzzle.title) || ''}
                   placeholder="Untitled"
                   margin="normal"
-                  name="title"
-                  onChange={e =>
-                    updatePuzzleTitle(activePuzzleId, e.target.value)
-                  }
+                  onChange={e => updatePuzzleTitle(puzzleId, e.target.value)}
+                  InputProps={{
+                    endAdornment: (
+                      <InputAdornment position="end">
+                        {displayVersions && (
+                          <Tooltip title="Select version" placement="bottom">
+                            <IconButton onClick={this.openVersionMenu}>
+                              <ArrowDropDown />
+                            </IconButton>
+                          </Tooltip>
+                        )}
+                        <Tooltip title="Add version" placement="top">
+                          <IconButton onClick={openModal} color="primary">
+                            <Add />
+                          </IconButton>
+                        </Tooltip>
+                      </InputAdornment>
+                    ),
+                  }}
                 />
               </Grid>
-              <Grid
-                item
-                xs={12}
-                component={SyncStatus}
-                isSyncing={isSyncing}
-                lastSynced={lastSynced}
-              />
               <Grid item xs={12}>
-                <GridContainer puzzleId={activePuzzleId} />
+                <SyncStatus isSyncing={isSyncing} lastSynced={lastSynced} />
+              </Grid>
+              <Grid item xs={12}>
+                <GridContainer puzzleId={puzzleId} />
               </Grid>
             </Grid>
           )}
@@ -188,16 +185,14 @@ class PuzzleContainer extends React.Component {
               <Tab key="Puzzle Data" label="Puzzle Data" value="Puzzle Data" />
               <Tab key="Notes" label="Notes" value="Notes" />
             </Tabs>
-            {tabValue === 'Clues' && (
-              <CluesContainer puzzleId={activePuzzleId} />
-            )}
+            {tabValue === 'Clues' && <CluesContainer puzzleId={puzzleId} />}
             {tabValue === 'WordList' && <WordListContainer />}
             {tabValue === 'Dictionary' && <DictionaryContainer />}
             {tabValue === 'Puzzle Data' && <div>Hello</div>}
             {tabValue === 'Notes' && (
               <Notes
-                onEdit={notes => editPuzzleNotes(activePuzzleId, notes)}
-                notes={activePuzzleId && puzzles[activePuzzleId].notes}
+                onEdit={notes => editPuzzleNotes(puzzleId, notes)}
+                notes={puzzleId && puzzle.notes}
               />
             )}
           </Grid>
@@ -209,24 +204,20 @@ class PuzzleContainer extends React.Component {
 
 PuzzleContainer.propTypes = {
   ui: PropTypes.shape({
-    activePuzzleId: PropTypes.string,
-    puzzleIds: PropTypes.array.isRequired,
+    puzzleId: PropTypes.string,
   }).isRequired,
-  data: PropTypes.shape({}).isRequired,
+  puzzle: PropTypes.object,
   loadPuzzles: PropTypes.func.isRequired,
-  selectPuzzle: PropTypes.func.isRequired,
-  // savePuzzles: PropTypes.func.isRequired,
   updatePuzzleTitle: PropTypes.func.isRequired,
   editPuzzleNotes: PropTypes.func.isRequired,
-  // uploadPuzzle: PropTypes.func.isRequired,
-  openModal: PropTypes.func.isRequired,
   puzzleId: PropTypes.string,
   handleTabChange: PropTypes.func.isRequired,
+  openModal: PropTypes.func.isRequired,
   classes: PropTypes.object.isRequired,
 };
 
 const mapStateToProps = createStructuredSelector({
-  data: makeSelectPuzzleContainerData(),
+  puzzle: makeSelectPuzzleContainerData(),
   ui: makeSelectPuzzleContainer(),
 });
 
@@ -234,8 +225,7 @@ function mapDispatchToProps(dispatch) {
   return bindActionCreators(
     {
       loadPuzzles,
-      selectPuzzle,
-      savePuzzles,
+      savePuzzle,
       updatePuzzleTitle,
       editPuzzleNotes,
       uploadPuzzle,

@@ -23,6 +23,7 @@ export const puzzle = new schema.Entity(
         down: value.clues && value.clues.down ? value.clues.down : {},
       },
     }),
+    idAttribute: value => String(value.id),
   },
 );
 export const user = new schema.Entity('users');

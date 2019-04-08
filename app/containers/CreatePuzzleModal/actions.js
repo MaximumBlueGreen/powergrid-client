@@ -24,11 +24,13 @@ export function openModal() {
   };
 }
 
-export function createPuzzle(size, title) {
+export function createPuzzle(size, title, parentId, puzzleToCopyId) {
   return {
     type: PUZZLE_CREATED,
     size,
     title,
+    parentId,
+    puzzleToCopyId,
   };
 }
 
