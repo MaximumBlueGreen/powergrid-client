@@ -46,6 +46,15 @@ const makeSelectWords = () =>
     ),
   }));
 
+const makeSelectCompletion = direction =>
+  createSelector(
+    [makeSelectClues(direction), makeSelectGridContainerWords()],
+    (clues, words) => ({
+      completed: Object.keys(clues).length,
+      total: Object.keys(words[direction]).length,
+    }),
+  );
+
 /**
  * Default selector used by CluesContainer
  */
@@ -54,4 +63,9 @@ const makeSelectCluesContainer = () =>
   createSelector(selectCluesContainerDomain, substate => substate.toJS());
 
 export default makeSelectCluesContainer;
-export { selectCluesContainerDomain, makeSelectClues, makeSelectWords };
+export {
+  selectCluesContainerDomain,
+  makeSelectClues,
+  makeSelectWords,
+  makeSelectCompletion,
+};

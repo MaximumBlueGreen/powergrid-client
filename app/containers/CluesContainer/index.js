@@ -19,6 +19,7 @@ import { updateClue } from 'entities/Clues/actions';
 import makeSelectCluesContainer, {
   makeSelectClues,
   makeSelectWords,
+  makeSelectCompletion,
 } from './selectors';
 import reducer from './reducer';
 import saga from './saga';
@@ -28,6 +29,10 @@ function CluesContainer({
   words: { across: acrossWords, down: downWords },
   clues: { across: acrossClues, down: downClues },
   updateClue,
+  completion: {
+    across: { completed: completedAcross, total: totalAcross },
+    down: { completed: completedDown, total: totalDown },
+  },
 }) {
   return (
     <Grid container>
@@ -35,7 +40,7 @@ function CluesContainer({
         <ClueList
           clues={acrossClues}
           words={acrossWords}
-          header="Across"
+          header={`Across: ${completedAcross} / ${totalAcross} done`}
           updateClue={(number, text) =>
             updateClue(puzzleId, number, true, text)
           }
@@ -45,7 +50,7 @@ function CluesContainer({
         <ClueList
           clues={downClues}
           words={downWords}
-          header="Down"
+          header={`Across: ${completedDown} / ${totalDown} done`}
           updateClue={(number, text) =>
             updateClue(puzzleId, number, false, text)
           }
@@ -66,6 +71,16 @@ CluesContainer.propTypes = {
     down: PropTypes.object.isRequired,
   }).isRequired,
   updateClue: PropTypes.func.isRequired,
+  completion: PropTypes.shape({
+    across: PropTypes.shape({
+      completed: PropTypes.number.isRequired,
+      total: PropTypes.number.isRequired,
+    }),
+    down: PropTypes.shape({
+      completed: PropTypes.number.isRequired,
+      total: PropTypes.number.isRequired,
+    }),
+  }),
 };
 
 const mapStateToProps = createStructuredSelector({
@@ -74,6 +89,10 @@ const mapStateToProps = createStructuredSelector({
   clues: createStructuredSelector({
     across: makeSelectClues('across'),
     down: makeSelectClues('down'),
+  }),
+  completion: createStructuredSelector({
+    across: makeSelectCompletion('across'),
+    down: makeSelectCompletion('down'),
   }),
 });
 
