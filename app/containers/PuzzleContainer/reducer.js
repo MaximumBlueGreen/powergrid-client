@@ -33,7 +33,7 @@ function puzzleContainerReducer(state = initialState, action) {
           )
           .set('loading', false);
       }
-      return state.set('loading', false);
+      return state;
     }
     case PUZZLES_LOADED:
       return state.set('loading', true);
