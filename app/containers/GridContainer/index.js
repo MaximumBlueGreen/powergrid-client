@@ -135,7 +135,9 @@ function GridContainer({
                     return setBlackSquareWithSymmetry(focusedSquareId);
                   }
                   return updateSquareValue(focusedSquareId, '');
-                case 9 /* TAB */: {
+
+                case 9 /* TAB */:
+                case 13 /* ENTER */: {
                   const directionKey =
                     focusedDirection === ACROSS ? 'acrossNumber' : 'downNumber';
                   const relevantSquares = squares.filter(
@@ -160,17 +162,34 @@ function GridContainer({
                     ),
                   );
                 }
-                case 32 /* Space */: {
-                  return focusSquareClamped(focusedSquareIndex);
-                }
+                case 32 /* Space */:
+                  if (focusedDirection === ACROSS) {
+                    focusSquareClamped(focusedSquareIndex + 1);
+                  } else {
+                    focusSquareClamped(focusedSquareIndex + size.width);
+                  }
+
+                  if (clickMode === CLICK_MODE_BLACK_SQUARE) {
+                    return setBlackSquareWithSymmetry(focusedSquareId);
+                  }
+                  return updateSquareValue(focusedSquareId, '');
+
                 case 37 /* Left Arrow */:
-                  return focusSquareClamped(focusedSquareIndex - 1);
+                  return focusedDirection !== ACROSS
+                    ? focusSquareClamped(focusedSquareIndex)
+                    : focusSquareClamped(focusedSquareIndex - 1);
                 case 38 /* Up Arrow */:
-                  return focusSquareClamped(focusedSquareIndex - size.width);
+                  return focusedDirection === ACROSS
+                    ? focusSquareClamped(focusedSquareIndex)
+                    : focusSquareClamped(focusedSquareIndex - size.width);
                 case 39 /* Right Arrow */:
-                  return focusSquareClamped(focusedSquareIndex + 1);
+                  return focusedDirection !== ACROSS
+                    ? focusSquareClamped(focusedSquareIndex)
+                    : focusSquareClamped(focusedSquareIndex + 1);
                 case 40 /* Down Arrow */:
-                  return focusSquareClamped(focusedSquareIndex + size.width);
+                  return focusedDirection === ACROSS
+                    ? focusSquareClamped(focusedSquareIndex)
+                    : focusSquareClamped(focusedSquareIndex + size.width);
                 case 190:
                   return toggleBlackSquareWithSymmetry(focusedSquareId);
                 default:

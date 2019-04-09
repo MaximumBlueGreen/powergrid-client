@@ -50,7 +50,7 @@ function CluesContainer({
         <ClueList
           clues={downClues}
           words={downWords}
-          header={`Across: ${completedDown} / ${totalDown} done`}
+          header={`Down: ${completedDown} / ${totalDown} done`}
           updateClue={(number, text) =>
             updateClue(puzzleId, number, false, text)
           }
