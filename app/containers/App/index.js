@@ -9,6 +9,7 @@
 
 import React from 'react';
 import { Switch, Route } from 'react-router-dom';
+import { Redirect } from 'react-router';
 
 import HomePage from 'containers/HomePage/Loadable';
 import LoginPage from 'containers/LoginPage';
@@ -33,6 +34,7 @@ export default function App() {
             <Route path="/home/:puzzleId?" component={HomePage} />
             <Route exact path="/dashboard" component={DashboardPage} />
             <Route exact path="/login" component={LoginPage} />
+            <Route exact path="/" render={() => <Redirect to="/login" />} />
             <Route component={NotFoundPage} />
           </Switch>
         </ThemeProvider>
