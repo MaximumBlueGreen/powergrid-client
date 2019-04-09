@@ -12,6 +12,7 @@ import { Switch, Route } from 'react-router-dom';
 
 import HomePage from 'containers/HomePage/Loadable';
 import LoginPage from 'containers/LoginPage';
+import DashboardPage from 'containers/DashboardPage';
 import NotFoundPage from 'containers/NotFoundPage/Loadable';
 
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
@@ -30,6 +31,7 @@ export default function App() {
         <ThemeProvider theme={theme}>
           <Switch>
             <Route path="/home/:puzzleId?" component={HomePage} />
+            <Route exact path="/dashboard" component={DashboardPage} />
             <Route exact path="/login" component={LoginPage} />
             <Route component={NotFoundPage} />
           </Switch>
