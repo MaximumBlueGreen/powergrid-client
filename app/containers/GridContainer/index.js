@@ -153,6 +153,9 @@ function GridContainer({
                   ),
                 );
               }
+              case 32 /* Space */: {
+                return focusSquareClamped(focusedSquareIndex);
+              }
               case 37 /* Left Arrow */:
                 return focusSquareClamped(focusedSquareIndex - 1);
               case 38 /* Up Arrow */:
