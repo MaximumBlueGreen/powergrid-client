@@ -6,6 +6,7 @@
 
 import React from 'react';
 import PropTypes from 'prop-types';
+import styled from 'styled-components';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import { compose, bindActionCreators } from 'redux';
@@ -35,6 +36,11 @@ import {
   CLICK_MODE_BLACK_SQUARE,
   SYMMETRY_MODE_DIAGONAL,
 } from './constants';
+
+const StyledGridComponentWrapper = styled.div`
+  max-height: 70vh;
+  max-width: 70vh;
+`;
 
 function GridContainer({
   data: { squares, size },
@@ -94,90 +100,92 @@ function GridContainer({
           toggleSymmetryMode={toggleSymmetryMode}
           symmetryMode={symmetryMode}
         />
-        <GridComponent
-          squares={squares}
-          size={size}
-          focusedSquareId={focusedSquareId}
-          focusedWordSquareIds={focusedWord.map(s => s.id)}
-          onSquareClicked={
-            clickMode === CLICK_MODE_FILL
-              ? id => focusSquareClamped(squares.findIndex(s => s.id === id))
-              : toggleBlackSquareWithSymmetry
-          }
-          onKeyPressed={e => {
-            const { keyCode, metaKey, key, shiftKey } = e;
-            e.preventDefault();
-            if (metaKey && keyCode === 90 && !shiftKey) {
-              return undo();
+        <StyledGridComponentWrapper>
+          <GridComponent
+            squares={squares}
+            size={size}
+            focusedSquareId={focusedSquareId}
+            focusedWordSquareIds={focusedWord.map(s => s.id)}
+            onSquareClicked={
+              clickMode === CLICK_MODE_FILL
+                ? id => focusSquareClamped(squares.findIndex(s => s.id === id))
+                : toggleBlackSquareWithSymmetry
             }
-            if (
-              (metaKey && keyCode === 89) ||
-              (metaKey && keyCode === 90 && shiftKey)
-            ) {
-              return redo();
-            }
-            switch (keyCode) {
-              case 8 /* Backspace */:
-                if (focusedDirection === ACROSS) {
-                  focusSquareClamped(focusedSquareIndex - 1);
-                } else {
-                  focusSquareClamped(focusedSquareIndex - size.width);
-                }
-
-                if (clickMode === CLICK_MODE_BLACK_SQUARE) {
-                  return setBlackSquareWithSymmetry(focusedSquareId);
-                }
-                return updateSquareValue(focusedSquareId, '');
-              case 9 /* TAB */: {
-                const directionKey =
-                  focusedDirection === ACROSS ? 'acrossNumber' : 'downNumber';
-                const relevantSquares = squares.filter(
-                  s => s.number && s.number === s[directionKey],
-                );
-                const previous = findLast(
-                  relevantSquares,
-                  s => s[directionKey] < focusedSquare[directionKey],
-                );
-                const next = find(
-                  relevantSquares,
-                  s => s[directionKey] > focusedSquare[directionKey],
-                );
-
-                if ((shiftKey && !previous) || (!shiftKey && !next)) {
-                  return false;
-                }
-
-                return focusSquareClamped(
-                  squares.findIndex(
-                    s => s.id === (shiftKey ? previous : next).id,
-                  ),
-                );
+            onKeyPressed={e => {
+              const { keyCode, metaKey, key, shiftKey } = e;
+              e.preventDefault();
+              if (metaKey && keyCode === 90 && !shiftKey) {
+                return undo();
               }
-              case 32 /* Space */: {
-                return focusSquareClamped(focusedSquareIndex);
+              if (
+                (metaKey && keyCode === 89) ||
+                (metaKey && keyCode === 90 && shiftKey)
+              ) {
+                return redo();
               }
-              case 37 /* Left Arrow */:
-                return focusSquareClamped(focusedSquareIndex - 1);
-              case 38 /* Up Arrow */:
-                return focusSquareClamped(focusedSquareIndex - size.width);
-              case 39 /* Right Arrow */:
-                return focusSquareClamped(focusedSquareIndex + 1);
-              case 40 /* Down Arrow */:
-                return focusSquareClamped(focusedSquareIndex + size.width);
-              case 190:
-                return toggleBlackSquareWithSymmetry(focusedSquareId);
-              default:
-                if (keyCode > 47 && keyCode < 91) {
-                  updateSquareValue(focusedSquareId, key);
+              switch (keyCode) {
+                case 8 /* Backspace */:
                   if (focusedDirection === ACROSS) {
-                    return focusSquareClamped(focusedSquareIndex + 1);
+                    focusSquareClamped(focusedSquareIndex - 1);
+                  } else {
+                    focusSquareClamped(focusedSquareIndex - size.width);
                   }
-                  return focusSquareClamped(focusedSquareIndex + size.width);
+
+                  if (clickMode === CLICK_MODE_BLACK_SQUARE) {
+                    return setBlackSquareWithSymmetry(focusedSquareId);
+                  }
+                  return updateSquareValue(focusedSquareId, '');
+                case 9 /* TAB */: {
+                  const directionKey =
+                    focusedDirection === ACROSS ? 'acrossNumber' : 'downNumber';
+                  const relevantSquares = squares.filter(
+                    s => s.number && s.number === s[directionKey],
+                  );
+                  const previous = findLast(
+                    relevantSquares,
+                    s => s[directionKey] < focusedSquare[directionKey],
+                  );
+                  const next = find(
+                    relevantSquares,
+                    s => s[directionKey] > focusedSquare[directionKey],
+                  );
+
+                  if ((shiftKey && !previous) || (!shiftKey && !next)) {
+                    return false;
+                  }
+
+                  return focusSquareClamped(
+                    squares.findIndex(
+                      s => s.id === (shiftKey ? previous : next).id,
+                    ),
+                  );
                 }
-            }
-            return false;
-          }}
-        />
+                case 32 /* Space */: {
+                  return focusSquareClamped(focusedSquareIndex);
+                }
+                case 37 /* Left Arrow */:
+                  return focusSquareClamped(focusedSquareIndex - 1);
+                case 38 /* Up Arrow */:
+                  return focusSquareClamped(focusedSquareIndex - size.width);
+                case 39 /* Right Arrow */:
+                  return focusSquareClamped(focusedSquareIndex + 1);
+                case 40 /* Down Arrow */:
+                  return focusSquareClamped(focusedSquareIndex + size.width);
+                case 190:
+                  return toggleBlackSquareWithSymmetry(focusedSquareId);
+                default:
+                  if (keyCode > 47 && keyCode < 91) {
+                    updateSquareValue(focusedSquareId, key);
+                    if (focusedDirection === ACROSS) {
+                      return focusSquareClamped(focusedSquareIndex + 1);
+                    }
+                    return focusSquareClamped(focusedSquareIndex + size.width);
+                  }
+              }
+              return false;
+            }}
+          />
+        </StyledGridComponentWrapper>
       </Grid>
     </Grid>
   );
