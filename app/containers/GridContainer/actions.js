@@ -12,10 +12,10 @@ import {
   HIGHLIGHTED_SQUARE_IDS_ADD,
 } from './constants';
 
-export function focusSquare(index) {
+export function focusSquare(squareId) {
   return {
     type: SQUARE_FOCUSED,
-    index,
+    squareId,
   };
 }
 

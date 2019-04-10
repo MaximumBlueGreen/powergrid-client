@@ -10,7 +10,7 @@ import styled from 'styled-components';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import { compose, bindActionCreators } from 'redux';
-import { clamp, find, findLast } from 'lodash';
+import { find, findLast } from 'lodash';
 import injectReducer from 'utils/injectReducer';
 import GridComponent from 'components/Grid';
 import {
@@ -38,6 +38,7 @@ import {
 import reducer from './reducer';
 import {
   ACROSS,
+  DOWN,
   CLICK_MODE_FILL,
   CLICK_MODE_BLACK_SQUARE,
   SYMMETRY_MODE_DIAGONAL,
@@ -51,7 +52,7 @@ const StyledGridComponentWrapper = styled.div`
 function GridContainer({
   data: { squares, size },
   ui: {
-    focusedSquareIndex,
+    focusedSquareId,
     focusedDirection,
     clickMode,
     symmetryMode,
@@ -70,10 +71,30 @@ function GridContainer({
   setHighlightedSquareIds,
   addHighlightedSquareIds,
 }) {
+  const focusedSquareIndex = squares.findIndex(s => s.id === focusedSquareId);
   const focusedSquare = squares[focusedSquareIndex];
-  const focusedSquareId = focusedSquare.id;
-  const focusSquareClamped = i =>
-    focusSquare(clamp(i, 0, size.width * size.height - 1));
+
+  const nextSquareId = direction => {
+    if (direction === ACROSS) {
+      return focusedSquareIndex === squares.length - 1
+        ? focusedSquareId
+        : squares[focusedSquareIndex + 1].id;
+    }
+    return focusedSquareIndex >= squares.length - size.width
+      ? focusedSquareId
+      : squares[focusedSquareIndex + size.width].id;
+  };
+
+  const previousSquareId = direction => {
+    if (direction === ACROSS) {
+      return focusedSquareIndex === 0
+        ? focusedSquareId
+        : squares[focusedSquareIndex - 1].id;
+    }
+    return focusedSquareIndex < size.width
+      ? focusedSquareId
+      : squares[focusedSquareIndex - size.width].id;
+  };
 
   const setBlackSquareWithSymmetry = (id, isBlack) => {
     setBlackSquare(
@@ -121,7 +142,7 @@ function GridContainer({
                 return addHighlightedSquareIds([id]);
               }
               return clickMode === CLICK_MODE_FILL
-                ? focusSquareClamped(squares.findIndex(s => s.id === id))
+                ? focusSquare(id)
                 : toggleBlackSquares([id], symmetryMode);
             }}
             setHighlightedSquareIds={setHighlightedSquareIds}
@@ -144,11 +165,7 @@ function GridContainer({
               }
               switch (keyCode) {
                 case 8 /* Backspace */:
-                  if (focusedDirection === ACROSS) {
-                    focusSquareClamped(focusedSquareIndex - 1);
-                  } else {
-                    focusSquareClamped(focusedSquareIndex - size.width);
-                  }
+                  focusSquare(previousSquareId(focusedDirection));
 
                   if (clickMode === CLICK_MODE_BLACK_SQUARE) {
                     return setBlackSquareWithSymmetry(focusedSquareId, false);
@@ -175,18 +192,10 @@ function GridContainer({
                     return false;
                   }
 
-                  return focusSquareClamped(
-                    squares.findIndex(
-                      s => s.id === (shiftKey ? previous : next).id,
-                    ),
-                  );
+                  return focusSquare((shiftKey ? previous : next).id);
                 }
                 case 32 /* Space */:
-                  if (focusedDirection === ACROSS) {
-                    focusSquareClamped(focusedSquareIndex + 1);
-                  } else {
-                    focusSquareClamped(focusedSquareIndex + size.width);
-                  }
+                  focusSquare(nextSquareId(focusedDirection));
 
                   if (clickMode === CLICK_MODE_BLACK_SQUARE) {
                     return setBlackSquareWithSymmetry(focusedSquareId);
@@ -194,21 +203,21 @@ function GridContainer({
                   return updateSquareValue(focusedSquareId, '');
 
                 case 37 /* Left Arrow */:
-                  return focusedDirection !== ACROSS
-                    ? focusSquareClamped(focusedSquareIndex)
-                    : focusSquareClamped(focusedSquareIndex - 1);
+                  return focusedDirection === ACROSS
+                    ? focusSquare(previousSquareId(ACROSS))
+                    : focusSquare(focusedSquareIndex);
                 case 38 /* Up Arrow */:
                   return focusedDirection === ACROSS
-                    ? focusSquareClamped(focusedSquareIndex)
-                    : focusSquareClamped(focusedSquareIndex - size.width);
+                    ? focusSquare(focusedSquareIndex)
+                    : focusSquare(previousSquareId(DOWN));
                 case 39 /* Right Arrow */:
-                  return focusedDirection !== ACROSS
-                    ? focusSquareClamped(focusedSquareIndex)
-                    : focusSquareClamped(focusedSquareIndex + 1);
+                  return focusedDirection === ACROSS
+                    ? focusSquare(nextSquareId(ACROSS))
+                    : focusSquare(focusedSquareIndex);
                 case 40 /* Down Arrow */:
                   return focusedDirection === ACROSS
-                    ? focusSquareClamped(focusedSquareIndex)
-                    : focusSquareClamped(focusedSquareIndex + size.width);
+                    ? focusSquare(focusedSquareIndex)
+                    : focusSquare(nextSquareId(DOWN));
                 case 190 /* Period */:
                   return toggleBlackSquares(
                     highlightedSquareIds.length > 0
@@ -219,10 +228,7 @@ function GridContainer({
                 default:
                   if (keyCode > 47 && keyCode < 91) {
                     updateSquareValue(focusedSquareId, key);
-                    if (focusedDirection === ACROSS) {
-                      return focusSquareClamped(focusedSquareIndex + 1);
-                    }
-                    return focusSquareClamped(focusedSquareIndex + size.width);
+                    return focusSquare(nextSquareId(focusedDirection));
                   }
               }
               return false;
@@ -243,7 +249,7 @@ GridContainer.propTypes = {
     }),
   }).isRequired,
   ui: PropTypes.shape({
-    focusedSquareIndex: PropTypes.number.isRequired,
+    focusedSquareId: PropTypes.string,
     focusedDirection: PropTypes.string.isRequired,
     clickMode: PropTypes.string.isRequired,
     symmetryMode: PropTypes.string.isRequired,
