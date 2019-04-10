@@ -14,16 +14,22 @@ import { find, findLast } from 'lodash';
 import injectReducer from 'utils/injectReducer';
 import GridComponent from 'components/Grid';
 import {
-  toggleBlackSquare,
   setBlackSquare,
   updateSquareValue,
   clearSquares,
 } from 'entities/Squares/actions';
+import { toggleBlackSquares } from 'entities/Puzzles/actions';
 import { ActionCreators } from 'redux-undo';
 import Grid from '@material-ui/core/Grid';
 
 import GridActionBar from 'components/GridActionBar';
-import { focusSquare, toggleClickMode, toggleSymmetryMode } from './actions';
+import {
+  focusSquare,
+  toggleClickMode,
+  toggleSymmetryMode,
+  setHighlightedSquareIds,
+  addHighlightedSquareIds,
+} from './actions';
 import {
   makeSelectGridContainer,
   makeSelectGridContainerDomain,
@@ -45,9 +51,15 @@ const StyledGridComponentWrapper = styled.div`
 
 function GridContainer({
   data: { squares, size },
-  ui: { focusedSquareId, focusedDirection, clickMode, symmetryMode },
+  ui: {
+    focusedSquareId,
+    focusedDirection,
+    clickMode,
+    symmetryMode,
+    highlightedSquareIds,
+  },
   focusedWord,
-  toggleBlackSquare,
+  toggleBlackSquares,
   setBlackSquare,
   toggleClickMode,
   updateSquareValue,
@@ -56,6 +68,8 @@ function GridContainer({
   redo,
   clearSquares,
   toggleSymmetryMode,
+  setHighlightedSquareIds,
+  addHighlightedSquareIds,
 }) {
   const focusedSquareIndex = squares.findIndex(s => s.id === focusedSquareId);
   const focusedSquare = squares[focusedSquareIndex];
@@ -82,19 +96,7 @@ function GridContainer({
       : squares[focusedSquareIndex - size.width].id;
   };
 
-  const toggleBlackSquareWithSymmetry = id => {
-    toggleBlackSquare(
-      id,
-      (symmetryMode === SYMMETRY_MODE_DIAGONAL && [
-        squares[
-          size.height * size.width - squares.findIndex(s => s.id === id) - 1
-        ].id,
-      ]) ||
-        [],
-    );
-  };
-
-  const setBlackSquareWithSymmetry = id => {
+  const setBlackSquareWithSymmetry = (id, isBlack) => {
     setBlackSquare(
       id,
       (symmetryMode === SYMMETRY_MODE_DIAGONAL && [
@@ -103,6 +105,7 @@ function GridContainer({
         ].id,
       ]) ||
         [],
+      isBlack,
     );
   };
 
@@ -116,7 +119,13 @@ function GridContainer({
           undo={undo}
           redo={redo}
           toggleClickMode={toggleClickMode}
-          clearSquares={() => clearSquares(squares.map(s => s.id))}
+          clearSquares={() =>
+            clearSquares(
+              highlightedSquareIds.length > 0
+                ? highlightedSquareIds
+                : squares.map(s => s.id),
+            )
+          }
           clickMode={clickMode}
           toggleSymmetryMode={toggleSymmetryMode}
           symmetryMode={symmetryMode}
@@ -127,10 +136,20 @@ function GridContainer({
             size={size}
             focusedSquareId={focusedSquareId}
             focusedWordSquareIds={focusedWord.map(s => s.id)}
-            onSquareClicked={
+            highlightedSquareIds={highlightedSquareIds}
+            onSquareClicked={({ metaKey }, id) => {
+              if (metaKey) {
+                return addHighlightedSquareIds([id]);
+              }
+              return clickMode === CLICK_MODE_FILL
+                ? focusSquare(id)
+                : toggleBlackSquares([id], symmetryMode);
+            }}
+            setHighlightedSquareIds={setHighlightedSquareIds}
+            onHighlightEnd={squareIds =>
               clickMode === CLICK_MODE_FILL
-                ? focusSquare
-                : toggleBlackSquareWithSymmetry
+                ? addHighlightedSquareIds(squareIds)
+                : toggleBlackSquares(squareIds, symmetryMode)
             }
             onKeyPressed={e => {
               const { keyCode, metaKey, key, shiftKey } = e;
@@ -149,7 +168,7 @@ function GridContainer({
                   focusSquare(previousSquareId(focusedDirection));
 
                   if (clickMode === CLICK_MODE_BLACK_SQUARE) {
-                    return setBlackSquareWithSymmetry(focusedSquareId);
+                    return setBlackSquareWithSymmetry(focusedSquareId, false);
                   }
                   return updateSquareValue(focusedSquareId, '');
 
@@ -203,8 +222,13 @@ function GridContainer({
                   return focusedDirection === ACROSS
                     ? focusSquare(focusedSquareIndex)
                     : focusSquare(nextSquareId(DOWN));
-                case 190:
-                  return toggleBlackSquareWithSymmetry(focusedSquareId);
+                case 190 /* Period */:
+                  return toggleBlackSquares(
+                    highlightedSquareIds.length > 0
+                      ? highlightedSquareIds
+                      : [focusedSquareId],
+                    symmetryMode,
+                  );
                 default:
                   if (keyCode > 47 && keyCode < 91) {
                     updateSquareValue(focusedSquareId, key);
@@ -233,9 +257,10 @@ GridContainer.propTypes = {
     focusedDirection: PropTypes.string.isRequired,
     clickMode: PropTypes.string.isRequired,
     symmetryMode: PropTypes.string.isRequired,
+    highlightedSquareIds: PropTypes.arrayOf(PropTypes.string).isRequired,
   }).isRequired,
   focusSquare: PropTypes.func.isRequired,
-  toggleBlackSquare: PropTypes.func.isRequired,
+  toggleBlackSquares: PropTypes.func.isRequired,
   setBlackSquare: PropTypes.func.isRequired,
   updateSquareValue: PropTypes.func.isRequired,
   undo: PropTypes.func.isRequired,
@@ -244,6 +269,8 @@ GridContainer.propTypes = {
   focusedWord: PropTypes.array.isRequired,
   toggleClickMode: PropTypes.func.isRequired,
   toggleSymmetryMode: PropTypes.func.isRequired,
+  setHighlightedSquareIds: PropTypes.func.isRequired,
+  addHighlightedSquareIds: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = createStructuredSelector({
@@ -252,10 +279,11 @@ const mapStateToProps = createStructuredSelector({
   focusedWord: makeSelectGridContainerFocusedWord(),
 });
 
-function mapDispatchToProps(dispatch) {
+function mapDispatchToProps(dispatch, { puzzleId }) {
   return bindActionCreators(
     {
-      toggleBlackSquare,
+      toggleBlackSquares: (ids, symmetry) =>
+        toggleBlackSquares(puzzleId, ids, symmetry),
       setBlackSquare,
       updateSquareValue,
       focusSquare,
@@ -264,6 +292,8 @@ function mapDispatchToProps(dispatch) {
       clearSquares,
       toggleClickMode,
       toggleSymmetryMode,
+      setHighlightedSquareIds,
+      addHighlightedSquareIds,
     },
     dispatch,
   );

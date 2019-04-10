@@ -16,6 +16,8 @@ import {
   SYMMETRY_MODE_NONE,
   SYMMETRY_MODE_DIAGONAL,
   SYMMETRY_MODE_TOGGLED,
+  HIGHLIGHTED_SQUARE_IDS_SET,
+  HIGHLIGHTED_SQUARE_IDS_ADD,
 } from './constants';
 
 export const initialState = fromJS({
@@ -23,6 +25,7 @@ export const initialState = fromJS({
   focusedDirection: ACROSS,
   clickMode: CLICK_MODE_FILL,
   symmetryMode: SYMMETRY_MODE_DIAGONAL,
+  highlightedSquareIds: [],
 });
 
 function gridContainerReducer(state = initialState, action) {
@@ -37,7 +40,8 @@ function gridContainerReducer(state = initialState, action) {
             ? otherDirection(currentFocusedDirection)
             : currentFocusedDirection,
         )
-        .set('focusedSquareId', action.squareId);
+        .set('focusedSquareId', action.squareId)
+        .set('highlightedSquareIds', []);
     }
     case CLICK_MODE_TOGGLED:
       return state.set(
@@ -53,8 +57,15 @@ function gridContainerReducer(state = initialState, action) {
           ? SYMMETRY_MODE_DIAGONAL
           : SYMMETRY_MODE_NONE,
       ); /* TODO refactor */
+    case HIGHLIGHTED_SQUARE_IDS_SET:
+      return state.set('highlightedSquareIds', action.squareIds);
+    case HIGHLIGHTED_SQUARE_IDS_ADD:
+      return state.update('highlightedSquareIds', squareIds => [
+        ...squareIds,
+        ...action.squareIds,
+      ]);
     case ENTITIES_LOADED:
-      return state.set('focusedSquareIndex', 0).set('focusedDirection', ACROSS);
+      return state.set('focusedDirection', ACROSS);
     default:
       return state;
   }

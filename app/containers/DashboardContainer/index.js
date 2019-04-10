@@ -9,7 +9,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import { compose, bindActionCreators } from 'redux';
-import { noop, orderBy } from 'lodash';
+import { orderBy } from 'lodash';
 
 import {
   Card,
@@ -68,14 +68,9 @@ class DashboardContainer extends React.Component {
             >
               My Puzzles
             </Grid>
-            {orderBy(
-              Object.keys(puzzles),
-              id => {
-                console.log(puzzles[id][id]);
-                return puzzles[id][id].updated_at;
-              },
-              ['desc'],
-            ).map(parentId => (
+            {orderBy(Object.keys(puzzles), id => puzzles[id][id].updated_at, [
+              'desc',
+            ]).map(parentId => (
               <Grid item xs={4} key={parentId}>
                 <Card>
                   <CardContent>
@@ -83,8 +78,7 @@ class DashboardContainer extends React.Component {
                       focus={false}
                       squares={puzzles[parentId][parentId].squares}
                       size={puzzles[parentId][parentId].size}
-                      onSquareClicked={noop}
-                      onKeyPressed={noop}
+                      highlightable={false}
                     />
                   </CardContent>
                   <CardActions>

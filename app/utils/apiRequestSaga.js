@@ -1,13 +1,15 @@
 import { call, select, put } from 'redux-saga/effects';
 import { push } from 'connected-react-router';
 import { merge } from 'lodash';
+import selectUsers from 'entities/Users/selectors';
+import { createSelector } from 'reselect';
 import request from './request';
 
 /* Change this to your local server */
-const BASE_URL = 'https://powergrid-app.herokuapp.com/';
-// const BASE_URL = 'http://localhost:3000/';
+// const BASE_URL = 'https://powergrid-app.herokuapp.com/';
+const BASE_URL = 'http://localhost:3000/';
 
-const selectUserToken = state => state.getIn(['entities', 'users', 'me']);
+const selectUserToken = createSelector(selectUsers, users => users.get('me'));
 
 export function* unauthenticated(requestURL, options, onSuccess, onFailure) {
   try {
