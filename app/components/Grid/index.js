@@ -38,6 +38,7 @@ class Grid extends React.Component {
       onKeyPressed,
       highlightedSquareIds,
       setHighlightedSquareIds,
+      addHighlightedSquareIds,
     } = this.props;
 
     const { origin, current } = this.state;
@@ -108,13 +109,15 @@ class Grid extends React.Component {
                 strokeWidth=".02"
                 fill={squareColor(s)}
                 fillOpacity={isHighlighted(s.id) ? 0.75 : 1}
-                onClick={() => onSquareClicked(s.id)}
-                onMouseDown={() => {
+                onClick={e => onSquareClicked(e, s.id)}
+                onMouseDown={({ metaKey }) => {
                   this.setState({
                     origin: { row, col },
                     current: { row, col },
                   });
-                  setHighlightedSquareIds([]);
+                  if (!metaKey) {
+                    setHighlightedSquareIds([]);
+                  }
                 }}
                 onMouseUp={() => {
                   this.setState({
@@ -125,7 +128,7 @@ class Grid extends React.Component {
                     upperLeftRow !== lowerRightRow ||
                     upperLeftCol !== lowerRightCol
                   ) {
-                    setHighlightedSquareIds(temporaryHighlightedSquareIds);
+                    addHighlightedSquareIds(temporaryHighlightedSquareIds);
                   }
                 }}
                 onMouseEnter={() => {
@@ -182,6 +185,7 @@ Grid.propTypes = {
   focus: PropTypes.bool,
   highlightedSquareIds: PropTypes.arrayOf(PropTypes.string).isRequired,
   setHighlightedSquareIds: PropTypes.func.isRequired,
+  addHighlightedSquareIds: PropTypes.func.isRequired,
 };
 
 Grid.defaultProps = {

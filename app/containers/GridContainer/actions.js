@@ -9,6 +9,7 @@ import {
   CLICK_MODE_TOGGLED,
   SYMMETRY_MODE_TOGGLED,
   HIGHLIGHTED_SQUARE_IDS_SET,
+  HIGHLIGHTED_SQUARE_IDS_ADD,
 } from './constants';
 
 export function focusSquare(index) {
@@ -27,6 +28,13 @@ export function toggleClickMode() {
 export function toggleSymmetryMode() {
   return {
     type: SYMMETRY_MODE_TOGGLED,
+  };
+}
+
+export function addHighlightedSquareIds(squareIds) {
+  return {
+    type: HIGHLIGHTED_SQUARE_IDS_ADD,
+    squareIds,
   };
 }
 

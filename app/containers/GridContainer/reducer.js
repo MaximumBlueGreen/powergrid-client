@@ -17,6 +17,7 @@ import {
   SYMMETRY_MODE_DIAGONAL,
   SYMMETRY_MODE_TOGGLED,
   HIGHLIGHTED_SQUARE_IDS_SET,
+  HIGHLIGHTED_SQUARE_IDS_ADD,
 } from './constants';
 
 export const initialState = fromJS({
@@ -57,6 +58,11 @@ function gridContainerReducer(state = initialState, action) {
       ); /* TODO refactor */
     case HIGHLIGHTED_SQUARE_IDS_SET:
       return state.set('highlightedSquareIds', action.squareIds);
+    case HIGHLIGHTED_SQUARE_IDS_ADD:
+      return state.update('highlightedSquareIds', squareIds => [
+        ...squareIds,
+        ...action.squareIds,
+      ]);
     case ENTITIES_LOADED:
       return state.set('focusedSquareIndex', 0).set('focusedDirection', ACROSS);
     default:
@@ -65,7 +71,10 @@ function gridContainerReducer(state = initialState, action) {
 }
 
 function reducerWithUnsetHighlightedSquareIds(state = initialState, action) {
-  if (action.type !== HIGHLIGHTED_SQUARE_IDS_SET) {
+  if (
+    action.type !== HIGHLIGHTED_SQUARE_IDS_SET ||
+    action.type !== HIGHLIGHTED_SQUARE_IDS_ADD
+  ) {
     return state
       .set('highlightedSquareIds', [])
       .merge(gridContainerReducer(state, action));
