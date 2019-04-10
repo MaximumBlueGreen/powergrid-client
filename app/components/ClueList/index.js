@@ -20,7 +20,8 @@ const styles = theme => ({
   },
 });
 
-function ClueList({ clues, words, header, updateClue, classes }) {
+function ClueList({ clues, words, header, updateClue, onFocused, classes }) {
+  console.log(clues, words);
   return (
     <List>
       <ListSubheader className={classes.listSubheader}>{header}</ListSubheader>
@@ -32,6 +33,7 @@ function ClueList({ clues, words, header, updateClue, classes }) {
             value={clues[number] ? clues[number].text : ''}
             disabled={word.includes('?')}
             onChange={e => updateClue(number, e.target.value)}
+            onFocus={() => onFocused(number)}
             fullWidth
             multiline
             rowsMax={1}
@@ -47,6 +49,7 @@ ClueList.propTypes = {
   words: PropTypes.object.isRequired,
   header: PropTypes.string.isRequired,
   updateClue: PropTypes.func.isRequired,
+  onFocused: PropTypes.func.isRequired,
   classes: PropTypes.object.isRequired,
 };
 

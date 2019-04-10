@@ -16,6 +16,7 @@ import ClueList from 'components/ClueList';
 import injectSaga from 'utils/injectSaga';
 import injectReducer from 'utils/injectReducer';
 import { updateClue } from 'entities/Clues/actions';
+import { selectClue } from './actions';
 import makeSelectCluesContainer, {
   makeSelectClues,
   makeSelectWords,
@@ -29,6 +30,7 @@ function CluesContainer({
   words: { across: acrossWords, down: downWords },
   clues: { across: acrossClues, down: downClues },
   updateClue,
+  selectClue,
   completion: {
     across: { completed: completedAcross, total: totalAcross },
     down: { completed: completedDown, total: totalDown },
@@ -44,6 +46,7 @@ function CluesContainer({
           updateClue={(number, text) =>
             updateClue(puzzleId, number, true, text)
           }
+          onFocused={number => selectClue(puzzleId, number, true)}
         />
       </Grid>
       <Grid item xs={6}>
@@ -54,6 +57,7 @@ function CluesContainer({
           updateClue={(number, text) =>
             updateClue(puzzleId, number, false, text)
           }
+          onFocused={number => selectClue(puzzleId, number, false)}
         />
       </Grid>
     </Grid>
@@ -71,6 +75,7 @@ CluesContainer.propTypes = {
     down: PropTypes.object.isRequired,
   }).isRequired,
   updateClue: PropTypes.func.isRequired,
+  selectClue: PropTypes.func.isRequired,
   completion: PropTypes.shape({
     across: PropTypes.shape({
       completed: PropTypes.number.isRequired,
@@ -100,6 +105,7 @@ function mapDispatchToProps(dispatch) {
   return bindActionCreators(
     {
       updateClue,
+      selectClue,
     },
     dispatch,
   );

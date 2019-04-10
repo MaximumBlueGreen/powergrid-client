@@ -6,6 +6,7 @@
 
 import {
   SQUARE_FOCUSED,
+  DIRECTION_FOCUSED,
   CLICK_MODE_TOGGLED,
   SYMMETRY_MODE_TOGGLED,
   HIGHLIGHTED_SQUARE_IDS_SET,
@@ -16,6 +17,13 @@ export function focusSquare(squareId) {
   return {
     type: SQUARE_FOCUSED,
     squareId,
+  };
+}
+
+export function focusDirection(direction) {
+  return {
+    type: DIRECTION_FOCUSED,
+    direction,
   };
 }
 

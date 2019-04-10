@@ -5,11 +5,20 @@ import { puzzle as puzzleSchema } from 'entities/schema';
 import { normalize, denormalize } from 'normalizr';
 import { authenticated } from 'utils/apiRequestSaga';
 import entitiesSelector from 'entities/selectors';
-import { SQUARE_FOCUSED } from 'containers/GridContainer/constants';
-import { makeSelectGridContainerFocusedWord } from 'containers/GridContainer/selectors';
+import { focusSquare, focusDirection } from 'containers/GridContainer/actions';
+import {
+  SQUARE_FOCUSED,
+  ACROSS,
+  DOWN,
+} from 'containers/GridContainer/constants';
+import {
+  makeSelectGridContainerFocusedWord,
+  makeSelectGridContainerSquareNumbers,
+} from 'containers/GridContainer/selectors';
 import { updateFilterPattern } from 'containers/WordListContainer/actions';
 import { ENTRY_SELECTED } from 'containers/WordListContainer/constants';
 import { bulkUpdateSquareValue } from 'entities/Squares/actions';
+import { CLUE_SELECTED } from 'containers/CluesContainer/constants';
 import { savePuzzle, savePuzzleSuccess } from './actions';
 import { PUZZLES_LOADED, PUZZLE_SAVED, PUZZLE_UPLOADED } from './constants';
 import { makeSelectPuzzleContainer } from './selectors';
@@ -119,6 +128,23 @@ function* updateGridFromEntry({ entry }) {
   }
 }
 
+function* focusWordInGrid({ puzzleId, number, isAcross }) {
+  const puzzle = yield select(makeSelectGridContainerSquareNumbers(), {
+    puzzleId,
+  });
+  yield all([
+    put(
+      focusSquare(
+        puzzle
+          .get('squares')
+          .find(s => String(s.get('number')) === number)
+          .get('id'),
+      ),
+    ),
+    put(focusDirection(isAcross ? ACROSS : DOWN)),
+  ]);
+}
+
 function* autosave() {
   while (true) {
     yield delay(10000);
@@ -133,6 +159,7 @@ export default function* saga() {
     takeLatest(PUZZLE_UPLOADED, uploadPuzzleSaga),
     takeLatest(SQUARE_FOCUSED, updateFilterPatternFromGrid),
     takeLatest(ENTRY_SELECTED, updateGridFromEntry),
+    takeLatest(CLUE_SELECTED, focusWordInGrid),
     autosave(),
   ]);
 }

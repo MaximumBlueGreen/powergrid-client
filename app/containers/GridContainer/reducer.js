@@ -10,6 +10,7 @@ import {
   ACROSS,
   DOWN,
   SQUARE_FOCUSED,
+  DIRECTION_FOCUSED,
   CLICK_MODE_FILL,
   CLICK_MODE_BLACK_SQUARE,
   CLICK_MODE_TOGGLED,
@@ -43,6 +44,8 @@ function gridContainerReducer(state = initialState, action) {
         .set('focusedSquareId', action.squareId)
         .set('highlightedSquareIds', []);
     }
+    case DIRECTION_FOCUSED:
+      return state.set('focusedDirection', action.direction);
     case CLICK_MODE_TOGGLED:
       return state.set(
         'clickMode',

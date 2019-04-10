@@ -4,10 +4,13 @@
  *
  */
 
-import { DEFAULT_ACTION } from './constants';
+import { CLUE_SELECTED } from './constants';
 
-export function defaultAction() {
+export function selectClue(puzzleId, number, isAcross) {
   return {
-    type: DEFAULT_ACTION,
+    type: CLUE_SELECTED,
+    puzzleId,
+    number,
+    isAcross,
   };
 }

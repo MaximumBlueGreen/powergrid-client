@@ -4,4 +4,4 @@
  *
  */
 
-export const DEFAULT_ACTION = 'app/CluesContainer/DEFAULT_ACTION';
+export const CLUE_SELECTED = 'app/CluesContainer/CLUE_SELECTED';

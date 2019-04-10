@@ -14,6 +14,8 @@ export const SYMMETRY_MODE_NONE = 'SYMMETRY_NONE';
 export const SYMMETRY_MODE_DIAGONAL = 'SYMMETRY_DIAGONAL';
 
 export const SQUARE_FOCUSED = 'app/GridContainer/SQUARE_FOCUSED';
+export const DIRECTION_FOCUSED = 'app/GridContainer/DIRECTION_FOCUSED';
+
 export const CLICK_MODE_TOGGLED = 'app/GridContainer/CLICK_MODE_TOGGLED';
 export const SYMMETRY_MODE_TOGGLED = 'app/GridContainer/SYMMETRY_TOGGLED';
 export const HIGHLIGHTED_SQUARE_IDS_SET =
