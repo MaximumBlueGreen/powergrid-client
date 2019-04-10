@@ -68,7 +68,7 @@ function GridActionBar({
             </ToggleButton>
           </Tooltip>
           <Tooltip
-            title="Black Square mode"
+            title="Black Square mode 【 . 】"
             placement="top"
             value={CLICK_MODE_BLACK_SQUARE}
           >
