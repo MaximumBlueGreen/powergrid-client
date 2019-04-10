@@ -81,6 +81,12 @@ class PuzzleContainer extends React.Component {
     this.props.loadPuzzles(this.props.puzzleId);
   }
 
+  componentDidUpdate({ puzzleId }) {
+    if (this.props.puzzleId !== puzzleId) {
+      this.props.loadPuzzles(this.props.puzzleId);
+    }
+  }
+
   openVersionMenu({ currentTarget }) {
     this.setState({
       versionMenuAnchorElement: currentTarget,
