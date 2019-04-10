@@ -205,18 +205,18 @@ function GridContainer({
                 case 37 /* Left Arrow */:
                   return focusedDirection === ACROSS
                     ? focusSquare(previousSquareId(ACROSS))
-                    : focusSquare(focusedSquareIndex);
+                    : focusSquare(focusedSquareId);
                 case 38 /* Up Arrow */:
                   return focusedDirection === ACROSS
-                    ? focusSquare(focusedSquareIndex)
+                    ? focusSquare(focusedSquareId)
                     : focusSquare(previousSquareId(DOWN));
                 case 39 /* Right Arrow */:
                   return focusedDirection === ACROSS
                     ? focusSquare(nextSquareId(ACROSS))
-                    : focusSquare(focusedSquareIndex);
+                    : focusSquare(focusedSquareId);
                 case 40 /* Down Arrow */:
                   return focusedDirection === ACROSS
-                    ? focusSquare(focusedSquareIndex)
+                    ? focusSquare(focusedSquareId)
                     : focusSquare(nextSquareId(DOWN));
                 case 190 /* Period */:
                   return toggleBlackSquares(
