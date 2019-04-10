@@ -40,7 +40,8 @@ function gridContainerReducer(state = initialState, action) {
             ? otherDirection(currentFocusedDirection)
             : currentFocusedDirection,
         )
-        .set('focusedSquareIndex', action.index);
+        .set('focusedSquareIndex', action.index)
+        .set('highlightedSquareIds', []);
     }
     case CLICK_MODE_TOGGLED:
       return state.set(
@@ -70,20 +71,8 @@ function gridContainerReducer(state = initialState, action) {
   }
 }
 
-function reducerWithUnsetHighlightedSquareIds(state = initialState, action) {
-  if (
-    action.type !== HIGHLIGHTED_SQUARE_IDS_SET ||
-    action.type !== HIGHLIGHTED_SQUARE_IDS_ADD
-  ) {
-    return state
-      .set('highlightedSquareIds', [])
-      .merge(gridContainerReducer(state, action));
-  }
-  return gridContainerReducer(state, action);
-}
-
 function otherDirection(direction) {
   return direction === ACROSS ? DOWN : ACROSS;
 }
 
-export default reducerWithUnsetHighlightedSquareIds;
+export default gridContainerReducer;
