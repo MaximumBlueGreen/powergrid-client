@@ -45,8 +45,8 @@ import {
 } from './constants';
 
 const StyledGridComponentWrapper = styled.div`
-  max-height: 70vh;
-  max-width: 70vh;
+  max-height: 75vh;
+  max-width: 75vh;
 `;
 
 function GridContainer({
