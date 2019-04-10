@@ -10,10 +10,10 @@ import {
   SYMMETRY_MODE_TOGGLED,
 } from './constants';
 
-export function focusSquare(index) {
+export function focusSquare(squareId) {
   return {
     type: SQUARE_FOCUSED,
-    index,
+    squareId,
   };
 }
 

@@ -65,7 +65,7 @@ const makeSelectGridContainerSquareNumbers = () =>
 const makeSelectGridContainerFocusedWord = () =>
   createSelector(
     [makeSelectGridContainerDomain(), makeSelectGridContainerSquareNumbers()],
-    ({ focusedDirection, focusedSquareIndex }, state) =>
+    ({ focusedDirection, focusedSquareId }, state) =>
       state
         .get('squares')
         .filter(
@@ -73,9 +73,9 @@ const makeSelectGridContainerFocusedWord = () =>
             !s.get('isBlack') &&
             (focusedDirection === ACROSS
               ? s.get('acrossNumber') ===
-                state.getIn(['squares', focusedSquareIndex, 'acrossNumber'])
+                state.getIn(['squares', focusedSquareId, 'acrossNumber'])
               : s.get('downNumber') ===
-                state.getIn(['squares', focusedSquareIndex, 'downNumber'])),
+                state.getIn(['squares', focusedSquareId, 'downNumber'])),
         )
         .toJS(),
   );
