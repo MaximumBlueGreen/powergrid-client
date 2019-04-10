@@ -9,8 +9,23 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import { compose, bindActionCreators } from 'redux';
+import { noop, orderBy } from 'lodash';
 
-import { Link, List, ListItem } from '@material-ui/core';
+import {
+  Card,
+  CardActions,
+  CardContent,
+  Fab,
+  Grid,
+  Button,
+  Typography,
+} from '@material-ui/core';
+import { withStyles } from '@material-ui/core/styles';
+import { Add } from '@material-ui/icons';
+
+import GridComponent from 'components/Grid';
+import CreatePuzzleModal from 'containers/CreatePuzzleModal';
+import { openModal } from 'containers/CreatePuzzleModal/actions';
 
 import injectSaga from 'utils/injectSaga';
 import injectReducer from 'utils/injectReducer';
@@ -21,24 +36,68 @@ import makeSelectDashboardContainer, {
 import reducer from './reducer';
 import saga from './saga';
 
+const styles = theme => ({
+  fab: {
+    position: 'fixed',
+    bottom: theme.spacing.unit * 2,
+    right: theme.spacing.unit * 2,
+  },
+});
+
 class DashboardContainer extends React.Component {
   componentDidMount() {
     this.props.loadPuzzles();
   }
 
   render() {
-    const { puzzles } = this.props;
+    const { puzzles, classes, openModal } = this.props;
     return (
-      <List>
-        {Object.keys(puzzles).map(parentId => (
-          <ListItem>
-            <Link href={`/home/${parentId}`}>{parentId}</Link>
-            {`(${Object.keys(puzzles[parentId]).length} version${
-              Object.keys(puzzles[parentId]).length > 1 ? 's' : ''
-            })`}
-          </ListItem>
-        ))}
-      </List>
+      <>
+        <Fab className={classes.fab} color="primary" onClick={openModal}>
+          <Add />
+        </Fab>
+        <CreatePuzzleModal />
+        <div style={{ width: '60%', marginLeft: '20%' }}>
+          <Grid container spacing={32}>
+            <Grid
+              item
+              xs={12}
+              component={Typography}
+              variant="title"
+              style={{ paddingBottom: '16px', marginTop: '16px' }}
+            >
+              My Puzzles
+            </Grid>
+            {orderBy(
+              Object.keys(puzzles),
+              id => {
+                console.log(puzzles[id][id]);
+                return puzzles[id][id].updated_at;
+              },
+              ['desc'],
+            ).map(parentId => (
+              <Grid item xs={4} key={parentId}>
+                <Card>
+                  <CardContent>
+                    <GridComponent
+                      focus={false}
+                      squares={puzzles[parentId][parentId].squares}
+                      size={puzzles[parentId][parentId].size}
+                      onSquareClicked={noop}
+                      onKeyPressed={noop}
+                    />
+                  </CardContent>
+                  <CardActions>
+                    <Button color="primary" href={`/home/${parentId}`}>
+                      {puzzles[parentId][parentId].title || 'Untitled'}
+                    </Button>
+                  </CardActions>
+                </Card>
+              </Grid>
+            ))}
+          </Grid>
+        </div>
+      </>
     );
   }
 }
@@ -46,6 +105,8 @@ class DashboardContainer extends React.Component {
 DashboardContainer.propTypes = {
   loadPuzzles: PropTypes.func.isRequired,
   puzzles: PropTypes.object.isRequired,
+  classes: PropTypes.object.isRequired,
+  openModal: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = createStructuredSelector({
@@ -54,7 +115,7 @@ const mapStateToProps = createStructuredSelector({
 });
 
 function mapDispatchToProps(dispatch) {
-  return bindActionCreators({ loadPuzzles }, dispatch);
+  return bindActionCreators({ loadPuzzles, openModal }, dispatch);
 }
 
 const withConnect = connect(
@@ -69,4 +130,5 @@ export default compose(
   withReducer,
   withSaga,
   withConnect,
+  withStyles(styles),
 )(DashboardContainer);

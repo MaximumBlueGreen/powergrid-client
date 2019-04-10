@@ -1,7 +1,7 @@
 import { takeLatest, put, all } from 'redux-saga/effects';
 import { authenticated } from 'utils/apiRequestSaga';
 import { times } from 'lodash';
-import { loadPuzzles } from 'containers/PuzzleContainer/actions';
+import { push } from 'connected-react-router';
 import { closeModal } from './actions';
 import { PUZZLE_CREATED } from './constants';
 
@@ -25,8 +25,8 @@ export function* createPuzzleSaga({
         puzzleToCopyId,
       }),
     },
-    function* onSuccess() {
-      yield all([put(loadPuzzles()), put(closeModal())]);
+    function* onSuccess({ id }) {
+      yield all([put(push(`/home/${id}`)), put(closeModal())]);
     },
     function* onError(error) {
       console.log(error);

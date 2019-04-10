@@ -9,7 +9,9 @@ import PropTypes from 'prop-types';
 
 class Grid extends React.Component {
   componentDidMount() {
-    this.gridRef.focus();
+    if (this.props.focus) {
+      this.gridRef.focus();
+    }
   }
 
   render() {
@@ -91,10 +93,12 @@ Grid.propTypes = {
   focusedWordSquareIds: PropTypes.arrayOf(PropTypes.string),
   onSquareClicked: PropTypes.func.isRequired,
   onKeyPressed: PropTypes.func.isRequired,
+  focus: PropTypes.bool,
 };
 
 Grid.defaultProps = {
   focusedWordSquareIds: [],
+  focus: true,
 };
 
 export default Grid;
