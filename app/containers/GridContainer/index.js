@@ -192,11 +192,7 @@ function GridContainer({
                     return false;
                   }
 
-                  return focusSquare(
-                    squares.findIndex(
-                      s => s.id === (shiftKey ? previous : next).id,
-                    ),
-                  );
+                  return focusSquare((shiftKey ? previous : next).id);
                 }
                 case 32 /* Space */:
                   focusSquare(nextSquareId(focusedDirection));
@@ -253,7 +249,7 @@ GridContainer.propTypes = {
     }),
   }).isRequired,
   ui: PropTypes.shape({
-    focusedSquareIndex: PropTypes.number.isRequired,
+    focusedSquareId: PropTypes.string,
     focusedDirection: PropTypes.string.isRequired,
     clickMode: PropTypes.string.isRequired,
     symmetryMode: PropTypes.string.isRequired,
