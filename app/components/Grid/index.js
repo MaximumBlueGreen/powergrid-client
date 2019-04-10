@@ -63,6 +63,7 @@ class Grid extends React.Component {
                 fontSize=".7"
                 dominantBaseline="middle"
                 textAnchor="middle"
+                pointerEvents="none"
               >
                 {s.value.toUpperCase()}
               </text>
@@ -72,6 +73,7 @@ class Grid extends React.Component {
                 x={(i % size.width) + 0.04}
                 y={parseInt(i / size.width, 10) + 0.25}
                 fontSize=".25"
+                pointerEvents="none"
               >
                 {s.number}
               </text>
