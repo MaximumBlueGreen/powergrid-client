@@ -23,7 +23,12 @@ import { ActionCreators } from 'redux-undo';
 import Grid from '@material-ui/core/Grid';
 
 import GridActionBar from 'components/GridActionBar';
-import { focusSquare, toggleClickMode, toggleSymmetryMode } from './actions';
+import {
+  focusSquare,
+  toggleClickMode,
+  toggleSymmetryMode,
+  setHighlightedSquareIds,
+} from './actions';
 import {
   makeSelectGridContainer,
   makeSelectGridContainerDomain,
@@ -44,7 +49,13 @@ const StyledGridComponentWrapper = styled.div`
 
 function GridContainer({
   data: { squares, size },
-  ui: { focusedSquareIndex, focusedDirection, clickMode, symmetryMode },
+  ui: {
+    focusedSquareIndex,
+    focusedDirection,
+    clickMode,
+    symmetryMode,
+    highlightedSquareIds,
+  },
   focusedWord,
   toggleBlackSquare,
   setBlackSquare,
@@ -55,6 +66,7 @@ function GridContainer({
   redo,
   clearSquares,
   toggleSymmetryMode,
+  setHighlightedSquareIds,
 }) {
   const focusedSquare = squares[focusedSquareIndex];
   const focusedSquareId = focusedSquare.id;
@@ -106,11 +118,13 @@ function GridContainer({
             size={size}
             focusedSquareId={focusedSquareId}
             focusedWordSquareIds={focusedWord.map(s => s.id)}
+            highlightedSquareIds={highlightedSquareIds}
             onSquareClicked={
               clickMode === CLICK_MODE_FILL
                 ? id => focusSquareClamped(squares.findIndex(s => s.id === id))
                 : toggleBlackSquareWithSymmetry
             }
+            setHighlightedSquareIds={setHighlightedSquareIds}
             onKeyPressed={e => {
               const { keyCode, metaKey, key, shiftKey } = e;
               e.preventDefault();
@@ -223,6 +237,7 @@ GridContainer.propTypes = {
     focusedDirection: PropTypes.string.isRequired,
     clickMode: PropTypes.string.isRequired,
     symmetryMode: PropTypes.string.isRequired,
+    highlightedSquareIds: PropTypes.arrayOf(PropTypes.string).isRequired,
   }).isRequired,
   focusSquare: PropTypes.func.isRequired,
   toggleBlackSquare: PropTypes.func.isRequired,
@@ -234,6 +249,7 @@ GridContainer.propTypes = {
   focusedWord: PropTypes.array.isRequired,
   toggleClickMode: PropTypes.func.isRequired,
   toggleSymmetryMode: PropTypes.func.isRequired,
+  setHighlightedSquareIds: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = createStructuredSelector({
@@ -254,6 +270,7 @@ function mapDispatchToProps(dispatch) {
       clearSquares,
       toggleClickMode,
       toggleSymmetryMode,
+      setHighlightedSquareIds,
     },
     dispatch,
   );
