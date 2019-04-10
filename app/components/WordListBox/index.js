@@ -19,7 +19,7 @@ function WordListBox({ word, score, updateEntry, selectEntry, deleteEntry }) {
   return (
     <TableRow>
       <TableCell style={{ width: '40%', textTransform: 'uppercase' }}>
-        <Tooltip title="Use" placement="left">
+        <Tooltip title="Use" placement="top">
           <Button onClick={selectEntry}>{word}</Button>
         </Tooltip>
       </TableCell>
