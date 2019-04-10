@@ -67,6 +67,7 @@ function reducer(state = initialState, action) {
 }
 
 export default undoable(reducer, {
+  limit: 20,
   filter: includeAction([
     SQUARE_BLACK_TOGGLED,
     SQUARE_BLACK_SET,
