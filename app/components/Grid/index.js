@@ -64,6 +64,7 @@ class Grid extends React.Component {
                 dominantBaseline="middle"
                 textAnchor="middle"
                 pointerEvents="none"
+                style={{ userSelect: 'none' }}
               >
                 {s.value.toUpperCase()}
               </text>
@@ -74,6 +75,7 @@ class Grid extends React.Component {
                 y={parseInt(i / size.width, 10) + 0.25}
                 fontSize=".25"
                 pointerEvents="none"
+                style={{ userSelect: 'none' }}
               >
                 {s.number}
               </text>
