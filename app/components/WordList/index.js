@@ -60,6 +60,7 @@ function WordList({
               />
             </TableCell>
             <TableCell>
+              SCORE:
               <Field
                 name="score"
                 type="number"
