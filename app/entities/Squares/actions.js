@@ -12,19 +12,17 @@ import {
   SQUARES_CLEARED,
 } from './constants';
 
-export function toggleBlackSquare(squareId, symmetricSquareIds = []) {
+export function toggleBlackSquare(squareId) {
   return {
     type: SQUARE_BLACK_TOGGLED,
     squareId,
-    symmetricSquareIds,
   };
 }
 
-export function setBlackSquare(squareId, symmetricSquareIds, isBlack) {
+export function setBlackSquare(squareId, isBlack) {
   return {
     type: SQUARE_BLACK_SET,
     squareId,
-    symmetricSquareIds,
     isBlack,
   };
 }

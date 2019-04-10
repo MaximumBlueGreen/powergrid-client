@@ -1,1 +1,1 @@
-export default state => state.getIn(['entities', 'clues']);
+export default state => state.get('entities').present.get('clues');

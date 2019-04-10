@@ -1,6 +1,5 @@
 import { fromJS } from 'immutable';
 import { ENTITIES_LOADED } from 'entities/constants';
-import undoable, { includeAction } from 'redux-undo';
 import {
   SQUARE_BLACK_TOGGLED,
   SQUARE_BLACK_SET,
@@ -8,32 +7,21 @@ import {
   BULK_SQUARE_VALUE_UPDATED,
   SQUARES_CLEARED,
 } from './constants';
-// redux-undo higher-order reducer
 
 const initialState = fromJS({});
 
-function reducer(state = initialState, action) {
+export default function(state = initialState, action) {
   switch (action.type) {
-    case SQUARE_BLACK_TOGGLED: {
-      const currentIsBlack = state.getIn([action.squareId, 'isBlack']);
-      return state.mergeDeep(
-        Object.assign(
-          {},
-          ...[...action.symmetricSquareIds, action.squareId].map(id => ({
-            [id]: { isBlack: !currentIsBlack, value: undefined },
-          })),
-        ),
-      );
-    }
+    case SQUARE_BLACK_TOGGLED:
+      return state.update(action.squareId, square => ({
+        value: undefined,
+        isBlack: !square.get('isBlack'),
+      }));
     case SQUARE_BLACK_SET:
-      return state.mergeDeep(
-        Object.assign(
-          {},
-          ...[...action.symmetricSquareIds, action.squareId].map(id => ({
-            [id]: { isBlack: action.isBlack, value: undefined },
-          })),
-        ),
-      );
+      return state.set(action.squareId, {
+        value: undefined,
+        isBlack: action.isBlack,
+      });
     case SQUARE_VALUE_UPDATED:
       if (state.getIn([action.squareId, 'isBlack'])) {
         return state;
@@ -65,16 +53,3 @@ function reducer(state = initialState, action) {
       return state;
   }
 }
-
-export default undoable(reducer, {
-  limit: 20,
-  filter: includeAction([
-    SQUARE_BLACK_TOGGLED,
-    SQUARE_BLACK_SET,
-    SQUARE_VALUE_UPDATED,
-    BULK_SQUARE_VALUE_UPDATED,
-    SQUARES_CLEARED,
-  ]),
-  ignoreInitialState: true,
-  syncFilter: true,
-});

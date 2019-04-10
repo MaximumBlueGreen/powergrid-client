@@ -6,6 +6,7 @@
 
 import React from 'react';
 import PropTypes from 'prop-types';
+import { noop } from 'lodash';
 
 class Grid extends React.Component {
   constructor(props) {
@@ -38,7 +39,9 @@ class Grid extends React.Component {
       onKeyPressed,
       highlightedSquareIds,
       setHighlightedSquareIds,
-      addHighlightedSquareIds,
+      onHighlightEnd,
+      highlightable,
+      focus,
     } = this.props;
 
     const { origin, current } = this.state;
@@ -61,6 +64,7 @@ class Grid extends React.Component {
       .map(s => s.id);
 
     const isHighlighted = id =>
+      highlightable &&
       [...highlightedSquareIds, ...temporaryHighlightedSquareIds].includes(id);
 
     const squareColor = ({ id, isBlack }) => {
@@ -83,7 +87,7 @@ class Grid extends React.Component {
         viewBox={`0 0 ${size.width} ${size.height}`}
         xmlns="http://www.w3.org/2000/svg"
         onKeyDown={onKeyPressed}
-        tabIndex={0}
+        {...(focus ? { tabIndex: 0 } : {})}
         ref={c => {
           this.gridRef = c;
         }}
@@ -128,7 +132,7 @@ class Grid extends React.Component {
                     upperLeftRow !== lowerRightRow ||
                     upperLeftCol !== lowerRightCol
                   ) {
-                    addHighlightedSquareIds(temporaryHighlightedSquareIds);
+                    onHighlightEnd(temporaryHighlightedSquareIds);
                   }
                 }}
                 onMouseEnter={() => {
@@ -180,17 +184,24 @@ Grid.propTypes = {
   squares: PropTypes.arrayOf(PropTypes.object).isRequired,
   focusedSquareId: PropTypes.string,
   focusedWordSquareIds: PropTypes.arrayOf(PropTypes.string),
-  onSquareClicked: PropTypes.func.isRequired,
-  onKeyPressed: PropTypes.func.isRequired,
+  onSquareClicked: PropTypes.func,
+  onKeyPressed: PropTypes.func,
   focus: PropTypes.bool,
-  highlightedSquareIds: PropTypes.arrayOf(PropTypes.string).isRequired,
-  setHighlightedSquareIds: PropTypes.func.isRequired,
-  addHighlightedSquareIds: PropTypes.func.isRequired,
+  highlightedSquareIds: PropTypes.arrayOf(PropTypes.string),
+  setHighlightedSquareIds: PropTypes.func,
+  onHighlightEnd: PropTypes.func,
+  highlightable: PropTypes.bool,
 };
 
 Grid.defaultProps = {
   focusedWordSquareIds: [],
   focus: true,
+  onSquareClicked: noop,
+  onKeyPressed: noop,
+  onHighlightEnd: noop,
+  setHighlightedSquareIds: noop,
+  highlightedSquareIds: [],
+  highlightable: true,
 };
 
 export default Grid;
