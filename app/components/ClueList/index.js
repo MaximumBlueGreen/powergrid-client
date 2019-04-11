@@ -35,7 +35,7 @@ function ClueList({ clues, words, header, updateClue, onFocused, classes }) {
             onFocus={() => onFocused(number)}
             fullWidth
             multiline
-            rowsMax={1}
+            rowsMax={3}
           />
         </ListItem>
       ))}
