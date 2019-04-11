@@ -137,7 +137,7 @@ class PuzzleContainer extends React.Component {
                   this.closeVersionMenu();
                 }}
               >
-                {title || id}
+                {title || 'Untitled'}
               </MenuItem>
             ))}
           </Menu>
