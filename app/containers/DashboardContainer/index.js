@@ -73,7 +73,7 @@ class DashboardContainer extends React.Component {
             ]).map(parentId => (
               <Grid item xs={4} key={parentId}>
                 <Card>
-                  <CardActionArea href={`/home/${parentId}`}>
+                  <CardActionArea href={`/edit/${parentId}`}>
                     <GridComponent
                       focus={false}
                       squares={puzzles[parentId][parentId].squares}
@@ -82,7 +82,7 @@ class DashboardContainer extends React.Component {
                     />
                   </CardActionArea>
                   <CardActions>
-                    <Button color="primary" href={`/home/${parentId}`}>
+                    <Button color="primary" href={`/edit/${parentId}`}>
                       {puzzles[parentId][parentId].title || 'Untitled'}
                     </Button>
                   </CardActions>

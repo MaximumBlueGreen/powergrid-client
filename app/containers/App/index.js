@@ -31,7 +31,7 @@ export default function App() {
       <MuiThemeProvider theme={theme}>
         <ThemeProvider theme={theme}>
           <Switch>
-            <Route path="/home/:puzzleId?" component={HomePage} />
+            <Route path="/edit/:puzzleId?" component={HomePage} />
             <Route exact path="/dashboard" component={DashboardPage} />
             <Route exact path="/login" component={LoginPage} />
             <Route exact path="/" render={() => <Redirect to="/login" />} />
