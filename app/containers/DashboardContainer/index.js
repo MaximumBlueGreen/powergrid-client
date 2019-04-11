@@ -80,12 +80,12 @@ class DashboardContainer extends React.Component {
                       size={puzzles[parentId][parentId].size}
                       highlightable={false}
                     />
-                    <CardActions>
-                      <Button color="primary">
-                        {puzzles[parentId][parentId].title || 'Untitled'}
-                      </Button>
-                    </CardActions>
                   </CardActionArea>
+                  <CardActions>
+                    <Button color="primary">
+                      {puzzles[parentId][parentId].title || 'Untitled'}
+                    </Button>
+                  </CardActions>
                 </Card>
               </Grid>
             ))}
