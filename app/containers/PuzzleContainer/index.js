@@ -186,12 +186,37 @@ class PuzzleContainer extends React.Component {
             )}
           </Grid>
           <Grid item xs={11} md={6}>
-            <Tabs value={tabValue} onChange={handleTabChange}>
-              <Tab key="Clues" label="Clues" value="Clues" />
-              <Tab key="WordList" label="Word List" value="WordList" />
-              <Tab key="Dictionary" label="Dictionary" value="Dictionary" />
-              <Tab key="Puzzle Data" label="Puzzle Data" value="Puzzle Data" />
-              <Tab key="Notes" label="Notes" value="Notes" />
+            <Tabs value={tabValue} onChange={handleTabChange} centered>
+              <Tab
+                style={{ minWidth: '20%' }}
+                key="Clues"
+                label="Clues"
+                value="Clues"
+              />
+              <Tab
+                style={{ minWidth: '20%' }}
+                key="WordList"
+                label="Words"
+                value="WordList"
+              />
+              <Tab
+                style={{ minWidth: '20%' }}
+                key="Dictionary"
+                label="Search"
+                value="Dictionary"
+              />
+              <Tab
+                style={{ minWidth: '20%' }}
+                key="Puzzle Data"
+                label="Data"
+                value="Puzzle Data"
+              />
+              <Tab
+                style={{ minWidth: '20%' }}
+                key="Notes"
+                label="Notes"
+                value="Notes"
+              />
             </Tabs>
             {tabValue === 'Clues' && <CluesContainer puzzleId={puzzleId} />}
             {tabValue === 'WordList' && <WordListContainer />}
