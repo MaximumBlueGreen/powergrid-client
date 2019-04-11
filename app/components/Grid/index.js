@@ -205,7 +205,7 @@ Grid.propTypes = {
   onHighlightEnd: PropTypes.func,
   highlightable: PropTypes.bool,
   classes: PropTypes.shape({
-    grid: PropTypes.object.isRequired,
+    grid: PropTypes.string.isRequired,
   }).isRequired,
 };
 
