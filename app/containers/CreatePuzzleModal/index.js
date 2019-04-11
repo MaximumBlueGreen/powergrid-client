@@ -19,6 +19,7 @@ import {
   MenuItem,
   TextField,
   Grid,
+  Typography,
 } from '@material-ui/core';
 
 import injectSaga from 'utils/injectSaga';
@@ -62,7 +63,7 @@ function CreatePuzzleModal({
         onClose={closeModal}
         aria-labelledby="form-dialog-title"
       >
-        <DialogTitle id="form-dialog-title">{`New ${
+        <DialogTitle style={{ width: '300px' }} id="form-dialog-title">{`New ${
           parentId ? 'Version' : 'Puzzle'
         }`}</DialogTitle>
         {mode === CREATE_MODE && (
@@ -93,32 +94,42 @@ function CreatePuzzleModal({
         )}
         {mode === UPLOAD_MODE && (
           <DialogContent>
-            <Grid container justify="space-evenly" spacing={8}>
-              <Grid item>
-                <input
-                  type="file"
-                  onChange={e => uploadPuzzle(e.target.files[0])}
-                  accept=".puz"
-                />
-              </Grid>
-            </Grid>
+            <Typography>Upload a .puz file</Typography>
           </DialogContent>
         )}
-        <Button color="primary" onClick={changeMode}>
-          {mode === CREATE_MODE ? 'Upload' : 'Create New'}
-        </Button>
+
         <DialogActions>
-          <Button onClick={closeModal} color="default" disabled={forceOpen}>
-            Cancel
+          <Button onClick={changeMode}>
+            {mode === CREATE_MODE ? 'Upload' : 'New'}
           </Button>
-          <Button
-            onClick={() =>
-              createPuzzle({ height, width }, title, parentId, puzzleToCopyId)
-            }
-            color="primary"
-          >
-            Create
-          </Button>
+          {mode === UPLOAD_MODE && (
+            <>
+              <input
+                accept=".puz"
+                style={{ display: 'none' }}
+                id="raised-button-file"
+                type="file"
+                onChange={e => uploadPuzzle(e.target.files[0])}
+              />
+              <label htmlFor="raised-button-file">
+                <Button color="primary" variant="contained" component="span">
+                  Browse
+                </Button>
+              </label>
+            </>
+          )}
+
+          {mode === CREATE_MODE && (
+            <Button
+              onClick={() =>
+                createPuzzle({ height, width }, title, parentId, puzzleToCopyId)
+              }
+              color="primary"
+              variant="contained"
+            >
+              Create
+            </Button>
+          )}
         </DialogActions>
       </Dialog>
     </div>
