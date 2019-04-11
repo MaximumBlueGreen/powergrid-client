@@ -22,7 +22,9 @@ import { ThemeProvider } from 'styled-components';
 import GlobalStyle from '../../global-styles';
 
 const theme = createMuiTheme({
-  useNextVariants: true,
+  typography: {
+    useNextVariants: true,
+  },
 });
 
 export default function App() {
