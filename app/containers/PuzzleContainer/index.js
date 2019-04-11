@@ -65,6 +65,9 @@ const styles = theme => ({
       top: 0,
     },
   },
+  shadedTab: {
+    'background-color': 'lightgrey',
+  },
 });
 
 class PuzzleContainer extends React.Component {
@@ -108,7 +111,7 @@ class PuzzleContainer extends React.Component {
       handleTabChange,
       loadPuzzles,
       openModal,
-      classes: { conditionalSticky },
+      classes: { conditionalSticky, shadedTab },
     } = this.props;
 
     const displayVersions = puzzle && puzzle.versions.length > 1;
@@ -179,7 +182,7 @@ class PuzzleContainer extends React.Component {
                 <Grid item xs={12}>
                   <SyncStatus isSyncing={isSyncing} lastSynced={lastSynced} />
                 </Grid>
-                <Grid item xs={12}>
+                <Grid item xs={12} style={{ marginBottom: '20px' }}>
                   <GridContainer puzzleId={puzzleId} />
                 </Grid>
               </>
@@ -192,30 +195,35 @@ class PuzzleContainer extends React.Component {
                 key="Clues"
                 label="Clues"
                 value="Clues"
+                className={tabValue === 'Clues' ? shadedTab : undefined}
               />
               <Tab
                 style={{ minWidth: '20%' }}
                 key="WordList"
                 label="Words"
                 value="WordList"
+                className={tabValue === 'WordList' ? shadedTab : undefined}
               />
               <Tab
                 style={{ minWidth: '20%' }}
                 key="Dictionary"
                 label="Search"
                 value="Dictionary"
+                className={tabValue === 'Dictionary' ? shadedTab : undefined}
               />
               <Tab
                 style={{ minWidth: '20%' }}
                 key="Puzzle Data"
                 label="Data"
                 value="Puzzle Data"
+                className={tabValue === 'Puzzle Data' ? shadedTab : undefined}
               />
               <Tab
                 style={{ minWidth: '20%' }}
                 key="Notes"
                 label="Notes"
                 value="Notes"
+                className={tabValue === 'Notes' ? shadedTab : undefined}
               />
             </Tabs>
             {tabValue === 'Clues' && <CluesContainer puzzleId={puzzleId} />}
