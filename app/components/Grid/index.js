@@ -123,8 +123,9 @@ class Grid extends React.Component {
           const col = i % size.width;
 
           return (
-            <>
+            <React.Fragment key={s.id}>
               <rect
+                key={s.id}
                 x={i % size.width}
                 y={parseInt(i / size.width, 10)}
                 width="1"
@@ -188,7 +189,7 @@ class Grid extends React.Component {
                   {s.number}
                 </text>
               )}
-            </>
+            </React.Fragment>
           );
         })}
       </svg>
