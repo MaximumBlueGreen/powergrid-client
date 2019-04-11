@@ -82,7 +82,7 @@ class DashboardContainer extends React.Component {
                     />
                   </CardActionArea>
                   <CardActions>
-                    <Button color="primary">
+                    <Button color="primary" href={`/home/${parentId}`}>
                       {puzzles[parentId][parentId].title || 'Untitled'}
                     </Button>
                   </CardActions>
