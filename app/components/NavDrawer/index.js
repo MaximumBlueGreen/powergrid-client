@@ -1,12 +1,16 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import Drawer from '@material-ui/core/Drawer';
-import IconButton from '@material-ui/core/IconButton';
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemText from '@material-ui/core/ListItemText';
-import { ArrowForwardIos } from '@material-ui/icons/';
+
+import {
+  Drawer,
+  IconButton,
+  List,
+  ListItem,
+  ListItemText,
+  ListItemIcon,
+} from '@material-ui/core';
+import { ArrowForwardIos, Home } from '@material-ui/icons/';
 
 const styles = {
   list: {
@@ -15,12 +19,6 @@ const styles = {
   buttonClosed: {
     position: 'fixed',
     left: 0,
-    top: '50%',
-    transform: 'translate(-50%, -50%)',
-  },
-  buttonOpen: {
-    position: 'fixed',
-    left: '250px',
     top: '50%',
     transform: 'translate(-50%, -50%)',
   },
@@ -47,9 +45,7 @@ class NavDrawer extends React.Component {
       <div>
         {!this.state.open && (
           <IconButton
-            className={
-              this.state.open ? classes.buttonOpen : classes.buttonClosed
-            }
+            className={classes.buttonClosed}
             onClick={this.toggleDrawer(true)}
           >
             <ArrowForwardIos fontSize="large" className={classes.buttonArrow} />
@@ -65,6 +61,9 @@ class NavDrawer extends React.Component {
             <div className={classes.list}>
               <List>
                 <ListItem button component="a" href="/dashboard">
+                  <ListItemIcon>
+                    <Home />
+                  </ListItemIcon>
                   <ListItemText primary="Dashboard" />
                 </ListItem>
               </List>

@@ -37,6 +37,7 @@ import {
   makeSelectGridContainer,
   makeSelectGridContainerDomain,
   makeSelectGridContainerFocusedWord,
+  makeSelectIllegalSquareIds,
 } from './selectors';
 import reducer from './reducer';
 import {
@@ -67,6 +68,7 @@ function GridContainer({
   setHighlightedSquareIds,
   addHighlightedSquareIds,
   puzzleId,
+  illegalSquareIds,
 }) {
   const focusedSquareIndex = squares.findIndex(s => s.id === focusedSquareId);
   const focusedSquare = squares[focusedSquareIndex];
@@ -134,6 +136,7 @@ function GridContainer({
             focusedSquareId={focusedSquareId}
             focusedWordSquareIds={focusedWord.map(s => s.id)}
             highlightedSquareIds={highlightedSquareIds}
+            illegalSquareIds={illegalSquareIds}
             onSquareClicked={({ metaKey }, id) => {
               if (metaKey) {
                 return addHighlightedSquareIds([id]);
@@ -264,12 +267,14 @@ GridContainer.propTypes = {
   setHighlightedSquareIds: PropTypes.func.isRequired,
   addHighlightedSquareIds: PropTypes.func.isRequired,
   puzzleId: PropTypes.string.isRequired,
+  illegalSquareIds: PropTypes.array.isRequired,
 };
 
 const mapStateToProps = createStructuredSelector({
   ui: makeSelectGridContainerDomain(),
   data: makeSelectGridContainer(),
   focusedWord: makeSelectGridContainerFocusedWord(),
+  illegalSquareIds: makeSelectIllegalSquareIds(),
 });
 
 function mapDispatchToProps(dispatch, { puzzleId }) {

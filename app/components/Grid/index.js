@@ -48,6 +48,7 @@ class Grid extends React.Component {
       focusedWordSquareIds,
       onSquareClicked,
       onKeyPressed,
+      illegalSquareIds,
       highlightedSquareIds,
       setHighlightedSquareIds,
       onHighlightEnd,
@@ -79,10 +80,16 @@ class Grid extends React.Component {
       highlightable &&
       [...highlightedSquareIds, ...temporaryHighlightedSquareIds].includes(id);
 
+    const isIllegal = id => illegalSquareIds.includes(id);
+
     const squareColor = ({ id, isBlack }) => {
       if (id === focusedSquareId) {
         return isBlack ? 'gray' : 'yellow';
       }
+      if (isIllegal(id)) {
+        return 'red';
+      }
+
       if (focusedWordSquareIds.includes(id)) {
         return 'lightblue';
       }
