@@ -8,7 +8,6 @@ import {
   SQUARE_FOCUSED,
   DIRECTION_FOCUSED,
   CLICK_MODE_TOGGLED,
-  SYMMETRY_MODE_TOGGLED,
   HIGHLIGHTED_SQUARE_IDS_SET,
   HIGHLIGHTED_SQUARE_IDS_ADD,
 } from './constants';
@@ -30,12 +29,6 @@ export function focusDirection(direction) {
 export function toggleClickMode() {
   return {
     type: CLICK_MODE_TOGGLED,
-  };
-}
-
-export function toggleSymmetryMode() {
-  return {
-    type: SYMMETRY_MODE_TOGGLED,
   };
 }
 

@@ -14,9 +14,6 @@ import {
   CLICK_MODE_FILL,
   CLICK_MODE_BLACK_SQUARE,
   CLICK_MODE_TOGGLED,
-  SYMMETRY_MODE_NONE,
-  SYMMETRY_MODE_DIAGONAL,
-  SYMMETRY_MODE_TOGGLED,
   HIGHLIGHTED_SQUARE_IDS_SET,
   HIGHLIGHTED_SQUARE_IDS_ADD,
 } from './constants';
@@ -25,7 +22,6 @@ export const initialState = fromJS({
   focusedSquareId: undefined,
   focusedDirection: ACROSS,
   clickMode: CLICK_MODE_FILL,
-  symmetryMode: SYMMETRY_MODE_DIAGONAL,
   highlightedSquareIds: [],
 });
 
@@ -53,13 +49,6 @@ function gridContainerReducer(state = initialState, action) {
           ? CLICK_MODE_BLACK_SQUARE
           : CLICK_MODE_FILL,
       );
-    case SYMMETRY_MODE_TOGGLED:
-      return state.set(
-        'symmetryMode',
-        state.get('symmetryMode') === SYMMETRY_MODE_NONE
-          ? SYMMETRY_MODE_DIAGONAL
-          : SYMMETRY_MODE_NONE,
-      ); /* TODO refactor */
     case HIGHLIGHTED_SQUARE_IDS_SET:
       return state.set('highlightedSquareIds', action.squareIds);
     case HIGHLIGHTED_SQUARE_IDS_ADD:

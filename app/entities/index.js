@@ -2,9 +2,10 @@ import { combineReducers } from 'redux-immutable';
 import undoable, { includeAction } from 'redux-undo';
 
 import {
+  SQUARES_BLACK_TOGGLED,
   SYMMETRY_MODE_NONE,
   SYMMETRY_MODE_DIAGONAL,
-} from 'containers/GridContainer/constants';
+} from './Puzzles/constants';
 import clues from './Clues/reducer';
 import entries from './Entries/reducer';
 import puzzles from './Puzzles/reducer';
@@ -19,7 +20,6 @@ import {
   BULK_SQUARE_VALUE_UPDATED,
   SQUARES_CLEARED,
 } from './Squares/constants';
-import { SQUARES_BLACK_TOGGLED } from './Puzzles/constants';
 
 const reducer = (state, action) => {
   if (action.type === SQUARES_BLACK_TOGGLED) {

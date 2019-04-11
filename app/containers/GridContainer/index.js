@@ -18,15 +18,18 @@ import {
   updateSquareValue,
   clearSquares,
 } from 'entities/Squares/actions';
-import { toggleBlackSquares } from 'entities/Puzzles/actions';
+import {
+  toggleBlackSquares,
+  setPuzzleSymmetry,
+} from 'entities/Puzzles/actions';
 import { ActionCreators } from 'redux-undo';
 import Grid from '@material-ui/core/Grid';
 
 import GridActionBar from 'components/GridActionBar';
+import { SYMMETRY_MODE_DIAGONAL } from 'entities/Puzzles/constants';
 import {
   focusSquare,
   toggleClickMode,
-  toggleSymmetryMode,
   setHighlightedSquareIds,
   addHighlightedSquareIds,
 } from './actions';
@@ -41,7 +44,6 @@ import {
   DOWN,
   CLICK_MODE_FILL,
   CLICK_MODE_BLACK_SQUARE,
-  SYMMETRY_MODE_DIAGONAL,
 } from './constants';
 
 const StyledGridComponentWrapper = styled.div`
@@ -50,14 +52,8 @@ const StyledGridComponentWrapper = styled.div`
 `;
 
 function GridContainer({
-  data: { squares, size },
-  ui: {
-    focusedSquareId,
-    focusedDirection,
-    clickMode,
-    symmetryMode,
-    highlightedSquareIds,
-  },
+  data: { squares, size, symmetry },
+  ui: { focusedSquareId, focusedDirection, clickMode, highlightedSquareIds },
   focusedWord,
   toggleBlackSquares,
   setBlackSquare,
@@ -67,9 +63,10 @@ function GridContainer({
   undo,
   redo,
   clearSquares,
-  toggleSymmetryMode,
+  setPuzzleSymmetry,
   setHighlightedSquareIds,
   addHighlightedSquareIds,
+  puzzleId,
 }) {
   const focusedSquareIndex = squares.findIndex(s => s.id === focusedSquareId);
   const focusedSquare = squares[focusedSquareIndex];
@@ -99,7 +96,7 @@ function GridContainer({
   const setBlackSquareWithSymmetry = (id, isBlack) => {
     setBlackSquare(
       id,
-      (symmetryMode === SYMMETRY_MODE_DIAGONAL && [
+      (symmetry === SYMMETRY_MODE_DIAGONAL && [
         squares[
           size.height * size.width - squares.findIndex(s => s.id === id) - 1
         ].id,
@@ -127,8 +124,8 @@ function GridContainer({
             )
           }
           clickMode={clickMode}
-          toggleSymmetryMode={toggleSymmetryMode}
-          symmetryMode={symmetryMode}
+          setSymmetryMode={symmetry => setPuzzleSymmetry(puzzleId, symmetry)}
+          symmetryMode={symmetry}
         />
         <StyledGridComponentWrapper>
           <GridComponent
@@ -143,13 +140,13 @@ function GridContainer({
               }
               return clickMode === CLICK_MODE_FILL
                 ? focusSquare(id)
-                : toggleBlackSquares([id], symmetryMode);
+                : toggleBlackSquares([id], symmetry);
             }}
             setHighlightedSquareIds={setHighlightedSquareIds}
             onHighlightEnd={squareIds =>
               clickMode === CLICK_MODE_FILL
                 ? addHighlightedSquareIds(squareIds)
-                : toggleBlackSquares(squareIds, symmetryMode)
+                : toggleBlackSquares(squareIds, symmetry)
             }
             onKeyPressed={e => {
               const { keyCode, metaKey, key, shiftKey } = e;
@@ -223,7 +220,7 @@ function GridContainer({
                     highlightedSquareIds.length > 0
                       ? highlightedSquareIds
                       : [focusedSquareId],
-                    symmetryMode,
+                    symmetry,
                   );
                 default:
                   if (keyCode > 47 && keyCode < 91) {
@@ -252,7 +249,6 @@ GridContainer.propTypes = {
     focusedSquareId: PropTypes.string,
     focusedDirection: PropTypes.string.isRequired,
     clickMode: PropTypes.string.isRequired,
-    symmetryMode: PropTypes.string.isRequired,
     highlightedSquareIds: PropTypes.arrayOf(PropTypes.string).isRequired,
   }).isRequired,
   focusSquare: PropTypes.func.isRequired,
@@ -264,9 +260,10 @@ GridContainer.propTypes = {
   clearSquares: PropTypes.func.isRequired,
   focusedWord: PropTypes.array.isRequired,
   toggleClickMode: PropTypes.func.isRequired,
-  toggleSymmetryMode: PropTypes.func.isRequired,
+  setPuzzleSymmetry: PropTypes.func.isRequired,
   setHighlightedSquareIds: PropTypes.func.isRequired,
   addHighlightedSquareIds: PropTypes.func.isRequired,
+  puzzleId: PropTypes.string.isRequired,
 };
 
 const mapStateToProps = createStructuredSelector({
@@ -287,7 +284,7 @@ function mapDispatchToProps(dispatch, { puzzleId }) {
       redo: ActionCreators.redo,
       clearSquares,
       toggleClickMode,
-      toggleSymmetryMode,
+      setPuzzleSymmetry,
       setHighlightedSquareIds,
       addHighlightedSquareIds,
     },

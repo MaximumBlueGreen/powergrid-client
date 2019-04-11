@@ -2,6 +2,7 @@ import { takeLatest, put, all } from 'redux-saga/effects';
 import { authenticated } from 'utils/apiRequestSaga';
 import { times } from 'lodash';
 import { push } from 'connected-react-router';
+import { SYMMETRY_MODE_DIAGONAL } from 'entities/Puzzles/constants';
 import { closeModal } from './actions';
 import { PUZZLE_CREATED } from './constants';
 
@@ -19,6 +20,7 @@ export function* createPuzzleSaga({
         puzzle: {
           squares: times(height * width, () => ({})),
           size: { height, width },
+          symmetry: SYMMETRY_MODE_DIAGONAL,
         },
         title,
         parent_id: parentId,

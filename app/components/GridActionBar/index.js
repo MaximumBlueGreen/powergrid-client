@@ -21,9 +21,13 @@ import { ToggleButton, ToggleButtonGroup } from '@material-ui/lab';
 import {
   CLICK_MODE_FILL,
   CLICK_MODE_BLACK_SQUARE,
+} from 'containers/GridContainer/constants';
+
+import {
   SYMMETRY_MODE_NONE,
   SYMMETRY_MODE_DIAGONAL,
-} from 'containers/GridContainer/constants';
+} from 'entities/Puzzles/constants';
+
 import PropTypes from 'prop-types';
 
 function GridActionBar({
@@ -33,7 +37,7 @@ function GridActionBar({
   clickMode,
   toggleClickMode,
   symmetryMode,
-  toggleSymmetryMode,
+  setSymmetryMode,
 }) {
   return (
     <Grid container alignItems="center" spacing={8}>
@@ -82,7 +86,7 @@ function GridActionBar({
         <ToggleButtonGroup
           exclusive
           value={symmetryMode}
-          onChange={toggleSymmetryMode}
+          onChange={(e, value) => setSymmetryMode(value)}
         >
           <Tooltip
             title="No symmetry"
@@ -115,7 +119,7 @@ GridActionBar.propTypes = {
   clearSquares: PropTypes.func.isRequired,
   clickMode: PropTypes.string.isRequired,
   symmetryMode: PropTypes.string.isRequired,
-  toggleSymmetryMode: PropTypes.func.isRequired,
+  setSymmetryMode: PropTypes.func.isRequired,
 };
 
 export default GridActionBar;

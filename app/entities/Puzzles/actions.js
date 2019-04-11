@@ -1,9 +1,10 @@
-import { SYMMETRY_MODE_NONE } from 'containers/GridContainer/constants';
 import {
   PUZZLE_TITLE_UPDATED,
   PUZZLE_NOTES_EDITED,
+  PUZZLE_SYMMETRY_SET,
   SQUARES_BLACK_TOGGLED,
   SQUARES_BLACK_SET,
+  SYMMETRY_MODE_NONE,
 } from './constants';
 
 export function updatePuzzleTitle(id, title) {
@@ -39,6 +40,14 @@ export function setBlackSquares(puzzleId, ids, symmetry = SYMMETRY_MODE_NONE) {
   return {
     type: SQUARES_BLACK_SET,
     ids,
+    symmetry,
+  };
+}
+
+export function setPuzzleSymmetry(id, symmetry) {
+  return {
+    type: PUZZLE_SYMMETRY_SET,
+    id,
     symmetry,
   };
 }
