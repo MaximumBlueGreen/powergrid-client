@@ -17,17 +17,13 @@ import TableRow from '@material-ui/core/TableRow';
 import TableCell from '@material-ui/core/TableCell';
 import IconButton from '@material-ui/core/IconButton';
 import { Add as AddIcon } from '@material-ui/icons';
-import Input from '@material-ui/core/Input';
 import Tooltip from '@material-ui/core/Tooltip';
 
 import { orderBy } from 'lodash';
 
-const renderFormComponent = Component => ({ input, label, ...custom }) => (
-  <Component label={label} {...input} {...custom} />
+const renderTextField = ({ input, label, ...custom }) => (
+  <TextField label={label} {...input} {...custom} />
 );
-
-const renderTextField = renderFormComponent(TextField);
-const renderInput = renderFormComponent(Input);
 
 function WordList({
   wordList,
@@ -56,15 +52,18 @@ function WordList({
                 inputProps={{ style: { textTransform: 'uppercase' } }}
                 type="text"
                 name="entry"
-                placeholder="Entry"
+                label="Entry"
               />
             </TableCell>
             <TableCell>
-              SCORE:
               <Field
                 name="score"
+                label="Score"
                 type="number"
-                component={renderInput}
+                InputLabelProps={{
+                  shrink: true,
+                }}
+                component={renderTextField}
                 placeholder="0"
               />
             </TableCell>
