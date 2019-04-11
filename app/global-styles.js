@@ -1,5 +1,7 @@
 import { createGlobalStyle } from 'styled-components';
 
+import 'draft-js/dist/Draft.css';
+
 const GlobalStyle = createGlobalStyle`
   html,
   body {
