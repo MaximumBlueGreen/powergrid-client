@@ -10,6 +10,7 @@ import {
   PUZZLE_CREATED,
   SIZE_UPDATED,
   TITLE_UPDATED,
+  PUZZLE_UPLOADED,
 } from './constants';
 
 export function closeModal() {
@@ -46,5 +47,12 @@ export function updateTitle(title) {
   return {
     type: TITLE_UPDATED,
     title,
+  };
+}
+
+export function uploadPuzzle(puzzleFile) {
+  return {
+    type: PUZZLE_UPLOADED,
+    puzzleFile,
   };
 }

@@ -24,7 +24,13 @@ import {
 import injectSaga from 'utils/injectSaga';
 import injectReducer from 'utils/injectReducer';
 import { createStructuredSelector } from 'reselect';
-import { closeModal, createPuzzle, updateSize, updateTitle } from './actions';
+import {
+  closeModal,
+  createPuzzle,
+  updateSize,
+  updateTitle,
+  uploadPuzzle,
+} from './actions';
 import saga from './saga';
 import reducer from './reducer';
 
@@ -119,7 +125,7 @@ const mapStateToProps = createStructuredSelector({
 
 function mapDispatchToProps(dispatch) {
   return bindActionCreators(
-    { closeModal, createPuzzle, updateSize, updateTitle },
+    { closeModal, createPuzzle, updateSize, updateTitle, uploadPuzzle },
     dispatch,
   );
 }
