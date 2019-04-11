@@ -21,7 +21,6 @@ const styles = theme => ({
 });
 
 function ClueList({ clues, words, header, updateClue, onFocused, classes }) {
-  console.log(clues, words);
   return (
     <List>
       <ListSubheader className={classes.listSubheader}>{header}</ListSubheader>
