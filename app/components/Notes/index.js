@@ -30,34 +30,34 @@ const styles = theme => ({
   },
 });
 
-const EntryTag = withStyles(styles)(
-  ({
-    children,
-    classes: { valid, invalid, entryTag },
-    decoratedText,
-    words,
-    onEntryTagClicked,
-  }) => {
-    const [, number, direction] = /([\d]+)(A|D)/g.exec(decoratedText);
-    const word = words[direction === 'A' ? 'across' : 'down'][number];
-    return (
-      <Tooltip title={word || ''}>
-        <span
-          role="presentation"
-          onClick={() => onEntryTagClicked(number, direction === 'A')}
-          className={[word ? valid : invalid, entryTag]}
-        >
-          {children}
-        </span>
-      </Tooltip>
-    );
-  },
-);
+const EntryTag = ({
+  children,
+  classes: { valid, invalid, entryTag },
+  decoratedText,
+  words,
+  onEntryTagClicked,
+}) => {
+  const [, number, direction] = /([\d]+)(A|D)/g.exec(decoratedText);
+  const word = words[direction === 'A' ? 'across' : 'down'][number];
+  return (
+    <Tooltip title={word || ''}>
+      <span
+        role="presentation"
+        onClick={() => onEntryTagClicked(number, direction === 'A')}
+        className={[word ? valid : invalid, entryTag]}
+      >
+        {children}
+      </span>
+    </Tooltip>
+  );
+};
 
 EntryTag.propTypes = {
-  classes: PropTypes.shape({
-    entryTag: PropTypes.string.isRequired,
-  }).isRequired,
+  children: PropTypes.node.isRequired,
+  classes: PropTypes.object.isRequired,
+  decoratedText: PropTypes.string.isRequired,
+  words: PropTypes.object.isRequired,
+  onEntryTagClicked: PropTypes.func.isRequired,
 };
 
 function entryTagStrategy(contentBlock, callback) {
@@ -78,12 +78,12 @@ function findWithRegex(regex, contentBlock, callback) {
 class Notes extends React.Component {
   constructor(props) {
     super(props);
-    const { notes, onEntryTagClicked, words } = props;
+    const { notes } = props;
     const compositeDecorator = new CompositeDecorator([
       {
         strategy: entryTagStrategy,
         component: EntryTag,
-        props: { words, onEntryTagClicked },
+        props,
       },
     ]);
 
@@ -107,7 +107,7 @@ class Notes extends React.Component {
 
   static getDerivedStateFromProps(props, state) {
     const { editorState, words: prevWords } = state;
-    const { words, onEntryTagClicked } = props;
+    const { words } = props;
     if (words !== prevWords) {
       return {
         editorState: EditorState.set(editorState, {
@@ -115,7 +115,7 @@ class Notes extends React.Component {
             {
               strategy: entryTagStrategy,
               component: EntryTag,
-              props: { words, onEntryTagClicked },
+              props,
             },
           ]),
         }),
@@ -154,7 +154,6 @@ Notes.propTypes = {
   notes: PropTypes.string,
   onEdit: PropTypes.func.isRequired,
   words: PropTypes.object.isRequired,
-  onEntryTagClicked: PropTypes.func.isRequired,
 };
 
 Notes.defaultProps = {
