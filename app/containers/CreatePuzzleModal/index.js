@@ -30,6 +30,7 @@ import {
   updateSize,
   updateTitle,
   uploadPuzzle,
+  changeMode,
 } from './actions';
 import saga from './saga';
 import reducer from './reducer';
@@ -155,6 +156,7 @@ function mapDispatchToProps(dispatch) {
       updateSize,
       updateTitle,
       uploadPuzzle,
+      changeMode,
     },
     dispatch,
   );
