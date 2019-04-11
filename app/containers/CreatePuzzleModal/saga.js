@@ -2,7 +2,6 @@ import { takeLatest, put, all, call } from 'redux-saga/effects';
 import { authenticated } from 'utils/apiRequestSaga';
 import { times } from 'lodash';
 import { push } from 'connected-react-router';
-import { loadPuzzles } from 'containers/PuzzleContainer/actions';
 import { SYMMETRY_MODE_DIAGONAL } from 'entities/Puzzles/constants';
 import { closeModal } from './actions';
 import { PUZZLE_CREATED, PUZZLE_UPLOADED } from './constants';
@@ -79,8 +78,8 @@ export function* uploadPuzzleSaga({ puzzleFile }) {
     },
     // console.log(response),
     // console.log(puzzle),
-    function* onSuccess() {
-      yield all([put(loadPuzzles()), put(closeModal())]);
+    function* onSuccess({ id }) {
+      yield all([put(push(`/home/${id}`)), put(closeModal())]);
     },
     function* onError(error) {
       console.log(error);

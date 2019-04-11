@@ -11,6 +11,7 @@ import {
   SIZE_UPDATED,
   TITLE_UPDATED,
   PUZZLE_UPLOADED,
+  CHANGE_MODE_ACTION,
 } from './constants';
 
 export function closeModal() {
@@ -22,6 +23,12 @@ export function closeModal() {
 export function openModal() {
   return {
     type: MODAL_OPENED,
+  };
+}
+
+export function changeMode() {
+  return {
+    type: CHANGE_MODE_ACTION,
   };
 }
 

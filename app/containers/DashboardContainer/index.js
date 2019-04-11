@@ -22,13 +22,10 @@ import {
 } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import { Add } from '@material-ui/icons';
-import CloudUploadIcon from '@material-ui/icons/CloudUpload';
 
 import GridComponent from 'components/Grid';
 import CreatePuzzleModal from 'containers/CreatePuzzleModal';
-import UploadPuzzleModal from 'containers/UploadPuzzleModal';
 import { openModal } from 'containers/CreatePuzzleModal/actions';
-import { openUpload } from 'containers/UploadPuzzleModal/actions';
 
 import injectSaga from 'utils/injectSaga';
 import injectReducer from 'utils/injectReducer';
@@ -53,17 +50,13 @@ class DashboardContainer extends React.Component {
   }
 
   render() {
-    const { puzzles, classes, openModal, openUpload } = this.props;
+    const { puzzles, classes, openModal } = this.props;
     return (
       <>
         <Fab className={classes.fab} color="primary" onClick={openModal}>
           <Add />
         </Fab>
         <CreatePuzzleModal />
-        <Fab className={classes.fab} color="secondary" onClick={openUpload}>
-          <CloudUploadIcon />
-        </Fab>
-        <UploadPuzzleModal />
         <div style={{ width: '60%', marginLeft: '20%' }}>
           <Grid container spacing={32}>
             <Grid
@@ -108,7 +101,6 @@ DashboardContainer.propTypes = {
   puzzles: PropTypes.object.isRequired,
   classes: PropTypes.object.isRequired,
   openModal: PropTypes.func.isRequired,
-  openUpload: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = createStructuredSelector({
@@ -117,7 +109,7 @@ const mapStateToProps = createStructuredSelector({
 });
 
 function mapDispatchToProps(dispatch) {
-  return bindActionCreators({ loadPuzzles, openModal, openUpload }, dispatch);
+  return bindActionCreators({ loadPuzzles, openModal }, dispatch);
 }
 
 const withConnect = connect(

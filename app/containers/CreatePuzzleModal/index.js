@@ -33,6 +33,7 @@ import {
 } from './actions';
 import saga from './saga';
 import reducer from './reducer';
+import { UPLOAD_MODE, CREATE_MODE } from './constants';
 
 import { makeSelectCreatePuzzleModal } from './selectors';
 
@@ -46,9 +47,12 @@ function CreatePuzzleModal({
     open,
     size: { height, width },
     title,
+    mode,
   },
   parentId,
   puzzleToCopyId,
+  changeMode,
+  uploadPuzzle,
 }) {
   return (
     <div>
@@ -60,30 +64,48 @@ function CreatePuzzleModal({
         <DialogTitle id="form-dialog-title">{`New ${
           parentId ? 'Version' : 'Puzzle'
         }`}</DialogTitle>
-        <DialogContent>
-          <Grid container justify="space-evenly" spacing={8}>
-            <Grid item>
-              <TextField
-                value={title || ''}
-                placeholder="Untitled"
-                name="title"
-                onChange={e => updateTitle(e.target.value)}
-                fullWidth
-              />
-            </Grid>
-            {!puzzleToCopyId && (
-              <Grid item xs={3}>
-                <Select
-                  value={height}
-                  onChange={e => updateSize(e.target.value, e.target.value)}
-                >
-                  <MenuItem value={15}>15x15</MenuItem>
-                  <MenuItem value={5}>5x5</MenuItem>
-                </Select>
+        {mode === CREATE_MODE && (
+          <DialogContent>
+            <Grid container justify="space-evenly" spacing={8}>
+              <Grid item>
+                <TextField
+                  value={title || ''}
+                  placeholder="Untitled"
+                  name="title"
+                  onChange={e => updateTitle(e.target.value)}
+                  fullWidth
+                />
               </Grid>
-            )}
-          </Grid>
-        </DialogContent>
+              {!puzzleToCopyId && (
+                <Grid item xs={3}>
+                  <Select
+                    value={height}
+                    onChange={e => updateSize(e.target.value, e.target.value)}
+                  >
+                    <MenuItem value={15}>15x15</MenuItem>
+                    <MenuItem value={5}>5x5</MenuItem>
+                  </Select>
+                </Grid>
+              )}
+            </Grid>
+          </DialogContent>
+        )}
+        {mode === UPLOAD_MODE && (
+          <DialogContent>
+            <Grid container justify="space-evenly" spacing={8}>
+              <Grid item>
+                <input
+                  type="file"
+                  onChange={e => uploadPuzzle(e.target.files[0])}
+                  accept=".puz"
+                />
+              </Grid>
+            </Grid>
+          </DialogContent>
+        )}
+        <Button color="primary" onClick={changeMode}>
+          {mode === CREATE_MODE ? 'Upload' : 'Create New'}
+        </Button>
         <DialogActions>
           <Button onClick={closeModal} color="default" disabled={forceOpen}>
             Cancel
@@ -117,6 +139,8 @@ CreatePuzzleModal.propTypes = {
   forceOpen: PropTypes.bool,
   parentId: PropTypes.string,
   puzzleToCopyId: PropTypes.string,
+  changeMode: PropTypes.func.isRequired,
+  uploadPuzzle: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = createStructuredSelector({
@@ -125,7 +149,13 @@ const mapStateToProps = createStructuredSelector({
 
 function mapDispatchToProps(dispatch) {
   return bindActionCreators(
-    { closeModal, createPuzzle, updateSize, updateTitle, uploadPuzzle },
+    {
+      closeModal,
+      createPuzzle,
+      updateSize,
+      updateTitle,
+      uploadPuzzle,
+    },
     dispatch,
   );
 }
