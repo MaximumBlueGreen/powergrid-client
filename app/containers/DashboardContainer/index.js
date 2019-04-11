@@ -14,7 +14,7 @@ import { orderBy } from 'lodash';
 import {
   Card,
   CardActions,
-  CardContent,
+  CardActionArea,
   Fab,
   Grid,
   Button,
@@ -73,19 +73,19 @@ class DashboardContainer extends React.Component {
             ]).map(parentId => (
               <Grid item xs={4} key={parentId}>
                 <Card>
-                  <CardContent>
+                  <CardActionArea href={`/home/${parentId}`}>
                     <GridComponent
                       focus={false}
                       squares={puzzles[parentId][parentId].squares}
                       size={puzzles[parentId][parentId].size}
                       highlightable={false}
                     />
-                  </CardContent>
-                  <CardActions>
-                    <Button color="primary" href={`/home/${parentId}`}>
-                      {puzzles[parentId][parentId].title || 'Untitled'}
-                    </Button>
-                  </CardActions>
+                    <CardActions>
+                      <Button color="primary">
+                        {puzzles[parentId][parentId].title || 'Untitled'}
+                      </Button>
+                    </CardActions>
+                  </CardActionArea>
                 </Card>
               </Grid>
             ))}
