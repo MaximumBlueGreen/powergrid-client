@@ -6,7 +6,8 @@
 
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Link, Paper } from '@material-ui/core';
+import { Paper, Tooltip } from '@material-ui/core';
+import { withStyles } from '@material-ui/core/styles';
 import {
   Editor,
   EditorState,
@@ -14,17 +15,53 @@ import {
   ContentState,
 } from 'draft-js';
 
-const EntryTag = props => (
-  <Link href="/dashboard" color="primary">
-    {props.children}
-  </Link>
+const styles = theme => ({
+  entryTag: {
+    fontWeight: 'bold',
+  },
+  valid: {
+    color: theme.palette.primary.main,
+    textDecoration: 'underline',
+    cursor: 'pointer',
+  },
+  invalid: {
+    color: theme.palette.error.main,
+    textDecoration: 'line-through',
+  },
+});
+
+const EntryTag = withStyles(styles)(
+  ({
+    children,
+    classes: { valid, invalid, entryTag },
+    decoratedText,
+    words,
+    onEntryTagClicked,
+  }) => {
+    const [, number, direction] = /([\d]+)(A|D)/g.exec(decoratedText);
+    const word = words[direction === 'A' ? 'across' : 'down'][number];
+    return (
+      <Tooltip title={word || ''}>
+        <span
+          role="presentation"
+          onClick={() => onEntryTagClicked(number, direction === 'A')}
+          className={[word ? valid : invalid, entryTag]}
+        >
+          {children}
+        </span>
+      </Tooltip>
+    );
+  },
 );
+
 EntryTag.propTypes = {
-  children: PropTypes.array,
+  classes: PropTypes.shape({
+    entryTag: PropTypes.string.isRequired,
+  }).isRequired,
 };
 
 function entryTagStrategy(contentBlock, callback) {
-  findWithRegex(/@[\d]+(A|D|a|d)/g, contentBlock, callback);
+  findWithRegex(/([\d]+)(A|D)(?=\s|$)/g, contentBlock, callback);
 }
 
 function findWithRegex(regex, contentBlock, callback) {
@@ -41,17 +78,19 @@ function findWithRegex(regex, contentBlock, callback) {
 class Notes extends React.Component {
   constructor(props) {
     super(props);
+    const { notes, onEntryTagClicked, words } = props;
     const compositeDecorator = new CompositeDecorator([
       {
         strategy: entryTagStrategy,
         component: EntryTag,
+        props: { words, onEntryTagClicked },
       },
     ]);
 
-    if (props.notes) {
+    if (notes) {
       this.state = {
         editorState: EditorState.createWithContent(
-          ContentState.createFromText(props.notes),
+          ContentState.createFromText(notes),
           compositeDecorator,
         ),
       };
@@ -61,10 +100,34 @@ class Notes extends React.Component {
       };
     }
 
+    this.state.words = props.words;
+
     this.onChange = editorState => this.setState({ editorState });
   }
 
+  static getDerivedStateFromProps(props, state) {
+    const { editorState, words: prevWords } = state;
+    const { words, onEntryTagClicked } = props;
+    if (words !== prevWords) {
+      return {
+        editorState: EditorState.set(editorState, {
+          decorator: new CompositeDecorator([
+            {
+              strategy: entryTagStrategy,
+              component: EntryTag,
+              props: { words, onEntryTagClicked },
+            },
+          ]),
+        }),
+        words,
+      };
+    }
+    return null;
+  }
+
   render() {
+    const { onEdit } = this.props;
+
     return (
       <Paper
         style={{
@@ -79,7 +142,7 @@ class Notes extends React.Component {
           editorState={this.state.editorState}
           onChange={editorState => {
             this.onChange(editorState);
-            this.props.onEdit(editorState.getCurrentContent().getPlainText());
+            onEdit(editorState.getCurrentContent().getPlainText());
           }}
         />
       </Paper>
@@ -90,10 +153,12 @@ class Notes extends React.Component {
 Notes.propTypes = {
   notes: PropTypes.string,
   onEdit: PropTypes.func.isRequired,
+  words: PropTypes.object.isRequired,
+  onEntryTagClicked: PropTypes.func.isRequired,
 };
 
 Notes.defaultProps = {
   notes: '',
 };
 
-export default Notes;
+export default withStyles(styles)(Notes);

@@ -11,6 +11,7 @@ import {
   PUZZLE_SAVED_SUCCESS,
   PUZZLE_UPLOADED,
   TAB_CHANGED,
+  ENTRY_TAG_CLICKED,
 } from './constants';
 
 export function defaultAction() {
@@ -49,5 +50,14 @@ export function handleTabChange(event, value) {
   return {
     type: TAB_CHANGED,
     tabValue: value,
+  };
+}
+
+export function clickEntryTag(puzzleId, number, isAcross) {
+  return {
+    type: ENTRY_TAG_CLICKED,
+    puzzleId,
+    number,
+    isAcross,
   };
 }
