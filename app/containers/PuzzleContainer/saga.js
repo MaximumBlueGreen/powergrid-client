@@ -53,6 +53,7 @@ export function* savePuzzleSaga() {
       squares: denormalizedPuzzle.squares,
       size: denormalizedPuzzle.size,
       title: denormalizedPuzzle.title,
+      symmetry: denormalizedPuzzle.symmetry,
     },
   };
   yield authenticated(

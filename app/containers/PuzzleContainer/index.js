@@ -140,49 +140,51 @@ class PuzzleContainer extends React.Component {
           </Menu>
         )}
         <Grid container justify="center" alignItems="flex-start" spacing={0}>
-          {puzzleId && (
-            <Grid
-              className={conditionalSticky}
-              item
-              container
-              xs={11}
-              md={5}
-              alignItems="center"
-            >
-              <Grid item>
-                <TextField
-                  value={(puzzle && puzzle.title) || ''}
-                  placeholder="Untitled"
-                  margin="normal"
-                  onChange={e => updatePuzzleTitle(puzzleId, e.target.value)}
-                  InputProps={{
-                    endAdornment: (
-                      <InputAdornment position="end">
-                        {displayVersions && (
-                          <Tooltip title="Select version" placement="bottom">
-                            <IconButton onClick={this.openVersionMenu}>
-                              <ArrowDropDown />
+          <Grid
+            className={conditionalSticky}
+            item
+            container
+            xs={11}
+            md={5}
+            alignItems="center"
+          >
+            {puzzle && (
+              <>
+                <Grid item>
+                  <TextField
+                    value={(puzzle && puzzle.title) || ''}
+                    placeholder="Untitled"
+                    margin="normal"
+                    onChange={e => updatePuzzleTitle(puzzleId, e.target.value)}
+                    InputProps={{
+                      endAdornment: (
+                        <InputAdornment position="end">
+                          {displayVersions && (
+                            <Tooltip title="Select version" placement="bottom">
+                              <IconButton onClick={this.openVersionMenu}>
+                                <ArrowDropDown />
+                              </IconButton>
+                            </Tooltip>
+                          )}
+                          <Tooltip title="Add version" placement="top">
+                            <IconButton onClick={openModal} color="primary">
+                              <Add />
                             </IconButton>
                           </Tooltip>
-                        )}
-                        <Tooltip title="Add version" placement="top">
-                          <IconButton onClick={openModal} color="primary">
-                            <Add />
-                          </IconButton>
-                        </Tooltip>
-                      </InputAdornment>
-                    ),
-                  }}
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <SyncStatus isSyncing={isSyncing} lastSynced={lastSynced} />
-              </Grid>
-              <Grid item xs={12}>
-                <GridContainer puzzleId={puzzleId} />
-              </Grid>
-            </Grid>
-          )}
+                        </InputAdornment>
+                      ),
+                    }}
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <SyncStatus isSyncing={isSyncing} lastSynced={lastSynced} />
+                </Grid>
+                <Grid item xs={12}>
+                  <GridContainer puzzleId={puzzleId} />
+                </Grid>
+              </>
+            )}
+          </Grid>
           <Grid item xs={11} md={6}>
             <Tabs value={tabValue} onChange={handleTabChange}>
               <Tab key="Clues" label="Clues" value="Clues" />
