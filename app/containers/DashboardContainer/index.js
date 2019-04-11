@@ -52,7 +52,7 @@ class DashboardContainer extends React.Component {
   render() {
     const { puzzles, classes, openModal } = this.props;
     return (
-      <>
+      <React.Fragment>
         <Fab className={classes.fab} color="primary" onClick={openModal}>
           <Add />
         </Fab>
@@ -91,7 +91,7 @@ class DashboardContainer extends React.Component {
             ))}
           </Grid>
         </div>
-      </>
+      </React.Fragment>
     );
   }
 }

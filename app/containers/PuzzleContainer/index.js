@@ -154,7 +154,7 @@ class PuzzleContainer extends React.Component {
             alignItems="center"
           >
             {puzzle && (
-              <>
+              <React.Fragment>
                 <Grid item>
                   <TextField
                     value={(puzzle && puzzle.title) || ''}
@@ -187,7 +187,7 @@ class PuzzleContainer extends React.Component {
                 <Grid item xs={12} style={{ marginBottom: '20px' }}>
                   <GridContainer puzzleId={puzzleId} />
                 </Grid>
-              </>
+              </React.Fragment>
             )}
           </Grid>
           <Grid item xs={11} md={6}>

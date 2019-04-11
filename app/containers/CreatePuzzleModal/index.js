@@ -103,7 +103,7 @@ function CreatePuzzleModal({
             {mode === CREATE_MODE ? 'Upload' : 'New'}
           </Button>
           {mode === UPLOAD_MODE && (
-            <>
+            <React.Fragment>
               <input
                 accept=".puz"
                 style={{ display: 'none' }}
@@ -116,7 +116,7 @@ function CreatePuzzleModal({
                   Browse
                 </Button>
               </label>
-            </>
+            </React.Fragment>
           )}
 
           {mode === CREATE_MODE && (

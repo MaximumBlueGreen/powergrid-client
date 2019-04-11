@@ -19,10 +19,10 @@ export default class HomePage extends React.PureComponent {
   render() {
     const { match } = this.props;
     return (
-      <>
+      <React.Fragment>
         <PuzzleContainer puzzleId={match.params.puzzleId} />
         <NavDrawer />
-      </>
+      </React.Fragment>
     );
   }
 }
