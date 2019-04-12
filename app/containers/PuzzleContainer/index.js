@@ -31,8 +31,8 @@ import { openModal } from 'containers/CreatePuzzleModal/actions';
 import DictionaryContainer from 'containers/DictionaryContainer';
 import GridContainer from 'containers/GridContainer';
 import WordListContainer from 'containers/WordListContainer';
+import NotesContainer from 'containers/NotesContainer';
 
-import Notes from 'components/Notes';
 import SyncStatus from 'components/SyncStatus';
 
 import { editPuzzleNotes, updatePuzzleTitle } from 'entities/Puzzles/actions';
@@ -45,6 +45,7 @@ import {
   loadPuzzles,
   savePuzzle,
   uploadPuzzle,
+  clickEntryTag,
 } from './actions';
 import reducer from './reducer';
 import saga from './saga';
@@ -111,6 +112,7 @@ class PuzzleContainer extends React.Component {
       handleTabChange,
       loadPuzzles,
       openModal,
+      clickEntryTag,
       classes: { conditionalSticky, shadedTab },
     } = this.props;
 
@@ -137,7 +139,7 @@ class PuzzleContainer extends React.Component {
                   this.closeVersionMenu();
                 }}
               >
-                {title || id}
+                {title || 'Untitled'}
               </MenuItem>
             ))}
           </Menu>
@@ -152,7 +154,7 @@ class PuzzleContainer extends React.Component {
             alignItems="center"
           >
             {puzzle && (
-              <>
+              <React.Fragment>
                 <Grid item>
                   <TextField
                     value={(puzzle && puzzle.title) || ''}
@@ -185,7 +187,7 @@ class PuzzleContainer extends React.Component {
                 <Grid item xs={12} style={{ marginBottom: '20px' }}>
                   <GridContainer puzzleId={puzzleId} />
                 </Grid>
-              </>
+              </React.Fragment>
             )}
           </Grid>
           <Grid item xs={11} md={6}>
@@ -231,9 +233,13 @@ class PuzzleContainer extends React.Component {
             {tabValue === 'Dictionary' && <DictionaryContainer />}
             {tabValue === 'Puzzle Data' && <div>Hello</div>}
             {tabValue === 'Notes' && (
-              <Notes
+              <NotesContainer
                 onEdit={notes => editPuzzleNotes(puzzleId, notes)}
                 notes={puzzleId && puzzle.notes}
+                puzzleId={puzzleId}
+                onEntryTagClicked={(number, isAcross) =>
+                  clickEntryTag(puzzleId, number, isAcross)
+                }
               />
             )}
           </Grid>
@@ -255,6 +261,7 @@ PuzzleContainer.propTypes = {
   handleTabChange: PropTypes.func.isRequired,
   openModal: PropTypes.func.isRequired,
   classes: PropTypes.object.isRequired,
+  clickEntryTag: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = createStructuredSelector({
@@ -272,6 +279,7 @@ function mapDispatchToProps(dispatch) {
       uploadPuzzle,
       openModal,
       handleTabChange,
+      clickEntryTag,
     },
     dispatch,
   );

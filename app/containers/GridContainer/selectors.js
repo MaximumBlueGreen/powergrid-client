@@ -97,6 +97,16 @@ const makeSelectGridContainerWords = () =>
       .toJS(),
   }));
 
+const makeSelectIllegalSquareIds = () =>
+  createSelector(makeSelectGridContainerWords(), ({ across, down }) => [
+    ...Object.keys(across)
+      .filter(n => across[n].length < 3)
+      .flatMap(n => across[n].map(s => s.id)),
+    ...Object.keys(down)
+      .filter(n => down[n].length < 3)
+      .flatMap(n => down[n].map(s => s.id)),
+  ]);
+
 const makeSelectGridContainer = () =>
   createSelector(makeSelectGridContainerSquareNumbers(), JSify);
 
@@ -106,4 +116,5 @@ export {
   makeSelectGridContainerSquareNumbers,
   makeSelectGridContainerFocusedWord,
   makeSelectGridContainerWords,
+  makeSelectIllegalSquareIds,
 };

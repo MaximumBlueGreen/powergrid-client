@@ -22,7 +22,9 @@ import { ThemeProvider } from 'styled-components';
 import GlobalStyle from '../../global-styles';
 
 const theme = createMuiTheme({
-  useNextVariants: true,
+  typography: {
+    useNextVariants: true,
+  },
 });
 
 export default function App() {
@@ -31,7 +33,7 @@ export default function App() {
       <MuiThemeProvider theme={theme}>
         <ThemeProvider theme={theme}>
           <Switch>
-            <Route path="/home/:puzzleId?" component={HomePage} />
+            <Route path="/edit/:puzzleId?" component={HomePage} />
             <Route exact path="/dashboard" component={DashboardPage} />
             <Route exact path="/login" component={LoginPage} />
             <Route exact path="/" render={() => <Redirect to="/login" />} />

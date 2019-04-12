@@ -21,7 +21,6 @@ const styles = theme => ({
 });
 
 function ClueList({ clues, words, header, updateClue, onFocused, classes }) {
-  console.log(clues, words);
   return (
     <List>
       <ListSubheader className={classes.listSubheader}>{header}</ListSubheader>
@@ -36,7 +35,7 @@ function ClueList({ clues, words, header, updateClue, onFocused, classes }) {
             onFocus={() => onFocused(number)}
             fullWidth
             multiline
-            rowsMax={1}
+            rowsMax={3}
           />
         </ListItem>
       ))}

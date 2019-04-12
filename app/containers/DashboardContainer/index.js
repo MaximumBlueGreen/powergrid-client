@@ -52,7 +52,7 @@ class DashboardContainer extends React.Component {
   render() {
     const { puzzles, classes, openModal } = this.props;
     return (
-      <>
+      <React.Fragment>
         <Fab className={classes.fab} color="primary" onClick={openModal}>
           <Add />
         </Fab>
@@ -73,25 +73,25 @@ class DashboardContainer extends React.Component {
             ]).map(parentId => (
               <Grid item xs={4} key={parentId}>
                 <Card>
-                  <CardActionArea href={`/home/${parentId}`}>
+                  <CardActionArea href={`/edit/${parentId}`}>
                     <GridComponent
                       focus={false}
                       squares={puzzles[parentId][parentId].squares}
                       size={puzzles[parentId][parentId].size}
                       highlightable={false}
                     />
-                    <CardActions>
-                      <Button color="primary">
-                        {puzzles[parentId][parentId].title || 'Untitled'}
-                      </Button>
-                    </CardActions>
                   </CardActionArea>
+                  <CardActions>
+                    <Button color="primary" href={`/edit/${parentId}`}>
+                      {puzzles[parentId][parentId].title || 'Untitled'}
+                    </Button>
+                  </CardActions>
                 </Card>
               </Grid>
             ))}
           </Grid>
         </div>
-      </>
+      </React.Fragment>
     );
   }
 }

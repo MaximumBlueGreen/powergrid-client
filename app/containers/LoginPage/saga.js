@@ -24,7 +24,7 @@ export function* postLoginInfo({ values }) {
     function* onSuccess({ token }) {
       localStorage.setItem('token', token);
       yield put(validatedAction(token));
-      yield put(push('/home'));
+      yield put(push('/dashboard'));
     },
     function* onError(error) {
       yield put(invalidatedAction(error));

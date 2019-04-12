@@ -29,7 +29,7 @@ export function* createPuzzleSaga({
       }),
     },
     function* onSuccess({ id }) {
-      yield all([put(push(`/home/${id}`)), put(closeModal())]);
+      yield all([put(push(`/edit/${id}`)), put(closeModal())]);
     },
     function* onError(error) {
       console.log(error);
@@ -79,7 +79,7 @@ export function* uploadPuzzleSaga({ puzzleFile }) {
     // console.log(response),
     // console.log(puzzle),
     function* onSuccess({ id }) {
-      yield all([put(push(`/home/${id}`)), put(closeModal())]);
+      yield all([put(push(`/edit/${id}`)), put(closeModal())]);
     },
     function* onError(error) {
       console.log(error);

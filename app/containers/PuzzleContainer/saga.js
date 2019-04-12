@@ -20,7 +20,12 @@ import { ENTRY_SELECTED } from 'containers/WordListContainer/constants';
 import { bulkUpdateSquareValue } from 'entities/Squares/actions';
 import { CLUE_SELECTED } from 'containers/CluesContainer/constants';
 import { savePuzzle, savePuzzleSuccess } from './actions';
-import { PUZZLES_LOADED, PUZZLE_SAVED, PUZZLE_UPLOADED } from './constants';
+import {
+  PUZZLES_LOADED,
+  PUZZLE_SAVED,
+  PUZZLE_UPLOADED,
+  ENTRY_TAG_CLICKED,
+} from './constants';
 import { makeSelectPuzzleContainer } from './selectors';
 
 export function* getPuzzlesSaga({ puzzleId }) {
@@ -160,7 +165,7 @@ export default function* saga() {
     takeLatest(PUZZLE_UPLOADED, uploadPuzzleSaga),
     takeLatest(SQUARE_FOCUSED, updateFilterPatternFromGrid),
     takeLatest(ENTRY_SELECTED, updateGridFromEntry),
-    takeLatest(CLUE_SELECTED, focusWordInGrid),
+    takeLatest([CLUE_SELECTED, ENTRY_TAG_CLICKED], focusWordInGrid),
     autosave(),
   ]);
 }
