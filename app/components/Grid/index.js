@@ -210,6 +210,7 @@ Grid.propTypes = {
   focus: PropTypes.bool,
   highlightedSquareIds: PropTypes.arrayOf(PropTypes.string),
   setHighlightedSquareIds: PropTypes.func,
+  illegalSquareIds: PropTypes.array,
   onHighlightEnd: PropTypes.func,
   highlightable: PropTypes.bool,
   classes: PropTypes.shape({
@@ -225,6 +226,7 @@ Grid.defaultProps = {
   onHighlightEnd: noop,
   setHighlightedSquareIds: noop,
   highlightedSquareIds: [],
+  illegalSquareIds: [],
   highlightable: true,
 };
 
