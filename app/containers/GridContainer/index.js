@@ -165,12 +165,12 @@ function GridContainer({
               }
               switch (keyCode) {
                 case 8 /* Backspace */:
-                  focusSquare(previousSquareId(focusedDirection));
-
                   if (clickMode === CLICK_MODE_BLACK_SQUARE) {
-                    return setBlackSquareWithSymmetry(focusedSquareId, false);
+                    setBlackSquareWithSymmetry(focusedSquareId, false);
+                  } else {
+                    updateSquareValue(focusedSquareId, '');
                   }
-                  return updateSquareValue(focusedSquareId, '');
+                  return focusSquare(previousSquareId(focusedDirection));
 
                 case 9 /* TAB */:
                 case 13 /* ENTER */: {
@@ -195,12 +195,12 @@ function GridContainer({
                   return focusSquare((shiftKey ? previous : next).id);
                 }
                 case 32 /* Space */:
-                  focusSquare(nextSquareId(focusedDirection));
-
                   if (clickMode === CLICK_MODE_BLACK_SQUARE) {
-                    return setBlackSquareWithSymmetry(focusedSquareId);
+                    setBlackSquareWithSymmetry(focusedSquareId);
+                  } else {
+                    updateSquareValue(focusedSquareId, '');
                   }
-                  return updateSquareValue(focusedSquareId, '');
+                  return focusSquare(nextSquareId(focusedDirection));
 
                 case 37 /* Left Arrow */:
                   return focusedDirection === ACROSS
