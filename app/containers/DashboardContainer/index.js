@@ -9,7 +9,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import { compose, bindActionCreators } from 'redux';
-import { orderBy } from 'lodash';
+import { orderBy, times } from 'lodash';
 
 import {
   Card,
@@ -21,7 +21,6 @@ import {
   Typography,
 } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
-import { Add } from '@material-ui/icons';
 
 import GridComponent from 'components/Grid';
 import CreatePuzzleModal from 'containers/CreatePuzzleModal';
@@ -37,10 +36,12 @@ import reducer from './reducer';
 import saga from './saga';
 
 const styles = theme => ({
-  fab: {
-    position: 'fixed',
-    bottom: theme.spacing.unit * 2,
-    right: theme.spacing.unit * 2,
+  newPuzzleButton: {
+    position: 'absolute',
+    left: '50%',
+    top: '50%',
+    transform: 'translate(-50%, -50%)',
+    zIndex: theme.zIndex.mobileStepper - 1,
   },
 });
 
@@ -50,15 +51,12 @@ class DashboardContainer extends React.Component {
   }
 
   render() {
-    const { puzzles, classes, openModal } = this.props;
+    const { puzzles, openModal, classes } = this.props;
     return (
       <React.Fragment>
-        <Fab className={classes.fab} color="primary" onClick={openModal}>
-          <Add />
-        </Fab>
         <CreatePuzzleModal />
         <div style={{ width: '60%', marginLeft: '20%' }}>
-          <Grid container spacing={32}>
+          <Grid container spacing={32} alignItems="center">
             <Grid
               item
               xs={12}
@@ -68,10 +66,30 @@ class DashboardContainer extends React.Component {
             >
               My Puzzles
             </Grid>
+            <Grid item lg={4} md={6} xs={12} style={{ position: 'relative' }}>
+              <Fab
+                className={classes.newPuzzleButton}
+                onClick={openModal}
+                variant="extended"
+                size="large"
+                color="primary"
+                aria-label="Add"
+              >
+                New Puzzle
+              </Fab>
+              <Card style={{ margin: '32px' }}>
+                <GridComponent
+                  focus={false}
+                  squares={times(225, id => ({ id }))}
+                  size={{ height: 15, width: 15 }}
+                  highlightable={false}
+                />
+              </Card>
+            </Grid>
             {orderBy(Object.keys(puzzles), id => puzzles[id][id].updated_at, [
               'desc',
             ]).map(parentId => (
-              <Grid item xs={4} key={parentId}>
+              <Grid item lg={4} md={6} xs={12} key={parentId}>
                 <Card>
                   <CardActionArea href={`/edit/${parentId}`}>
                     <GridComponent
