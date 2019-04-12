@@ -33,6 +33,7 @@ import GridContainer from 'containers/GridContainer';
 import WordListContainer from 'containers/WordListContainer';
 import NotesContainer from 'containers/NotesContainer';
 
+import NavDrawer from 'components/NavDrawer';
 import SyncStatus from 'components/SyncStatus';
 
 import { editPuzzleNotes, updatePuzzleTitle } from 'entities/Puzzles/actions';
@@ -144,12 +145,15 @@ class PuzzleContainer extends React.Component {
             ))}
           </Menu>
         )}
-        <Grid container justify="center" alignItems="flex-start" spacing={0}>
+        <Grid container justify="space-between" alignItems="flex-start">
+          <Grid item xs={1} alignContent="center">
+            <NavDrawer />
+          </Grid>
           <Grid
             className={conditionalSticky}
             item
             container
-            xs={11}
+            xs={10}
             md={5}
             alignItems="center"
           >
@@ -190,7 +194,7 @@ class PuzzleContainer extends React.Component {
               </React.Fragment>
             )}
           </Grid>
-          <Grid item xs={11} md={6}>
+          <Grid item xs={10} md={6}>
             <Tabs value={tabValue} onChange={handleTabChange} centered>
               <Tab
                 style={{ minWidth: '20%' }}

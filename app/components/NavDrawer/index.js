@@ -10,20 +10,11 @@ import {
   ListItemText,
   ListItemIcon,
 } from '@material-ui/core';
-import { ArrowForwardIos, Home } from '@material-ui/icons/';
+import { Home, Menu } from '@material-ui/icons/';
 
 const styles = {
   list: {
     width: 250,
-  },
-  buttonClosed: {
-    position: 'fixed',
-    left: 0,
-    top: '50%',
-    transform: 'translate(-50%, -50%)',
-  },
-  buttonArrow: {
-    transform: 'translate(40%, 0)',
   },
 };
 
@@ -48,7 +39,7 @@ class NavDrawer extends React.Component {
             className={classes.buttonClosed}
             onClick={this.toggleDrawer(true)}
           >
-            <ArrowForwardIos fontSize="large" className={classes.buttonArrow} />
+            <Menu fontSize="large" />
           </IconButton>
         )}
         <Drawer open={this.state.open} onClose={this.toggleDrawer(false)}>
