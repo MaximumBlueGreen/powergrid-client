@@ -130,7 +130,7 @@ class Grid extends React.Component {
                 y={parseInt(i / size.width, 10)}
                 width="1"
                 height="1"
-                stroke="#aaaaaa"
+                stroke={s.isBlack ? 'black' : '#aaaaaa'}
                 strokeWidth=".02"
                 fill={squareColor(s)}
                 fillOpacity={isHighlighted(s.id) ? 0.75 : 1}
