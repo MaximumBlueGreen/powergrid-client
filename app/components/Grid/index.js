@@ -192,6 +192,15 @@ class Grid extends React.Component {
             </React.Fragment>
           );
         })}
+        <rect
+          x={0}
+          y={0}
+          width={size.width}
+          height={size.height}
+          stroke="#aaaaaa"
+          strokeWidth=".04"
+          fill="none"
+        />
       </svg>
     );
   }
