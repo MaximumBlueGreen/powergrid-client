@@ -14,3 +14,6 @@ export default createSelector(
     users: users.toJS(),
   }),
 );
+
+export const selectPastLength = state => state.get('entities').past.length;
+export const selectFutureLength = state => state.get('entities').future.length;

@@ -38,17 +38,19 @@ function GridActionBar({
   toggleClickMode,
   symmetryMode,
   setSymmetryMode,
+  canUndo,
+  canRedo,
 }) {
   return (
     <Grid container alignItems="center" spacing={8}>
       <Grid item>
         <Tooltip title="Undo" placement="top">
-          <IconButton color="primary" onClick={undo}>
+          <IconButton color="primary" onClick={undo} disabled={!canUndo}>
             <UndoIcon fontSize="small" />
           </IconButton>
         </Tooltip>
         <Tooltip title="Redo" placement="top">
-          <IconButton color="primary" onClick={redo}>
+          <IconButton color="primary" onClick={redo} disabled={!canRedo}>
             <RedoIcon fontSize="small" />
           </IconButton>
         </Tooltip>
@@ -120,6 +122,8 @@ GridActionBar.propTypes = {
   clickMode: PropTypes.string.isRequired,
   symmetryMode: PropTypes.string.isRequired,
   setSymmetryMode: PropTypes.func.isRequired,
+  canRedo: PropTypes.bool.isRequired,
+  canUndo: PropTypes.bool.isRequired,
 };
 
 export default GridActionBar;
