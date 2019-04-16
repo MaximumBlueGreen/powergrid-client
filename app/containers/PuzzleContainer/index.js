@@ -146,7 +146,7 @@ class PuzzleContainer extends React.Component {
           </Menu>
         )}
         <Grid container justify="space-between" alignItems="flex-start">
-          <Grid item>
+          <Grid item className={conditionalSticky}>
             <NavDrawer />
           </Grid>
           <Grid
