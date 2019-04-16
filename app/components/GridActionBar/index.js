@@ -6,7 +6,7 @@
 
 import React from 'react';
 
-import { Grid, IconButton, Tooltip } from '@material-ui/core';
+import { Chip, Grid, IconButton, Tooltip } from '@material-ui/core';
 import {
   Undo as UndoIcon,
   Redo as RedoIcon,
@@ -40,6 +40,8 @@ function GridActionBar({
   setSymmetryMode,
   canUndo,
   canRedo,
+  wordCount,
+  blackSquareCount,
 }) {
   return (
     <Grid container alignItems="center" spacing={8}>
@@ -110,6 +112,10 @@ function GridActionBar({
           </Tooltip>
         </ToggleButtonGroup>
       </Grid>
+      <Grid item>
+        <Chip label={`${wordCount} words`} variant="outlined" />
+        <Chip label={`${blackSquareCount} blocks`} variant="outlined" />
+      </Grid>
     </Grid>
   );
 }
@@ -124,6 +130,8 @@ GridActionBar.propTypes = {
   setSymmetryMode: PropTypes.func.isRequired,
   canRedo: PropTypes.bool.isRequired,
   canUndo: PropTypes.bool.isRequired,
+  wordCount: PropTypes.number.isRequired,
+  blackSquareCount: PropTypes.number.isRequired,
 };
 
 export default GridActionBar;
