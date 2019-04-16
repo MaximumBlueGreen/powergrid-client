@@ -5,16 +5,20 @@ import { puzzle as puzzleSchema } from 'entities/schema';
 import { normalize, denormalize } from 'normalizr';
 import { authenticated } from 'utils/apiRequestSaga';
 import entitiesSelector from 'entities/selectors';
+import entriesSelector from 'entities/Entries/selectors';
 import { focusSquare, focusDirection } from 'containers/GridContainer/actions';
 import {
   SQUARE_FOCUSED,
   ACROSS,
   DOWN,
+  AUTOFILL_CLICKED,
 } from 'containers/GridContainer/constants';
 import {
   makeSelectGridContainerFocusedWord,
   makeSelectGridContainerSquareNumbers,
+  makeSelectGridContainerWords,
 } from 'containers/GridContainer/selectors';
+import { selectWordListContainerDomain } from 'containers/WordListContainer/selectors';
 import { updateFilterPattern } from 'containers/WordListContainer/actions';
 import { ENTRY_SELECTED } from 'containers/WordListContainer/constants';
 import { bulkUpdateSquareValue } from 'entities/Squares/actions';
@@ -151,6 +155,40 @@ function* focusWordInGrid({ puzzleId, number, isAcross }) {
   ]);
 }
 
+function* autoFillGrid() {
+  const { puzzleId } = yield select(makeSelectPuzzleContainer());
+  // const entities = yield select(entitiesSelector);
+  const entries = yield select(entriesSelector);
+  const domain = yield select(selectWordListContainerDomain);
+  const entryIds = domain.get('entryIds');
+  const actualEntries = entryIds.map(id => entries.get(id));
+
+  // const words = yield select(makeSelectGridContainerSquareNumbers(), {
+  //   puzzleId,
+  // });
+  //
+  // const {
+  //   size: { width, height },
+  //   squares,
+  // } = words.toJS();
+
+  const gridContainerWords = yield select(makeSelectGridContainerWords(), {
+    puzzleId,
+  });
+
+  // Iterate over numbers (possible word positions)
+  // iterate over words:
+  //    iterate through matches in word list sorted by score
+  //    if there are matches:
+  //      insert the word and recurse?
+  //    else:
+  //      go up a level or fail if at top level
+
+  console.log(gridContainerWords);
+  console.log(actualEntries);
+  yield;
+}
+
 function* autosave() {
   while (true) {
     yield delay(10000);
@@ -166,6 +204,7 @@ export default function* saga() {
     takeLatest(SQUARE_FOCUSED, updateFilterPatternFromGrid),
     takeLatest(ENTRY_SELECTED, updateGridFromEntry),
     takeLatest([CLUE_SELECTED, ENTRY_TAG_CLICKED], focusWordInGrid),
+    takeLatest(AUTOFILL_CLICKED, autoFillGrid),
     autosave(),
   ]);
 }

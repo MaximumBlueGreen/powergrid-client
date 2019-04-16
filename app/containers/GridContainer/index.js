@@ -32,6 +32,7 @@ import {
   toggleClickMode,
   setHighlightedSquareIds,
   addHighlightedSquareIds,
+  autoFill,
 } from './actions';
 import {
   makeSelectGridContainer,
@@ -69,6 +70,7 @@ function GridContainer({
   addHighlightedSquareIds,
   puzzleId,
   illegalSquareIds,
+  autoFill,
 }) {
   const focusedSquareIndex = squares.findIndex(s => s.id === focusedSquareId);
   const focusedSquare = squares[focusedSquareIndex];
@@ -128,6 +130,7 @@ function GridContainer({
           clickMode={clickMode}
           setSymmetryMode={symmetry => setPuzzleSymmetry(puzzleId, symmetry)}
           symmetryMode={symmetry}
+          autoFill={autoFill}
         />
         <StyledGridComponentWrapper>
           <GridComponent
@@ -268,6 +271,7 @@ GridContainer.propTypes = {
   addHighlightedSquareIds: PropTypes.func.isRequired,
   puzzleId: PropTypes.string.isRequired,
   illegalSquareIds: PropTypes.array.isRequired,
+  autoFill: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = createStructuredSelector({
@@ -292,6 +296,7 @@ function mapDispatchToProps(dispatch, { puzzleId }) {
       setPuzzleSymmetry,
       setHighlightedSquareIds,
       addHighlightedSquareIds,
+      autoFill,
     },
     dispatch,
   );

@@ -18,3 +18,5 @@ export const HIGHLIGHTED_SQUARE_IDS_SET =
   'app/GridContainer/HIGHLIGHTED_SQUARE_IDS_SET';
 export const HIGHLIGHTED_SQUARE_IDS_ADD =
   'app/GridContainer/HIGHLIGHTED_SQUARE_IDS_ADD';
+
+export const AUTOFILL_CLICKED = 'app/GridContainer/AUTOFILL_CLICKED';

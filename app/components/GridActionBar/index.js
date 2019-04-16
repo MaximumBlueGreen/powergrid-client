@@ -6,7 +6,7 @@
 
 import React from 'react';
 
-import { Grid, IconButton, Tooltip } from '@material-ui/core';
+import { Grid, IconButton, Tooltip, Button } from '@material-ui/core';
 import {
   Undo as UndoIcon,
   Redo as RedoIcon,
@@ -38,6 +38,7 @@ function GridActionBar({
   toggleClickMode,
   symmetryMode,
   setSymmetryMode,
+  autoFill,
 }) {
   return (
     <Grid container alignItems="center" spacing={8}>
@@ -108,6 +109,11 @@ function GridActionBar({
           </Tooltip>
         </ToggleButtonGroup>
       </Grid>
+      <Grid item>
+        <Button onClick={autoFill} variant="contained" size="small">
+          Fill
+        </Button>
+      </Grid>
     </Grid>
   );
 }
@@ -120,6 +126,7 @@ GridActionBar.propTypes = {
   clickMode: PropTypes.string.isRequired,
   symmetryMode: PropTypes.string.isRequired,
   setSymmetryMode: PropTypes.func.isRequired,
+  autoFill: PropTypes.func.isRequired,
 };
 
 export default GridActionBar;

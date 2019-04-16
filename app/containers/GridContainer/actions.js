@@ -10,6 +10,7 @@ import {
   CLICK_MODE_TOGGLED,
   HIGHLIGHTED_SQUARE_IDS_SET,
   HIGHLIGHTED_SQUARE_IDS_ADD,
+  AUTOFILL_CLICKED,
 } from './constants';
 
 export function focusSquare(squareId) {
@@ -43,5 +44,11 @@ export function setHighlightedSquareIds(squareIds) {
   return {
     type: HIGHLIGHTED_SQUARE_IDS_SET,
     squareIds,
+  };
+}
+
+export function autoFill() {
+  return {
+    type: AUTOFILL_CLICKED,
   };
 }

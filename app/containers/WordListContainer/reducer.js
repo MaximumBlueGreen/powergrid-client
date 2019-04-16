@@ -23,7 +23,7 @@ function wordlistContainerReducer(state = initialState, action) {
       return state;
     }
     case FILTER_PATTERN_UPDATED:
-      return state.set('filterPattern', action.pattern);
+      return state.set('filterPattern', action.pattern.toUpperCase());
     default:
       return state;
   }
