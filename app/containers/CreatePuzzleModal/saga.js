@@ -121,14 +121,14 @@ function parse(puzzleFile) {
           }
           if (needsAcrossNumber) {
             acrossClues.push({
-              number: currentNumber,
+              id: `${currentNumber}-${'Across'}`,
               text: allClues[currentClue],
             });
             currentClue += 1;
           }
           if (needsDownNumber) {
             downClues.push({
-              number: currentNumber,
+              id: `${currentNumber}-${'Down'}`,
               text: allClues[currentClue],
             });
             currentClue += 1;
@@ -160,6 +160,8 @@ export function* uploadPuzzleSaga({ puzzleFile }) {
     acrossClues,
     downClues,
   } = yield call(parse, puzzleFile);
+  console.log(acrossClues);
+  console.log(downClues);
   yield authenticated(
     'puzzles',
     {
@@ -171,7 +173,7 @@ export function* uploadPuzzleSaga({ puzzleFile }) {
             value: puzzle[i] === '.' ? undefined : puzzle[i],
           })),
           size: { height, width },
-          clue: { across: acrossClues, down: downClues },
+          clues: { across: acrossClues, down: downClues },
           notes,
         },
         title,
