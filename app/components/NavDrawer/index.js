@@ -34,14 +34,12 @@ class NavDrawer extends React.Component {
 
     return (
       <div>
-        {!this.state.open && (
-          <IconButton
-            className={classes.buttonClosed}
-            onClick={this.toggleDrawer(true)}
-          >
-            <Menu fontSize="large" />
-          </IconButton>
-        )}
+        <IconButton
+          className={classes.buttonClosed}
+          onClick={this.toggleDrawer(true)}
+        >
+          <Menu fontSize="large" />
+        </IconButton>
         <Drawer open={this.state.open} onClose={this.toggleDrawer(false)}>
           <div
             tabIndex={0}
