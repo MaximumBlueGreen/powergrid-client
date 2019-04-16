@@ -6,7 +6,7 @@
 
 import React from 'react';
 
-import { Grid, IconButton, Tooltip, Button } from '@material-ui/core';
+import { Chip, Grid, IconButton, Tooltip, Button } from '@material-ui/core';
 import {
   Undo as UndoIcon,
   Redo as RedoIcon,
@@ -39,17 +39,21 @@ function GridActionBar({
   symmetryMode,
   setSymmetryMode,
   autoFill,
+  canUndo,
+  canRedo,
+  wordCount,
+  blackSquareCount,
 }) {
   return (
     <Grid container alignItems="center" spacing={8}>
       <Grid item>
         <Tooltip title="Undo" placement="top">
-          <IconButton color="primary" onClick={undo}>
+          <IconButton color="primary" onClick={undo} disabled={!canUndo}>
             <UndoIcon fontSize="small" />
           </IconButton>
         </Tooltip>
         <Tooltip title="Redo" placement="top">
-          <IconButton color="primary" onClick={redo}>
+          <IconButton color="primary" onClick={redo} disabled={!canRedo}>
             <RedoIcon fontSize="small" />
           </IconButton>
         </Tooltip>
@@ -114,6 +118,10 @@ function GridActionBar({
           Fill
         </Button>
       </Grid>
+      <Grid item>
+        <Chip label={`${wordCount} words`} variant="outlined" />
+        <Chip label={`${blackSquareCount} blocks`} variant="outlined" />
+      </Grid>
     </Grid>
   );
 }
@@ -127,6 +135,10 @@ GridActionBar.propTypes = {
   symmetryMode: PropTypes.string.isRequired,
   setSymmetryMode: PropTypes.func.isRequired,
   autoFill: PropTypes.func.isRequired,
+  canRedo: PropTypes.bool.isRequired,
+  canUndo: PropTypes.bool.isRequired,
+  wordCount: PropTypes.number.isRequired,
+  blackSquareCount: PropTypes.number.isRequired,
 };
 
 export default GridActionBar;

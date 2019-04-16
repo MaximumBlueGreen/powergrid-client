@@ -27,6 +27,8 @@ import Grid from '@material-ui/core/Grid';
 
 import GridActionBar from 'components/GridActionBar';
 import { SYMMETRY_MODE_DIAGONAL } from 'entities/Puzzles/constants';
+import { selectFutureLength, selectPastLength } from 'entities/selectors';
+import { makeSelectWords } from 'containers/CluesContainer/selectors';
 import {
   focusSquare,
   toggleClickMode,
@@ -71,6 +73,9 @@ function GridContainer({
   puzzleId,
   illegalSquareIds,
   autoFill,
+  futureLength,
+  pastLength,
+  words,
 }) {
   const focusedSquareIndex = squares.findIndex(s => s.id === focusedSquareId);
   const focusedSquare = squares[focusedSquareIndex];
@@ -117,8 +122,14 @@ function GridContainer({
           item
           xs={12}
           component={GridActionBar}
+          canUndo={pastLength > 0}
+          canRedo={futureLength > 0}
           undo={undo}
           redo={redo}
+          wordCount={
+            Object.keys(words.across).length + Object.keys(words.down).length
+          }
+          blackSquareCount={squares.filter(s => s.isBlack).length}
           toggleClickMode={toggleClickMode}
           clearSquares={() =>
             clearSquares(
@@ -272,6 +283,9 @@ GridContainer.propTypes = {
   puzzleId: PropTypes.string.isRequired,
   illegalSquareIds: PropTypes.array.isRequired,
   autoFill: PropTypes.func.isRequired,
+  pastLength: PropTypes.number.isRequired,
+  futureLength: PropTypes.number.isRequired,
+  words: PropTypes.object.isRequired,
 };
 
 const mapStateToProps = createStructuredSelector({
@@ -279,6 +293,9 @@ const mapStateToProps = createStructuredSelector({
   data: makeSelectGridContainer(),
   focusedWord: makeSelectGridContainerFocusedWord(),
   illegalSquareIds: makeSelectIllegalSquareIds(),
+  futureLength: selectFutureLength,
+  pastLength: selectPastLength,
+  words: makeSelectWords(),
 });
 
 function mapDispatchToProps(dispatch, { puzzleId }) {

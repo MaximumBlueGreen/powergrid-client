@@ -130,7 +130,7 @@ class Grid extends React.Component {
                 y={parseInt(i / size.width, 10)}
                 width="1"
                 height="1"
-                stroke="#aaaaaa"
+                stroke={s.isBlack ? 'black' : '#aaaaaa'}
                 strokeWidth=".02"
                 fill={squareColor(s)}
                 fillOpacity={isHighlighted(s.id) ? 0.75 : 1}
@@ -192,6 +192,15 @@ class Grid extends React.Component {
             </React.Fragment>
           );
         })}
+        <rect
+          x={0}
+          y={0}
+          width={size.width}
+          height={size.height}
+          stroke="#aaaaaa"
+          strokeWidth=".04"
+          fill="none"
+        />
       </svg>
     );
   }

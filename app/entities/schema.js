@@ -4,7 +4,9 @@ import { SYMMETRY_MODE_DIAGONAL } from 'entities/Puzzles/constants';
 export const square = new schema.Entity('squares', undefined, {
   idAttribute: (value, parent) => `${parent.id}-${value.id}`,
 });
-export const clue = new schema.Entity('clues');
+export const clue = new schema.Entity('clues', undefined, {
+  idAttribute: (value, parent) => `${parent.id}-${value.id}`,
+});
 export const puzzle = new schema.Entity(
   'puzzles',
   {
