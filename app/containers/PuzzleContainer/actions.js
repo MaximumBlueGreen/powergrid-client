@@ -6,7 +6,7 @@
 
 import {
   DEFAULT_ACTION,
-  PUZZLES_LOADED,
+  PUZZLE_LOADED,
   PUZZLE_SAVED,
   PUZZLE_SAVED_SUCCESS,
   PUZZLE_UPLOADED,
@@ -20,9 +20,9 @@ export function defaultAction() {
   };
 }
 
-export function loadPuzzles(puzzleId) {
+export function loadPuzzle(puzzleId) {
   return {
-    type: PUZZLES_LOADED,
+    type: PUZZLE_LOADED,
     puzzleId,
   };
 }

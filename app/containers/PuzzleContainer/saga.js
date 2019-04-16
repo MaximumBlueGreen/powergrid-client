@@ -25,19 +25,19 @@ import { bulkUpdateSquareValue } from 'entities/Squares/actions';
 import { CLUE_SELECTED } from 'containers/CluesContainer/constants';
 import { savePuzzle, savePuzzleSuccess } from './actions';
 import {
-  PUZZLES_LOADED,
+  PUZZLE_LOADED,
   PUZZLE_SAVED,
   PUZZLE_UPLOADED,
   ENTRY_TAG_CLICKED,
 } from './constants';
 import { makeSelectPuzzleContainer } from './selectors';
 
-export function* getPuzzlesSaga({ puzzleId }) {
+export function* getPuzzleSaga({ puzzleId }) {
   yield authenticated(
-    'users/me/puzzles',
+    `puzzles/${puzzleId}`,
     { method: 'GET' },
-    function* onSuccess(puzzles) {
-      const { entities, result } = normalize(puzzles, [puzzleSchema]);
+    function* onSuccess(puzzle) {
+      const { entities, result } = normalize(puzzle, puzzleSchema);
       yield put(loadEntities(entities, result, { puzzleId }));
     },
     function* onFailure(err) {
@@ -108,7 +108,7 @@ export function* uploadPuzzleSaga({ puzzleFile }) {
         },
       }),
     },
-    getPuzzlesSaga,
+    getPuzzleSaga,
     function* onError(error) {
       console.log(error);
     },
@@ -198,7 +198,7 @@ function* autosave() {
 
 export default function* saga() {
   yield all([
-    takeLatest(PUZZLES_LOADED, getPuzzlesSaga),
+    takeLatest(PUZZLE_LOADED, getPuzzleSaga),
     takeLatest(PUZZLE_SAVED, savePuzzleSaga),
     takeLatest(PUZZLE_UPLOADED, uploadPuzzleSaga),
     takeLatest(SQUARE_FOCUSED, updateFilterPatternFromGrid),

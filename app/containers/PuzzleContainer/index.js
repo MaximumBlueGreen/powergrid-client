@@ -43,7 +43,7 @@ import injectSaga from 'utils/injectSaga';
 
 import {
   handleTabChange,
-  loadPuzzles,
+  loadPuzzle,
   savePuzzle,
   uploadPuzzle,
   clickEntryTag,
@@ -83,12 +83,12 @@ class PuzzleContainer extends React.Component {
   }
 
   componentDidMount() {
-    this.props.loadPuzzles(this.props.puzzleId);
+    this.props.loadPuzzle(this.props.puzzleId);
   }
 
   componentDidUpdate({ puzzleId }) {
     if (this.props.puzzleId !== puzzleId) {
-      this.props.loadPuzzles(this.props.puzzleId);
+      this.props.loadPuzzle(this.props.puzzleId);
     }
   }
 
@@ -111,7 +111,7 @@ class PuzzleContainer extends React.Component {
       updatePuzzleTitle,
       editPuzzleNotes,
       handleTabChange,
-      loadPuzzles,
+      loadPuzzle,
       openModal,
       clickEntryTag,
       classes: { conditionalSticky, shadedTab },
@@ -136,7 +136,7 @@ class PuzzleContainer extends React.Component {
               <MenuItem
                 key={id}
                 onClick={() => {
-                  loadPuzzles(id);
+                  loadPuzzle(id);
                   this.closeVersionMenu();
                 }}
               >
@@ -258,7 +258,7 @@ PuzzleContainer.propTypes = {
     puzzleId: PropTypes.string,
   }).isRequired,
   puzzle: PropTypes.object,
-  loadPuzzles: PropTypes.func.isRequired,
+  loadPuzzle: PropTypes.func.isRequired,
   updatePuzzleTitle: PropTypes.func.isRequired,
   editPuzzleNotes: PropTypes.func.isRequired,
   puzzleId: PropTypes.string,
@@ -276,7 +276,7 @@ const mapStateToProps = createStructuredSelector({
 function mapDispatchToProps(dispatch) {
   return bindActionCreators(
     {
-      loadPuzzles,
+      loadPuzzle,
       savePuzzle,
       updatePuzzleTitle,
       editPuzzleNotes,

@@ -10,7 +10,7 @@ import { ENTITIES_LOADED } from 'entities/constants';
 import {
   PUZZLE_SAVED,
   PUZZLE_SAVED_SUCCESS,
-  PUZZLES_LOADED,
+  PUZZLE_LOADED,
   TAB_CHANGED,
 } from './constants';
 
@@ -35,7 +35,7 @@ function puzzleContainerReducer(state = initialState, action) {
       }
       return state;
     }
-    case PUZZLES_LOADED:
+    case PUZZLE_LOADED:
       return state.set('loading', true);
     case PUZZLE_SAVED:
       return state.set('isSyncing', true);
