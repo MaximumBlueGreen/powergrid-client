@@ -6,8 +6,8 @@ import { createSelector } from 'reselect';
 import request from './request';
 
 /* Change this to your local server */
-const BASE_URL = 'https://powergrid-app.herokuapp.com/';
-// const BASE_URL = 'http://localhost:3000/';
+// const BASE_URL = 'https://powergrid-app.herokuapp.com/';
+const BASE_URL = 'http://localhost:3000/';
 
 const selectUserToken = createSelector(selectUsers, users => users.get('me'));
 
@@ -48,6 +48,8 @@ export function* authenticated(requestURL, options, onSuccess, onFailure) {
     function* onFailureWithRedirect(error) {
       if (error.response.status === 401) {
         yield put(push('/login'));
+      } else if (error.response.status === 404) {
+        yield put(push('/dashboard'));
       } else {
         yield onFailure(error);
       }

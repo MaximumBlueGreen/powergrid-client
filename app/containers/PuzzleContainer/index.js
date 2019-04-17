@@ -22,16 +22,18 @@ import {
   TextField,
   Tooltip,
 } from '@material-ui/core';
-import { ArrowDropDown, Add } from '@material-ui/icons';
+import { ArrowDropDown, Add, PersonAdd } from '@material-ui/icons';
 import { withStyles } from '@material-ui/core/styles';
 
 import CluesContainer from 'containers/CluesContainer';
 import CreatePuzzleModal from 'containers/CreatePuzzleModal';
-import { openModal } from 'containers/CreatePuzzleModal/actions';
+import { openModal as openCreatePuzzleModal } from 'containers/CreatePuzzleModal/actions';
+import { openModal as openManagePermissionsModal } from 'containers/ManagePermissionsModal/actions';
 import DictionaryContainer from 'containers/DictionaryContainer';
 import GridContainer from 'containers/GridContainer';
 import WordListContainer from 'containers/WordListContainer';
 import NotesContainer from 'containers/NotesContainer';
+import ManagePermissionsModal from 'containers/ManagePermissionsModal';
 
 import NavDrawer from 'components/NavDrawer';
 import SyncStatus from 'components/SyncStatus';
@@ -112,7 +114,8 @@ class PuzzleContainer extends React.Component {
       editPuzzleNotes,
       handleTabChange,
       loadPuzzle,
-      openModal,
+      openCreatePuzzleModal,
+      openManagePermissionsModal,
       clickEntryTag,
       classes: { conditionalSticky, shadedTab },
     } = this.props;
@@ -126,6 +129,7 @@ class PuzzleContainer extends React.Component {
           parentId={puzzle && (puzzle.parent_id || puzzleId)}
           puzzleToCopyId={puzzleId}
         />
+        {puzzleId && <ManagePermissionsModal puzzleId={puzzleId} />}
         {puzzle && (
           <Menu
             anchorEl={this.state.versionMenuAnchorElement}
@@ -176,7 +180,10 @@ class PuzzleContainer extends React.Component {
                             </Tooltip>
                           )}
                           <Tooltip title="Add version" placement="top">
-                            <IconButton onClick={openModal} color="primary">
+                            <IconButton
+                              onClick={openCreatePuzzleModal}
+                              color="primary"
+                            >
                               <Add />
                             </IconButton>
                           </Tooltip>
@@ -184,6 +191,13 @@ class PuzzleContainer extends React.Component {
                       ),
                     }}
                   />
+                </Grid>
+                <Grid item>
+                  <IconButton
+                    onClick={() => openManagePermissionsModal(puzzleId)}
+                  >
+                    <PersonAdd />
+                  </IconButton>
                 </Grid>
                 <Grid item xs={12}>
                   <SyncStatus isSyncing={isSyncing} lastSynced={lastSynced} />
@@ -263,7 +277,8 @@ PuzzleContainer.propTypes = {
   editPuzzleNotes: PropTypes.func.isRequired,
   puzzleId: PropTypes.string,
   handleTabChange: PropTypes.func.isRequired,
-  openModal: PropTypes.func.isRequired,
+  openCreatePuzzleModal: PropTypes.func.isRequired,
+  openManagePermissionsModal: PropTypes.func.isRequired,
   classes: PropTypes.object.isRequired,
   clickEntryTag: PropTypes.func.isRequired,
 };
@@ -281,7 +296,8 @@ function mapDispatchToProps(dispatch) {
       updatePuzzleTitle,
       editPuzzleNotes,
       uploadPuzzle,
-      openModal,
+      openCreatePuzzleModal,
+      openManagePermissionsModal,
       handleTabChange,
       clickEntryTag,
     },

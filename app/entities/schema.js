@@ -1,6 +1,9 @@
 import { schema } from 'normalizr';
 import { SYMMETRY_MODE_DIAGONAL } from 'entities/Puzzles/constants';
 
+export const user = new schema.Entity('users', undefined, {
+  idAttribute: value => String(value.id),
+});
 export const square = new schema.Entity('squares', undefined, {
   idAttribute: (value, parent) => `${parent.id}-${value.id}`,
 });
@@ -15,6 +18,8 @@ export const puzzle = new schema.Entity(
       across: new schema.Values(clue),
       down: new schema.Values(clue),
     },
+    creator: user,
+    accessors: [user],
   },
   {
     processStrategy: value => ({
@@ -30,7 +35,6 @@ export const puzzle = new schema.Entity(
     idAttribute: value => String(value.id),
   },
 );
-export const user = new schema.Entity('users');
 export const entry = new schema.Entity(
   'entries',
   {
