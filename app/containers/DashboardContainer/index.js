@@ -61,7 +61,7 @@ class DashboardContainer extends React.Component {
               item
               xs={12}
               component={Typography}
-              variant="title"
+              variant="h4"
               style={{ paddingBottom: '16px', marginTop: '16px' }}
             >
               My Puzzles
