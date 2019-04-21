@@ -53,6 +53,8 @@ import {
 const StyledGridComponentWrapper = styled.div`
   max-height: 75vh;
   max-width: 75vh;
+  ${props =>
+    props.blackSquareMode && 'cursor: url(/blackSquare.png) 32 32, auto;'};
 `;
 
 function GridContainer({
@@ -143,7 +145,9 @@ function GridContainer({
           symmetryMode={symmetry}
           autoFill={autoFill}
         />
-        <StyledGridComponentWrapper>
+        <StyledGridComponentWrapper
+          blackSquareMode={clickMode === CLICK_MODE_BLACK_SQUARE}
+        >
           <GridComponent
             squares={squares}
             size={size}
