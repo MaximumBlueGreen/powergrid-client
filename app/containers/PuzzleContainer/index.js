@@ -12,17 +12,27 @@ import { createStructuredSelector } from 'reselect';
 import styled from 'styled-components';
 
 import {
+  BottomNavigation,
+  BottomNavigationAction,
   Grid,
   IconButton,
   InputAdornment,
   Menu,
   MenuItem,
-  Tab,
-  Tabs,
+  Step,
+  StepButton,
+  Stepper,
   TextField,
   Tooltip,
 } from '@material-ui/core';
-import { ArrowDropDown, Add, PersonAdd } from '@material-ui/icons';
+import {
+  ArrowDropDown,
+  Add,
+  PersonAdd,
+  Edit,
+  BarChart,
+  List,
+} from '@material-ui/icons';
 import { withStyles } from '@material-ui/core/styles';
 
 import CluesContainer from 'containers/CluesContainer';
@@ -43,13 +53,7 @@ import { editPuzzleNotes, updatePuzzleTitle } from 'entities/Puzzles/actions';
 import injectReducer from 'utils/injectReducer';
 import injectSaga from 'utils/injectSaga';
 
-import {
-  handleTabChange,
-  loadPuzzle,
-  savePuzzle,
-  uploadPuzzle,
-  clickEntryTag,
-} from './actions';
+import { loadPuzzle, savePuzzle, uploadPuzzle, clickEntryTag } from './actions';
 import reducer from './reducer';
 import saga from './saga';
 import {
@@ -69,19 +73,49 @@ const styles = theme => ({
       top: 0,
     },
   },
-  shadedTab: {
-    'background-color': 'lightgrey',
+  stepperRoot: {
+    'background-color': 'transparent',
+  },
+  tabs: {
+    position: 'fixed',
+    bottom: theme.spacing.unit,
+    right: theme.spacing.unit,
+    boxShadow: theme.shadows[2],
   },
 });
+
+const FILL_MODE = 'Fill';
+const CLUE_MODE = 'Clue';
+const SUBMIT_MODE = 'Submit';
+const MODES = [FILL_MODE, CLUE_MODE, SUBMIT_MODE];
+
+const TABS = {
+  [FILL_MODE]: [
+    { label: 'Words', Icon: List },
+    { label: 'Dictionary', Icon: List },
+    { label: 'Notes', Icon: Edit },
+    { label: 'Data', Icon: BarChart },
+  ],
+  [CLUE_MODE]: [
+    { label: 'Clues', Icon: List },
+    { label: 'Notes', Icon: Edit },
+    { label: 'Data', Icon: BarChart },
+  ],
+  [SUBMIT_MODE]: [],
+};
 
 class PuzzleContainer extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       versionMenuAnchorElement: null,
+      mode: MODES[0],
+      tabIndex: 0,
     };
     this.openVersionMenu = this.openVersionMenu.bind(this);
     this.closeVersionMenu = this.closeVersionMenu.bind(this);
+    this.changeMode = this.changeMode.bind(this);
+    this.changeTab = this.changeTab.bind(this);
   }
 
   componentDidMount() {
@@ -106,21 +140,34 @@ class PuzzleContainer extends React.Component {
     });
   }
 
+  changeMode(mode) {
+    this.setState({
+      mode,
+      tabIndex: 0,
+    });
+  }
+
+  changeTab(tabIndex) {
+    this.setState({
+      tabIndex,
+    });
+  }
+
   render() {
     const {
-      ui: { puzzleId, isSyncing, lastSynced, loading, tabValue },
+      ui: { puzzleId, isSyncing, lastSynced, loading },
       puzzle,
       updatePuzzleTitle,
       editPuzzleNotes,
-      handleTabChange,
       loadPuzzle,
       openCreatePuzzleModal,
       openManagePermissionsModal,
       clickEntryTag,
-      classes: { conditionalSticky, shadedTab },
+      classes: { conditionalSticky, tabs, stepperRoot },
     } = this.props;
 
     const displayVersions = puzzle && puzzle.versions.length > 1;
+    const activeTab = TABS[this.state.mode][this.state.tabIndex];
 
     return (
       <PuzzleContainerWrapper>
@@ -209,57 +256,51 @@ class PuzzleContainer extends React.Component {
             )}
           </Grid>
           <Grid item xs={10} md={6}>
-            <Tabs value={tabValue} onChange={handleTabChange} centered>
-              <Tab
-                style={{ minWidth: '20%' }}
-                key="Clues"
-                label="Clues"
-                value="Clues"
-                className={tabValue === 'Clues' ? shadedTab : undefined}
-              />
-              <Tab
-                style={{ minWidth: '20%' }}
-                key="WordList"
-                label="Words"
-                value="WordList"
-                className={tabValue === 'WordList' ? shadedTab : undefined}
-              />
-              <Tab
-                style={{ minWidth: '20%' }}
-                key="Dictionary"
-                label="Search"
-                value="Dictionary"
-                className={tabValue === 'Dictionary' ? shadedTab : undefined}
-              />
-              <Tab
-                style={{ minWidth: '20%' }}
-                key="Puzzle Data"
-                label="Data"
-                value="Puzzle Data"
-                className={tabValue === 'Puzzle Data' ? shadedTab : undefined}
-              />
-              <Tab
-                style={{ minWidth: '20%' }}
-                key="Notes"
-                label="Notes"
-                value="Notes"
-                className={tabValue === 'Notes' ? shadedTab : undefined}
-              />
-            </Tabs>
-            {tabValue === 'Clues' && <CluesContainer puzzleId={puzzleId} />}
-            {tabValue === 'WordList' && <WordListContainer />}
-            {tabValue === 'Dictionary' && <DictionaryContainer />}
-            {tabValue === 'Puzzle Data' && <div>Hello</div>}
-            {tabValue === 'Notes' && (
-              <NotesContainer
-                onEdit={notes => editPuzzleNotes(puzzleId, notes)}
-                notes={puzzleId && puzzle.notes}
-                puzzleId={puzzleId}
-                onEntryTagClicked={(number, isAcross) =>
-                  clickEntryTag(puzzleId, number, isAcross)
-                }
-              />
+            <Stepper
+              nonLinear
+              activeStep={MODES.findIndex(mode => mode === this.state.mode)}
+              className={stepperRoot}
+            >
+              {MODES.map(mode => (
+                <Step key={mode}>
+                  <StepButton onClick={() => this.changeMode(mode)}>
+                    {mode}
+                  </StepButton>
+                </Step>
+              ))}
+            </Stepper>
+
+            {activeTab && (
+              <>
+                {activeTab.label === 'Words' && <WordListContainer />}
+                {activeTab.label === 'Clues' && (
+                  <CluesContainer puzzleId={puzzleId} />
+                )}
+                {activeTab.label === 'Notes' && (
+                  <NotesContainer
+                    onEdit={notes => editPuzzleNotes(puzzleId, notes)}
+                    notes={puzzleId && puzzle.notes}
+                    puzzleId={puzzleId}
+                    onEntryTagClicked={(number, isAcross) =>
+                      clickEntryTag(puzzleId, number, isAcross)
+                    }
+                  />
+                )}
+                {activeTab.label === 'Data' && <div />}
+                {activeTab.label === 'Dictionary' && <DictionaryContainer />}
+              </>
             )}
+
+            <BottomNavigation
+              onChange={(e, value) => this.changeTab(value)}
+              showLabels
+              className={tabs}
+              value={this.state.tabIndex}
+            >
+              {TABS[this.state.mode].map(({ label, Icon }) => (
+                <BottomNavigationAction label={label} icon={<Icon />} />
+              ))}
+            </BottomNavigation>
           </Grid>
         </Grid>
       </PuzzleContainerWrapper>
@@ -276,7 +317,6 @@ PuzzleContainer.propTypes = {
   updatePuzzleTitle: PropTypes.func.isRequired,
   editPuzzleNotes: PropTypes.func.isRequired,
   puzzleId: PropTypes.string,
-  handleTabChange: PropTypes.func.isRequired,
   openCreatePuzzleModal: PropTypes.func.isRequired,
   openManagePermissionsModal: PropTypes.func.isRequired,
   classes: PropTypes.object.isRequired,
@@ -298,7 +338,6 @@ function mapDispatchToProps(dispatch) {
       uploadPuzzle,
       openCreatePuzzleModal,
       openManagePermissionsModal,
-      handleTabChange,
       clickEntryTag,
     },
     dispatch,

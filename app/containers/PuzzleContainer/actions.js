@@ -10,7 +10,6 @@ import {
   PUZZLE_SAVED,
   PUZZLE_SAVED_SUCCESS,
   PUZZLE_UPLOADED,
-  TAB_CHANGED,
   ENTRY_TAG_CLICKED,
 } from './constants';
 
@@ -43,13 +42,6 @@ export function uploadPuzzle(puzzleFile) {
   return {
     type: PUZZLE_UPLOADED,
     puzzleFile,
-  };
-}
-
-export function handleTabChange(event, value) {
-  return {
-    type: TAB_CHANGED,
-    tabValue: value,
   };
 }
 

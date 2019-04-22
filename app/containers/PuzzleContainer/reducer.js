@@ -7,19 +7,13 @@
 import { fromJS } from 'immutable';
 
 import { ENTITIES_LOADED } from 'entities/constants';
-import {
-  PUZZLE_SAVED,
-  PUZZLE_SAVED_SUCCESS,
-  PUZZLE_LOADED,
-  TAB_CHANGED,
-} from './constants';
+import { PUZZLE_SAVED, PUZZLE_SAVED_SUCCESS, PUZZLE_LOADED } from './constants';
 
 export const initialState = fromJS({
   puzzleId: undefined,
   lastSynced: Date.now(),
   isSyncing: false,
   loading: true,
-  tabValue: 'WordList',
 });
 
 function puzzleContainerReducer(state = initialState, action) {
@@ -41,8 +35,6 @@ function puzzleContainerReducer(state = initialState, action) {
       return state.set('isSyncing', true);
     case PUZZLE_SAVED_SUCCESS:
       return state.set('isSyncing', false).set('lastSynced', Date.now());
-    case TAB_CHANGED:
-      return state.set('tabValue', action.tabValue);
     default:
       return state;
   }
