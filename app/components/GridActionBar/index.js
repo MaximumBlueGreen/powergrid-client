@@ -91,7 +91,7 @@ function GridActionBar({
         <ToggleButtonGroup
           exclusive
           value={symmetryMode}
-          onChange={(e, value) => setSymmetryMode(value)}
+          onChange={(e, value) => setSymmetryMode(value || symmetryMode)}
         >
           <Tooltip
             title="No symmetry"
