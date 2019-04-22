@@ -6,18 +6,29 @@ import { authenticated } from 'utils/apiRequestSaga';
 import selectEntries from 'entities/Entries/selectors';
 import { ENTRY_UPDATED } from 'entities/Entries/constants';
 import { reset } from 'redux-form/immutable';
-import { WORDLIST_LOADED, ENTRY_DELETED, ENTRY_ADDED } from './constants';
+import {
+  WORDLIST_LOADED,
+  ENTRY_DELETED,
+  ENTRY_ADDED,
+  FILTER_PATTERN_UPDATED,
+} from './constants';
 import { loadWordList } from './actions';
+import { makeSelectWordListContainer } from './selectors';
 
 export function* getEntries() {
+  const { offset, filterPattern, limit } = yield select(
+    makeSelectWordListContainer(),
+  );
+  const pattern = filterPattern.replace(/\./g, '_').slice(1, -1);
+
   yield authenticated(
-    'entries',
+    `entries?offset=${offset}&limit=${limit}&pattern=${pattern}`,
     {
       method: 'GET',
     },
     function* onSuccess(entries) {
       const { entities, result } = normalize(entries, [entrySchema]);
-      yield put(loadEntities(entities, result));
+      yield put(loadEntities(entities, result, { entityType: 'ENTRY' }));
     },
     function* onError(error) {
       console.log(error);
@@ -80,7 +91,7 @@ export function* addEntry({ values }) {
 // Individual exports for testing
 export default function* wordListContainerSaga() {
   yield all([
-    takeLatest(WORDLIST_LOADED, getEntries),
+    takeLatest([WORDLIST_LOADED, FILTER_PATTERN_UPDATED], getEntries),
     takeLatest(ENTRY_UPDATED, updateEntry),
     takeLatest(ENTRY_DELETED, deleteEntry),
     takeLatest(ENTRY_ADDED, addEntry),

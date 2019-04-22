@@ -16,6 +16,7 @@ import WordList from 'components/WordList';
 import injectSaga from 'utils/injectSaga';
 import injectReducer from 'utils/injectReducer';
 import { updateEntry } from 'entities/Entries/actions';
+
 import {
   makeSelectWordListContainerData,
   makeSelectWordListContainer,
@@ -33,12 +34,31 @@ import {
 class WordListContainer extends React.Component {
   componentDidMount() {
     this.props.loadWordList();
+    window.addEventListener('scroll', this.onScroll, false);
   }
+
+  componentWillUnmount() {
+    window.removeEventListener('scroll', this.onScroll, false);
+  }
+
+  onScroll = () => {
+    const {
+      ui: { loading, moreToLoad },
+    } = this.props;
+
+    if (loading || !moreToLoad) {
+      return;
+    }
+
+    if (window.innerHeight + window.pageYOffset >= document.body.scrollHeight) {
+      this.props.loadWordList();
+    }
+  };
 
   render() {
     const {
       data: entries,
-      ui: { filterPattern },
+      ui: { filterPattern, loading, moreToLoad },
       updateFilterPattern,
       updateEntry,
       selectEntry,
@@ -46,6 +66,7 @@ class WordListContainer extends React.Component {
       handleSubmit,
       addEntry,
     } = this.props;
+
     return (
       <form onSubmit={handleSubmit(addEntry)}>
         <WordList
@@ -55,6 +76,8 @@ class WordListContainer extends React.Component {
           updateEntry={updateEntry}
           selectEntry={selectEntry}
           deleteEntry={deleteEntry}
+          loading={loading}
+          moreToLoad={moreToLoad}
         />
       </form>
     );
@@ -62,7 +85,6 @@ class WordListContainer extends React.Component {
 }
 
 WordListContainer.propTypes = {
-  // dispatch: PropTypes.func.isRequired,
   loadWordList: PropTypes.func.isRequired,
   data: PropTypes.array.isRequired,
   ui: PropTypes.shape({

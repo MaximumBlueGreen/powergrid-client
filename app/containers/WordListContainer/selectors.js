@@ -16,16 +16,8 @@ const makeSelectWordListFiltered = () =>
     entriesSelector,
     selectWordListContainerDomain,
     (entries, domain) => {
-      const filterPattern = domain.get('filterPattern');
       const entryIds = domain.get('entryIds');
-
-      return entryIds.map(id => entries.get(id)).filter(entry => {
-        try {
-          return entry.get('entry').match(filterPattern);
-        } catch {
-          return false;
-        }
-      });
+      return entryIds.map(id => entries.get(id));
     },
   );
 

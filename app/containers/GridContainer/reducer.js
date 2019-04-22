@@ -5,7 +5,6 @@
  */
 
 import { fromJS } from 'immutable';
-import { ENTITIES_LOADED } from 'entities/constants';
 import {
   ACROSS,
   DOWN,
@@ -56,8 +55,6 @@ function gridContainerReducer(state = initialState, action) {
         ...squareIds,
         ...action.squareIds,
       ]);
-    case ENTITIES_LOADED:
-      return state.set('focusedDirection', ACROSS);
     default:
       return state;
   }

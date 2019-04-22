@@ -8,21 +8,32 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import WordListBox from 'components/WordListBox';
 
-import TextField from '@material-ui/core/TextField';
 import { Field } from 'redux-form/immutable';
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableHead from '@material-ui/core/TableHead';
-import TableRow from '@material-ui/core/TableRow';
-import TableCell from '@material-ui/core/TableCell';
-import IconButton from '@material-ui/core/IconButton';
+
+import {
+  CircularProgress,
+  IconButton,
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableRow,
+  TextField,
+  Typography,
+} from '@material-ui/core';
+
 import { Add as AddIcon } from '@material-ui/icons';
 import Tooltip from '@material-ui/core/Tooltip';
 
 import { orderBy } from 'lodash';
 
 const renderTextField = ({ input, label, ...custom }) => (
-  <TextField label={label} {...input} {...custom} />
+  <TextField
+    label={label}
+    InputProps={{ disableUnderline: true }}
+    {...input}
+    {...custom}
+  />
 );
 
 function WordList({
@@ -32,6 +43,8 @@ function WordList({
   updateEntry,
   selectEntry,
   deleteEntry,
+  loading,
+  moreToLoad,
 }) {
   return (
     <div>
@@ -91,6 +104,13 @@ function WordList({
           ))}
         </TableBody>
       </Table>
+      {!loading &&
+        wordList.length === 0 && <Typography>No results found</Typography>}
+      {!moreToLoad &&
+        wordList.length > 0 && <Typography>End of results</Typography>}
+      <CircularProgress
+        style={{ visibility: loading ? 'visible' : 'hidden' }}
+      />
     </div>
   );
 }
@@ -102,6 +122,8 @@ WordList.propTypes = {
   updateEntry: PropTypes.func.isRequired,
   selectEntry: PropTypes.func.isRequired,
   deleteEntry: PropTypes.func.isRequired,
+  loading: PropTypes.bool.isRequired,
+  moreToLoad: PropTypes.bool.isRequired,
 };
 
 export default WordList;
