@@ -10,6 +10,7 @@ const GlobalStyle = createGlobalStyle`
   }
 
   body {
+    overflow-y: scroll;
     font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
   }
 
