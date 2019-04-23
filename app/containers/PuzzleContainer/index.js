@@ -32,6 +32,7 @@ import {
   Edit,
   BarChart,
   List,
+  Search,
 } from '@material-ui/icons';
 import { withStyles } from '@material-ui/core/styles';
 
@@ -92,7 +93,7 @@ const MODES = [FILL_MODE, CLUE_MODE, SUBMIT_MODE];
 const TABS = {
   [FILL_MODE]: [
     { label: 'Words', Icon: List },
-    { label: 'Dictionary', Icon: List },
+    { label: 'Dictionary', Icon: Search },
     { label: 'Notes', Icon: Edit },
     { label: 'Data', Icon: BarChart },
   ],
