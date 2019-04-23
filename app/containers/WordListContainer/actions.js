@@ -12,9 +12,10 @@ import {
   ENTRY_DELETED,
 } from './constants';
 
-export function loadWordList() {
+export function loadWordList(reload = false) {
   return {
     type: WORDLIST_LOADED,
+    reload,
   };
 }
 

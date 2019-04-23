@@ -30,7 +30,7 @@ import {
   Add,
   PersonAdd,
   Edit,
-  BarChart,
+  // BarChart,
   List,
   Search,
 } from '@material-ui/icons';
@@ -95,12 +95,12 @@ const TABS = {
     { label: 'Words', Icon: List },
     { label: 'Dictionary', Icon: Search },
     { label: 'Notes', Icon: Edit },
-    { label: 'Data', Icon: BarChart },
+    // { label: 'Data', Icon: BarChart },
   ],
   [CLUE_MODE]: [
     { label: 'Clues', Icon: List },
     { label: 'Notes', Icon: Edit },
-    { label: 'Data', Icon: BarChart },
+    // { label: 'Data', Icon: BarChart },
   ],
   [SUBMIT_MODE]: [],
 };

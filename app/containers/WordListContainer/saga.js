@@ -62,7 +62,7 @@ export function* deleteEntry({ entryId }) {
       method: 'DELETE',
     },
     function* onSuccess() {
-      yield getEntries();
+      yield put(loadWordList(true));
     },
     function* onError(error) {
       console.log(error);
@@ -80,7 +80,7 @@ export function* addEntry({ values }) {
     },
     function* onSuccess() {
       yield put(reset('addEntry'));
-      yield put(loadWordList());
+      yield put(loadWordList(true));
     },
     function* onError(error) {
       console.log(error);

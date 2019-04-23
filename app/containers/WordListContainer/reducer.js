@@ -35,7 +35,10 @@ function wordlistContainerReducer(state = initialState, action) {
         .set('loading', true)
         .set('moreToLoad', true);
     case WORDLIST_LOADED:
-      return state.set('loading', true).set('moreToLoad', true);
+      return state
+        .set('loading', true)
+        .set('moreToLoad', true)
+        .set('offset', action.reload ? 0 : state.get('offset'));
     default:
       return state;
   }
