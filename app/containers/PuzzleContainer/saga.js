@@ -23,6 +23,7 @@ import { updateFilterPattern } from 'containers/WordListContainer/actions';
 import { ENTRY_SELECTED } from 'containers/WordListContainer/constants';
 import { bulkUpdateSquareValue } from 'entities/Squares/actions';
 import { CLUE_SELECTED } from 'containers/CluesContainer/constants';
+import { zipObject } from 'lodash';
 import { savePuzzle, savePuzzleSuccess } from './actions';
 import {
   PUZZLE_LOADED,
@@ -155,6 +156,76 @@ function* focusWordInGrid({ puzzleId, number, isAcross }) {
   ]);
 }
 
+function updateAdjacent(currentNode, nodes, edges, word) {
+  const updatedNodes = JSON.parse(JSON.stringify(nodes));
+  updatedNodes[currentNode] = [...word.entry];
+  for (let i = 0; i < edges[currentNode].length; i += 1) {
+    const adjNode = edges[currentNode][i];
+    updatedNodes[adjNode.value][adjNode.index] = word.entry[i];
+  }
+  return updatedNodes;
+}
+
+function fill(
+  currentNode,
+  nodesList,
+  nodesMap,
+  edges,
+  words,
+  wordScores,
+  visited,
+  currentScore,
+) {
+  const potentialWords = words.filter(word =>
+    word.entry.match(
+      nodesMap[currentNode]
+        .join('')
+        .replace(/\?/g, '.')
+        .toUpperCase(),
+    ),
+  );
+  const allResults = [];
+  const updatedVisited = [...visited, currentNode];
+
+  for (let i = 0; i < potentialWords.length; i += 1) {
+    const updatedNodes = updateAdjacent(
+      currentNode,
+      nodesMap,
+      edges,
+      potentialWords[i],
+    );
+    if (updatedVisited.length === nodesList.length) {
+      allResults.push({
+        updatedNodes,
+        score: currentScore, // currentScore + wordScores[potentialWords[i]],
+      });
+      return allResults;
+    }
+    for (let j = 0; j < nodesList.length; j += 1) {
+      if (!updatedVisited.includes(nodesList[j])) {
+        const wordIndex = words.indexOf(potentialWords[i]);
+        const arr = fill(
+          nodesList[j],
+          nodesList,
+          updatedNodes,
+          edges,
+          [
+            ...words.slice(0, wordIndex),
+            ...words.slice(wordIndex + 1, words.length),
+          ],
+          wordScores,
+          updatedVisited,
+          currentScore, // currentScore + wordScores[potentialWords[i]],
+        );
+        if (arr.length !== 0) {
+          return arr;
+        }
+      }
+    }
+  }
+  return [];
+}
+
 function* autoFillGrid() {
   const { puzzleId } = yield select(makeSelectPuzzleContainer());
   // const entities = yield select(entitiesSelector);
@@ -184,9 +255,84 @@ function* autoFillGrid() {
   //    else:
   //      go up a level or fail if at top level
 
-  console.log(gridContainerWords);
-  console.log(actualEntries);
-  yield;
+  const nodes = {
+    ...zipObject(
+      Object.keys(gridContainerWords.across).map(k => `${k}A`),
+      Object.values(gridContainerWords.across).map(a =>
+        Object.values(a).map(s => s.value || '?'),
+      ),
+    ),
+    ...zipObject(
+      Object.keys(gridContainerWords.down).map(k => `${k}D`),
+      Object.values(gridContainerWords.down).map(a =>
+        Object.values(a).map(s => s.value || '?'),
+      ),
+    ),
+  };
+
+  // Invariant: gridContainerWords.accross[k] will be in order of the words
+  const edges = {
+    ...zipObject(
+      Object.keys(gridContainerWords.across).map(k => `${k}A`),
+      Object.keys(gridContainerWords.across).map(k =>
+        Object.values(gridContainerWords.across[k]).map(s => ({
+          value: `${s.downNumber}D`,
+          index: gridContainerWords.down[s.downNumber]
+            .map(g => g.id)
+            .indexOf(s.id),
+        })),
+      ),
+    ),
+    ...zipObject(
+      Object.keys(gridContainerWords.down).map(k => `${k}D`),
+      Object.keys(gridContainerWords.down).map(k =>
+        Object.values(gridContainerWords.down[k]).map(s =>
+          // console.log(gridContainerWords.across[s.acrossNumber], s);
+          ({
+            value: `${s.acrossNumber}A`,
+            index: gridContainerWords.across[s.acrossNumber]
+              .map(g => g.id)
+              .indexOf(s.id),
+          }),
+        ),
+      ),
+    ),
+  };
+
+  // console.log(edges);
+
+  // call fill(nodes, edges), which will return nodes and edges that are full
+  const wordScores = {};
+  const results = yield fill(
+    Object.keys(nodes)[0],
+    Object.keys(nodes),
+    nodes,
+    edges,
+    actualEntries.toJS(),
+    wordScores,
+    [],
+    0,
+  );
+
+  console.log(gridContainerWords.across);
+  console.log('results: ', results);
+
+  if (results.length !== 0) {
+    const { updatedNodes } = results[0];
+    const acrossKeys = Object.keys(results[0].updatedNodes).filter(k =>
+      k.includes('A'),
+    );
+    const allEntries = [];
+    const allSquareIds = [];
+    for (let i = 0; i < acrossKeys.length; i += 1) {
+      const entry = updatedNodes[acrossKeys[i]];
+      const id = acrossKeys[i].slice(0, 1);
+      const squareIds = gridContainerWords.across[id].map(s => s.id);
+      allEntries.push(...entry);
+      allSquareIds.push(...squareIds);
+    }
+    yield put(bulkUpdateSquareValue(allSquareIds, allEntries));
+  }
 }
 
 function* autosave() {
