@@ -108,9 +108,14 @@ function WordList({
         wordList.length === 0 && <Typography>No results found</Typography>}
       {!moreToLoad &&
         wordList.length > 0 && <Typography>End of results</Typography>}
-      <CircularProgress
-        style={{ visibility: loading ? 'visible' : 'hidden' }}
-      />
+      <div style={{ width: '100%', textAlign: 'center' }}>
+        <CircularProgress
+          style={{
+            margin: '10px',
+            visibility: loading ? 'visible' : 'hidden',
+          }}
+        />
+      </div>
     </div>
   );
 }

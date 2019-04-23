@@ -50,7 +50,10 @@ class WordListContainer extends React.Component {
       return;
     }
 
-    if (window.innerHeight + window.pageYOffset >= document.body.scrollHeight) {
+    if (
+      window.innerHeight + window.pageYOffset >=
+      document.body.scrollHeight * 0.9
+    ) {
       this.props.loadWordList();
     }
   };

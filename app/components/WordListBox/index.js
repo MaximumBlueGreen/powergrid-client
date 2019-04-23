@@ -20,7 +20,12 @@ function WordListBox({ word, score, updateEntry, selectEntry, deleteEntry }) {
     <TableRow>
       <TableCell style={{ width: '40%', textTransform: 'uppercase' }}>
         <Tooltip title="Use" placement="top">
-          <Button onClick={selectEntry}>{word}</Button>
+          <Button
+            onClick={selectEntry}
+            style={{ fontFamily: "'Roboto Mono', monospace" }}
+          >
+            {word}
+          </Button>
         </Tooltip>
       </TableCell>
       <TableCell style={{ width: '10%' }}>
@@ -28,6 +33,7 @@ function WordListBox({ word, score, updateEntry, selectEntry, deleteEntry }) {
           onChange={e => updateEntry({ score: e.target.value })}
           type="number"
           value={score}
+          disableUnderline
         />
       </TableCell>
       <TableCell style={{ width: '5%' }}>
