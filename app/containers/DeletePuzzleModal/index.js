@@ -26,7 +26,6 @@ function DeletePuzzleModal({
   deletePuzzle,
   ui: { open, puzzleId },
 }) {
-  console.log(puzzleId);
   return (
     <div>
       <Dialog open={open} onClose={closeModal}>
