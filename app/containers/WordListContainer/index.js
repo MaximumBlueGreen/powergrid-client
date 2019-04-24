@@ -71,7 +71,7 @@ class WordListContainer extends React.Component {
     } = this.props;
 
     return (
-      <form onSubmit={handleSubmit(addEntry)}>
+      <form onSubmit={handleSubmit(addEntry)} autoComplete="off">
         <WordList
           wordList={entries}
           filterPattern={filterPattern}
