@@ -31,6 +31,7 @@ export const puzzle = new schema.Entity(
         down: value.clues && value.clues.down ? value.clues.down : {},
       },
       symmetry: value.symmetry || SYMMETRY_MODE_DIAGONAL,
+      accessors: value.accessors || [],
     }),
     idAttribute: value => String(value.id),
   },
