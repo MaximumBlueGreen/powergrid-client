@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
+import withLogout from 'containers/WithLogout';
 
 import {
   Drawer,
@@ -10,13 +11,22 @@ import {
   ListItemText,
   ListItemIcon,
 } from '@material-ui/core';
-import { Home, Menu } from '@material-ui/icons/';
+import { Dashboard, Menu, PowerSettingsNew } from '@material-ui/icons/';
 
 const styles = {
   list: {
     width: 250,
   },
 };
+
+const LogoutButton = withLogout(({ logout }) => (
+  <ListItem button onClick={logout}>
+    <ListItemIcon>
+      <PowerSettingsNew />
+    </ListItemIcon>
+    <ListItemText primary="Log Out" />
+  </ListItem>
+));
 
 class NavDrawer extends React.Component {
   state = {
@@ -51,10 +61,11 @@ class NavDrawer extends React.Component {
               <List>
                 <ListItem button component="a" href="/dashboard">
                   <ListItemIcon>
-                    <Home />
+                    <Dashboard />
                   </ListItemIcon>
                   <ListItemText primary="Dashboard" />
                 </ListItem>
+                <LogoutButton />
               </List>
             </div>
           </div>
