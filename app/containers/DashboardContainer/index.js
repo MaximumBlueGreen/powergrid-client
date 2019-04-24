@@ -19,12 +19,17 @@ import {
   Grid,
   Button,
   Typography,
+  IconButton,
 } from '@material-ui/core';
+import { Delete } from '@material-ui/icons';
 import { withStyles } from '@material-ui/core/styles';
 
 import GridComponent from 'components/Grid';
 import CreatePuzzleModal from 'containers/CreatePuzzleModal';
-import { openModal } from 'containers/CreatePuzzleModal/actions';
+import { openModal as openCreateModal } from 'containers/CreatePuzzleModal/actions';
+
+import DeletePuzzleModal from 'containers/DeletePuzzleModal';
+import { openModal as openDeleteModal } from 'containers/DeletePuzzleModal/actions';
 
 import injectSaga from 'utils/injectSaga';
 import injectReducer from 'utils/injectReducer';
@@ -43,6 +48,10 @@ const styles = theme => ({
     transform: 'translate(-50%, -50%)',
     zIndex: theme.zIndex.mobileStepper - 1,
   },
+  cardActions: {
+    display: 'flex',
+    justifyContent: 'space-between',
+  },
 });
 
 class DashboardContainer extends React.Component {
@@ -51,10 +60,11 @@ class DashboardContainer extends React.Component {
   }
 
   render() {
-    const { puzzles, openModal, classes } = this.props;
+    const { puzzles, openCreateModal, openDeleteModal, classes } = this.props;
     return (
       <React.Fragment>
         <CreatePuzzleModal />
+        <DeletePuzzleModal />
         <div style={{ width: '60%', marginLeft: '20%' }}>
           <Grid container spacing={32} alignItems="center">
             <Grid
@@ -69,7 +79,7 @@ class DashboardContainer extends React.Component {
             <Grid item lg={4} md={6} xs={12} style={{ position: 'relative' }}>
               <Fab
                 className={classes.newPuzzleButton}
-                onClick={openModal}
+                onClick={openCreateModal}
                 variant="extended"
                 size="large"
                 color="primary"
@@ -99,10 +109,13 @@ class DashboardContainer extends React.Component {
                       highlightable={false}
                     />
                   </CardActionArea>
-                  <CardActions>
+                  <CardActions className={classes.cardActions}>
                     <Button color="primary" href={`/edit/${parentId}`}>
                       {puzzles[parentId][parentId].title || 'Untitled'}
                     </Button>
+                    <IconButton onClick={() => openDeleteModal(parentId)}>
+                      <Delete />
+                    </IconButton>
                   </CardActions>
                 </Card>
               </Grid>
@@ -118,7 +131,8 @@ DashboardContainer.propTypes = {
   loadPuzzles: PropTypes.func.isRequired,
   puzzles: PropTypes.object.isRequired,
   classes: PropTypes.object.isRequired,
-  openModal: PropTypes.func.isRequired,
+  openCreateModal: PropTypes.func.isRequired,
+  openDeleteModal: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = createStructuredSelector({
@@ -127,7 +141,10 @@ const mapStateToProps = createStructuredSelector({
 });
 
 function mapDispatchToProps(dispatch) {
-  return bindActionCreators({ loadPuzzles, openModal }, dispatch);
+  return bindActionCreators(
+    { loadPuzzles, openCreateModal, openDeleteModal },
+    dispatch,
+  );
 }
 
 const withConnect = connect(

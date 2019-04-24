@@ -1,6 +1,7 @@
 import { fromJS } from 'immutable';
 import { ENTITIES_LOADED } from 'entities/constants';
 import { CLUE_UPDATED } from 'entities/Clues/constants';
+import { PUZZLE_DELETED } from 'containers/DeletePuzzleModal/constants';
 import {
   PUZZLE_TITLE_UPDATED,
   PUZZLE_NOTES_EDITED,
@@ -30,6 +31,8 @@ export default function(state = initialState, action) {
       );
     case ENTITIES_LOADED:
       return state.merge(action.entities.puzzles);
+    case PUZZLE_DELETED:
+      return state.delete(action.id);
     default:
       return state;
   }
