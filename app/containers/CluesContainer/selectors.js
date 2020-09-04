@@ -50,7 +50,7 @@ const makeSelectCompletion = direction =>
   createSelector(
     [makeSelectClues(direction), makeSelectGridContainerWords()],
     (clues, words) => ({
-      completed: Object.keys(clues).filter(i => clues[i].text.length > 0)
+      completed: Object.keys(clues).filter(i => clues[i].text && clues[i].text.length > 0)
         .length,
       total: Object.keys(words[direction]).length,
     }),
