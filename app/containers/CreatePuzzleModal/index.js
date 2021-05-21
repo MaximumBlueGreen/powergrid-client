@@ -84,6 +84,7 @@ function CreatePuzzleModal({
                     value={height}
                     onChange={e => updateSize(e.target.value, e.target.value)}
                   >
+                    <MenuItem value={21}>21x21</MenuItem>
                     <MenuItem value={15}>15x15</MenuItem>
                     <MenuItem value={5}>5x5</MenuItem>
                   </Select>
